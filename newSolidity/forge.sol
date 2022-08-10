@@ -169,7 +169,7 @@ abstract contract ApproveAndCallFallBack {
 //Main contract
 
 contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
-	uint constant public targetTime = 60 * 12;
+	uint constant public targetTime = 60 * 24;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -191,7 +191,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 1028;
+    uint public _BLOCKS_PER_READJUSTMENT = 512;
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
