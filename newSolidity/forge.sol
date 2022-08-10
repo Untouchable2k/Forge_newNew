@@ -157,14 +157,6 @@ interface IERC20 {
 }
 
 
-// File: contracts/commons/AddressMinHeap.sol
-
-
-
-abstract contract ApproveAndCallFallBack {
-    function receiveApproval(address from, uint256 tokens, address token, bytes memory data) virtual public;
-}
-
 
 //Main contract
 
@@ -217,8 +209,8 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint give0xBTC = 0;
     uint give = 1;
     // metadata
-    string public name = "Forge";
-    string public constant symbol = "Fge";
+    string public name = "ArbiForge";
+    string public constant symbol = "AFge";
     uint8 public constant decimals = 18;
 
     uint256 lastrun = block.timestamp;
@@ -281,10 +273,10 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		 if(ratio < 200){
 			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
 		 }else {
-			totalOwed = (340000000);
+			totalOwed = (1150000000) + (x * 100000000).div(888);
 		} 
 
-		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
 			give0xBTC = 1 * give;
 		}else{
@@ -319,17 +311,17 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888;
 		uint totalOwed = 0;
-		if(ratio < 314){
+		if(ratio < 512){
 			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
 		}else {
-			totalOwed = (x * 100000000).div(888) + (350000000);
+			totalOwed = (x * 100000000).div(888) + (1150000000);
 		} 
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000 * 4));
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000 * 2));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
 				
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000 * 4));
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000 * 2));
 		previousBlockTime = block.timestamp;
 
 		if(give0xBTC > 0){
@@ -340,7 +332,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 			}
 		}
 
-		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000 * 4), epochCount, challengeNumber );
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000 * 2), epochCount, challengeNumber );
 
 		return totalOwed;
 
@@ -728,22 +720,6 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-		// ------------------------------------------------------------------------
-
-		// Token owner can approve for `spender` to transferFrom(...) `tokens`
-
-		// from the token owner's account. The `spender` contract function
-
-		// `receiveApproval(...)` is then executed
-
-		// ------------------------------------------------------------------------
-
-
-	function receiveApproval(address from, uint256 tokens, address token, bytes memory data) public override{
-
-		require(token == address(this));
-		IERC20(address(this)).transfer(from, tokens);  
-	}
 
 
 	  //Allow ETH to enter
@@ -754,7 +730,6 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 
 	fallback() external payable {
 
-		revert();
 	}
 }
 
