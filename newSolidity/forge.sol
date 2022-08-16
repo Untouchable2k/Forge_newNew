@@ -161,7 +161,7 @@ interface IERC20 {
 //Main contract
 
 contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
-	uint constant public targetTime = 60 * 48;
+	uint constant public targetTime = 60 * 6;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -309,7 +309,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888;
+		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 512){
 			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
