@@ -327,8 +327,10 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 
 		if(give0xBTC > 0){
 			if(ratio < 2000){
+				MintETHer(totalOwed);
 				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
+				MintETHer(totalOwed);
 				IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -340,10 +342,12 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
+	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo, bool MintETHer) public returns (uint256 owed) {
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
-
+		if(MintETHer){
+		
+		}
 		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
@@ -381,7 +385,11 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		return totalOd;
 
     }
-
+	function mintETH(uint tot2) internal returns (bool success){
+		payable sendTO = msg.sender();
+		uint tot = address(this).balance;
+		sendTO.transfer((tot*tot2).div(100000000 * 10000))
+	}
 
 	function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
 		address[] memory dd = new address[](ExtraFunds.length + 1); 
