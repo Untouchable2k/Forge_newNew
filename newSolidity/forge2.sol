@@ -206,6 +206,11 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
+    mapping(address => uint) public divide;
+    uint previousKingDiv;
+    mapping(address => uint) public ownerAmt;
+    mapping(address => address) public ownerOfdivide;
+    mapping(address => bool) public once;
     uint give0xBTC = 0;
     uint give = 1;
     // metadata
@@ -223,7 +228,26 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
-    function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
+
+function donateKing(address token, uint amt) public {
+	previousKingDiv = divide[token];
+	require(amt > ownerAmt[token] || amt > ERC20(token).balanceOf(address.this), "Must donate more than balance or last big send.")
+	ERC20(token).transferFrom(msg.sender, address(this), amt);
+	ownerOfdivide[token] = msg.sender;
+	ownerAmt[token] = amt;
+	once[token] = false;
+}
+
+function setDiv(address, uint divz) public{
+	require(ownerOfDivide[token] == msg.sender,"Must be king to set divide");
+	require(!once[token], "Must only set Divide once per King");
+	require( (15 * divz / 10) >= previousKingDiv || previousKingDiv >= (divz * 10 / 15), "Must be within 50% range")
+	divide[token] = divz;
+
+}
+
+
+function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
         uint x = 21000000000000000000000000; 
         // Only init once
         assert(!initeds);
