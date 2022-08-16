@@ -210,7 +210,6 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint previousKingDiv;
     mapping(address => uint) public ownerAmt;
     mapping(address => address) public ownerOfdivide;
-    mapping(address => bool) public once;
     uint give0xBTC = 0;
     uint give = 1;
     // metadata
@@ -228,24 +227,30 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
+donateAndKing(address token, uint amt, uint divz) public {
+	donateKing(token, amt);
+	setDiv(token, divz);
+}
 
-function donateKing(address token, uint amt) public {
-	previousKingDiv = divide[token];
+function donateKing(address token, uint amt) internal {
+	previousKingDiv = whatDiv();
 	require(amt > ownerAmt[token] || amt > ERC20(token).balanceOf(address.this), "Must donate more than balance or last big send.")
 	ERC20(token).transferFrom(msg.sender, address(this), amt);
 	ownerOfdivide[token] = msg.sender;
 	ownerAmt[token] = amt;
-	once[token] = false;
-}
-
-function setDiv(address, uint divz) public{
 	require(ownerOfDivide[token] == msg.sender,"Must be king to set divide");
-	require(!once[token], "Must only set Divide once per King");
-	require( (15 * divz / 10) >= previousKingDiv || previousKingDiv >= (divz * 10 / 15), "Must be within 50% range")
+	require( (30 * divz / 10) >= previousKingDiv || previousKingDiv >= (divz * 10 / 30), "Must be within 300% range")
 	divide[token] = divz;
-
 }
 
+
+function whatDiv(address token) public{
+	if(divide[token] == 0){
+		return 2500;
+	}else{
+		return divide[token];
+	}
+}
 
 function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
         uint x = 21000000000000000000000000; 
@@ -395,9 +400,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500 * 2);
+						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 * 2);
+						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
@@ -472,9 +477,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0){
-						totalOwed = (TotalOwned * totalIN).divRound(100000000 * 2500 * 2);
+						totalOwed = (TotalOwned * totalIN).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
 					}else{
-						totalOwed = (TotalOwned * totalIN).div(100000000 * 2500 * 2 );
+						totalOwed = (TotalOwned * totalIN).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
