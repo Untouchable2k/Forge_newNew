@@ -229,7 +229,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+	    reward_amount = (24 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
@@ -265,19 +265,19 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 
-		reward_amount = (100 * 10**uint(decimals)).div( 2**rewardEra );
+		reward_amount = (24 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
 		
 		 if(ratio < 200){
-			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
+			totalOwed = (61001200 * ((x / 10) ** 2 )).div(888**2) + (40861500 * x / 10  ).div(888) ;
 		 }else {
-			totalOwed = (1150000000) + (x * 100000000).div(888);
+			totalOwed = (350000000) + ((x / 10) * 100000000).div(888);
 		} 
 
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
-			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
+			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
 			give0xBTC = 1 * give;
 		}else{
 			give0xBTC = 0;
@@ -311,28 +311,28 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
-		if(ratio < 512){
-			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
+		if(ratio < 3000){
+			totalOwed = (61001200 * ( (x / 10) ** 2 )).div(888 ** 2)+ (40861500 * (x / 10)).div(888);
 		}else {
-			totalOwed = (x * 100000000).div(888) + (1150000000);
-		} 
+			totalOwed = ( (x / 10) * 100000000).div(888) + (350000000);
+		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000 * 2));
-		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
 				
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000 * 2));
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
 		if(give0xBTC > 0){
-			if(ratio < 200){
+			if(ratio < 2000){
 				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
 				IERC20(AddressZeroXBTC).transfer(mintTo, (34 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
 
-		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000 * 2), epochCount, challengeNumber );
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
 		return totalOwed;
 
