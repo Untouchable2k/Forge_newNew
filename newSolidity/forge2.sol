@@ -270,10 +270,10 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
 		
-		 if(ratio < 200){
-			totalOwed = (61001200 * ((x / 10) ** 2 )).div(888**2) + (40861500 * x / 10  ).div(888) ;
+		 if(ratio < 2000){
+			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
-			totalOwed = (350000000) + ((x / 10) * 100000000).div(888);
+			totalOwed = (400000000);
 		} 
 
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
@@ -312,14 +312,15 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			totalOwed = (61001200 * ( (x / 10) ** 2 )).div(888 ** 2)+ (40861500 * (x / 10)).div(888);
+			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = ( (x / 10) * 100000000).div(888) + (350000000);
+			totalOwed = (x*8000000).div(888)+475000000;
+			
 		}
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000 * 2));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
@@ -328,7 +329,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 			if(ratio < 2000){
 				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-				IERC20(AddressZeroXBTC).transfer(mintTo, (34 * Token2Per * give0xBTC).div(10 * 2));
+				IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
 
