@@ -353,12 +353,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 		if(give0x > 0){
 			if(ratio < 2000){
-                address payable to = payable(mintTo);
-                to.send((totalOwed * Token2Per * give0x).div(100000000));
+            			address payable to = payable(mintTo);
+             			to.send((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-                address payable to = payable(mintTo);
-                to.send((40 * Token2Per * give0x).div(10));
+               			address payable to = payable(mintTo);
+               			to.send((40 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -522,8 +522,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				_reAdjustDifficulty();
 			}
             */
-			    multipler = balanceOf(address(this)) / (1000 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
-			    if(( balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
+			    if(( balanceOf(address(this)) / Token2Per) <= (15000 + 15000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
