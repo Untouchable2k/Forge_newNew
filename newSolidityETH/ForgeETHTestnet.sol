@@ -183,7 +183,7 @@ contract Forge is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 256;
+    uint public _BLOCKS_PER_READJUSTMENT = 8; //256;
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
@@ -208,8 +208,8 @@ contract Forge is Ownable, IERC20 {
     uint previousKingDiv;
     mapping(address => uint) public ownerAmt;
     mapping(address => address) public ownerOfDivide;
-    uint give0x = 0;
-    uint give = 1;
+    uint public give0x = 0;
+    uint public give = 1;
     // metadata
     string public name = "ArbiForge";
     string public constant symbol = "AFge";
@@ -297,14 +297,15 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
 			totalOwed = (400000000);
-		} 
+		}
 
-		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+		if( address(this).balance > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
-			
-            address payable to = payable(AddressLPReward);
-            to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
-            give0x = 1 * give;
+			if(give0x != 0){
+           		address payable to = payable(AddressLPReward);
+           		to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+			}
+				give0x = 1 * give;
 		}else{
 			give0x = 0;
 		}
@@ -609,8 +610,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				_reAdjustDifficulty();
 			}
             */
-			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
-			    if(( balanceOf(address(this)) / Token2Per) <= (15000 + 15000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+			    multipler = address(this).balance / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
+			    if(( address(this).balance / Token2Per) <= (15000 + 15000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
