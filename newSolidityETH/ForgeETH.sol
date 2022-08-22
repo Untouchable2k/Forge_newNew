@@ -160,7 +160,7 @@ interface IERC20 {
 
 //Main contract
 
-contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
+contract Forge is Ownable, IERC20 {
 	uint constant public targetTime = 60 * 6;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
@@ -199,8 +199,6 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     //Stuff for Functions
     uint oldecount = 0;
     uint public previousBlockTime  =  block.timestamp;
-    uint oneEthUnit =    1000000000000000000;
-    uint one8unit   =              100000000;
     uint public Token2Per=           1000000;
     uint Token2Min=                       88;
     uint public tokensMinted;
@@ -209,8 +207,8 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     mapping(address => uint) public divide;
     uint previousKingDiv;
     mapping(address => uint) public ownerAmt;
-    mapping(address => address) public ownerOfdivide;
-    uint give0xBTC = 0;
+    mapping(address => address) public ownerOfDivide;
+    uint give0x = 0;
     uint give = 1;
     // metadata
     string public name = "ArbiForge";
@@ -227,26 +225,22 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
-donateAndKing(address token, uint amt, uint divz) public {
-	donateKing(token, amt);
-	setDiv(token, divz);
-}
 
-function donateKing(address token, uint amt) internal {
-	previousKingDiv = whatDiv();
-	require(amt > ownerAmt[token] || amt > ERC20(token).balanceOf(address.this), "Must donate more than balance or last big send.")
-	ERC20(token).transferFrom(msg.sender, address(this), amt);
-	ownerOfdivide[token] = msg.sender;
+function donateKing(address token, uint amt, uint divz) internal {
+	previousKingDiv = whatDiv(token);
+	require(amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
+	IERC20(token).transferFrom(msg.sender, address(this), amt);
+	ownerOfDivide[token] = msg.sender;
 	ownerAmt[token] = amt;
 	require(ownerOfDivide[token] == msg.sender,"Must be king to set divide");
-	require( (30 * divz / 10) >= previousKingDiv || previousKingDiv >= (divz * 10 / 30), "Must be within 300% range")
+	require( (25 * divz / 10) >= previousKingDiv && previousKingDiv >= (divz * 10 / 25), "Must be within 250% range");
 	divide[token] = divz;
 }
 
-
-function whatDiv(address token) public{
+//Standard distribution is 6 months with 5000
+function whatDiv(address token) public returns(uint suc){
 	if(divide[token] == 0){
-		return 2500;
+		return 5000;
 	}else{
 		return divide[token];
 	}
@@ -305,11 +299,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			totalOwed = (400000000);
 		} 
 
-		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
-			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
-			give0xBTC = 1 * give;
+		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
+			
+            address payable to = payable(AddressLPReward);
+            to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+            give0x = 1 * give;
 		}else{
-			give0xBTC = 0;
+			give0x = 0;
 		}
 		oldecount = epochCount; //actually epoch
 
@@ -349,18 +346,20 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000 * 2));
+		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
-		if(give0xBTC > 0){
+		if(give0x > 0){
 			if(ratio < 2000){
-				MintETHer(totalOwed);
-				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
+                address payable to = payable(mintTo);
+                to.send((totalOwed * Token2Per * give0x).div(100000000));
+				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-				MintETHer(totalOwed);
-				IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
+                address payable to = payable(mintTo);
+                to.send((40 * Token2Per * give0x).div(10));
+				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
 
@@ -371,12 +370,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 	}
 
 
-	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo, bool MintETHer) public returns (uint256 owed) {
+	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
-		if(MintETHer){
-		
-		}
+
 		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
@@ -414,11 +411,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		return totalOd;
 
     }
-	function mintETH(uint tot2) internal returns (bool success){
-		payable sendTO = msg.sender();
-		uint tot = address(this).balance;
-		sendTO.transfer((tot*tot2).div(100000000 * 10000))
-	}
 
 	function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
 		address[] memory dd = new address[](ExtraFunds.length + 1); 
@@ -516,8 +508,22 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
+                /*
 				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
 				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+				{
+					if(Token2Per.div(2) > Token2Min)
+					{
+						Token2Per = Token2Per.div(2);
+					}
+				}else{
+					Token2Per = Token2Per.mult(3);
+				}
+				_reAdjustDifficulty();
+			}
+            */
+			    multipler = balanceOf(address(this)) / (1000 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
+			    if(( balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
