@@ -671,7 +671,7 @@ contract ForgeMining{
     
     
     function z_transferERC20TokenToMinerContract(address tokenAddress) public returns (bool success) {
-        require(tokenAddress != AddressZeroXBTC && tokenAddress != AddressForgeToken);
+        require(tokenAddress != AddressForgeToken);
         
         return IERC20(tokenAddress).transfer(AddressForgeToken, IERC20(tokenAddress).balanceOf(address(this))); 
     }
