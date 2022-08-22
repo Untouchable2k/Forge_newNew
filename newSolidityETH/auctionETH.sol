@@ -307,7 +307,7 @@ contract ForgeMining{
     function WholeEraBurn0xForMember(address member) public payable returns (bool success)
     {
         uint256 daysleft = daysPerEra - currentDay - 1 ;//just incase
-        FutureBurn0xEasier(currentEra, currentDay, daysleft, member, msg.value);
+        FutureBurn0xEasier(currentEra, currentDay, daysleft, member);
         
         return true;
         
@@ -326,7 +326,7 @@ contract ForgeMining{
             amt[y] = (msg.value) / totalNumberrOfDays;
             y++;
         }
-        FutureBurn0Arrays(_era, dd, _member, msg.value);
+        FutureBurn0xArrays(_era, dd, _member, amt);
     
         return true;
     }
@@ -353,7 +353,7 @@ contract ForgeMining{
         }
     
         //require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, stricttotal), "NO OTHER WAY, send it the required 0xBitcoin");
-        require(msg.value > stricttotal, "Must send required ETH");
+        require(msg.value >= stricttotal, "Must send required ETH");
         emit BurnMultipleDays(msg.sender, _member, _era, fdays.length, stricttotal);
         
         return true;
@@ -361,10 +361,10 @@ contract ForgeMining{
     }
 
 
-    function burn0xForMember(address member) public returns (bool success) {
+    function burn0xForMember(address member) public payable returns (bool success) {
         uint day = currentDay;
        // require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, _0xbtcAmount), "NO WAY, requires 0xBTC send");
-        address payable To = payable (AddressForgeToken ):
+        address payable To = payable (AddressForgeToken );
         To.send(msg.value);
         _recordBurn(msg.sender, member, currentEra, currentDay, msg.value);
         emit Burn(msg.sender, member, currentEra, day, msg.value, mapEraDay_Units[currentEra][currentDay]);
@@ -677,15 +677,6 @@ contract ForgeMining{
     }
     
     
-  //Do not allow ETH to enter
-  receive() external payable {
-    revert();
-  }
-
-
-  fallback() external payable {
-    revert();
-  }
 }
 
 /*
