@@ -294,7 +294,7 @@ interface IERC721 {
 
 //Main contract
 
-contract Forge is Ownable, IERC20 {
+contract ArbiForge is Ownable, IERC20 {
 	uint constant public targetTime = 60 * 6;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
@@ -364,10 +364,8 @@ function donateKing(address token, uint amt, uint divz) internal {
 	previousKingDiv = whatDiv(token);
 	require(amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
 	IERC20(token).transferFrom(msg.sender, address(this), amt);
-	ownerOfDivide[token] = msg.sender;
 	ownerAmt[token] = amt;
-	require(ownerOfDivide[token] == msg.sender,"Must be king to set divide");
-	require( (25 * divz / 10) >= previousKingDiv && previousKingDiv >= (divz * 10 / 25), "Must be within 250% range");
+	require( divz >= 2500  && divz <= 250000, "Must be within 2500 - 250000");
 	divide[token] = divz;
 }
 
@@ -435,9 +433,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
-            		address payable to = payable(AddressLPReward);
-            		to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
-            		give0x = 1 * give;
+			
+            address payable to = payable(AddressLPReward);
+            to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+            give0x = 1 * give;
 		}else{
 			give0x = 0;
 		}
