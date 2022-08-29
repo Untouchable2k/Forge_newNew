@@ -158,7 +158,7 @@ interface IERC20 {
 
 
 
-interface IERC721 is IERC165 {
+interface IERC721 {
     /**
      * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
      */
