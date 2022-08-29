@@ -308,7 +308,7 @@ contract ArbiForge is Ownable, IERC20 {
     event MegaMint(address indexed from, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted, uint256 TokenMultipler);
 
 // Managment events
-    uint256 override public totalSupply = 42000001000000000000000000;
+    uint256 override public totalSupply = 73500001000000000000000000;
     bytes32 private constant BALANCE_KEY = keccak256("balance");
 
     //BITCOIN INITALIZE Start
@@ -317,7 +317,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 256;
+    uint public _BLOCKS_PER_READJUSTMENT = 8;
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
