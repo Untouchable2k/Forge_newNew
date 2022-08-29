@@ -454,7 +454,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		return true;
 	}
 	
+	///add a require statemnt
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+		require(epochCount % 100 == 0, "Only mint on 100ths mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
@@ -533,11 +535,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		for(uint x=0; x<xy; x++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
-			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, epoch 16 = 4 extra mints w/ a divRound for the 4th mint(allows small balance token minting aka NFTs)
+			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, ..., epoch 32 = 5 extra mints w/ a divRound for the 5th mint(allows small balance token minting aka NFTs)
 			if(epochCount % (2**(x+1)) == 0){
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					if( x % 3 == 0 && x != 0){
+					if( x % 5 == 0 && x != 0){
 						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
 					}else{
 						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
