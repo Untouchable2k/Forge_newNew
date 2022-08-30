@@ -9,7 +9,7 @@
 //
 //  10,500,000 Forge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
-//  Distributes 8,192 Forge tokens every 4-12 days for the first era(~5 years) and halves the amount of Forge every era after
+//  Distributes 8,192 Forge tokens every 3-14 days for the first era(~5 years) and halves the amount of Forge every era after
 //
 // By using the burn0xBTCForMember function
 //       0xBitcoin Token is taken from the user and used to recieve your share of the 8,192 tokens auctioned every ~4 days
@@ -295,13 +295,13 @@ contract ForgeMining{
     }
 
 
-
     receive() external payable {
 
         burn0xForMember(msg.sender);
 
 
     }
+
 
     //Bids for Whole Era
     function WholeEraBurn0xForMember(address member) public payable returns (bool success)
@@ -364,6 +364,7 @@ contract ForgeMining{
     function burn0xForMember(address member) public payable returns (bool success) {
         uint day = currentDay;
        // require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, _0xbtcAmount), "NO WAY, requires 0xBTC send");
+
         address payable To = payable (AddressForgeToken );
         To.send(msg.value);
         _recordBurn(msg.sender, member, currentEra, currentDay, msg.value);
@@ -671,7 +672,7 @@ contract ForgeMining{
     
     
     function z_transferERC20TokenToMinerContract(address tokenAddress) public returns (bool success) {
-        require(tokenAddress != AddressZeroXBTC && tokenAddress != AddressForgeToken);
+        require(tokenAddress != AddressForgeToken);
         
         return IERC20(tokenAddress).transfer(AddressForgeToken, IERC20(tokenAddress).balanceOf(address(this))); 
     }
