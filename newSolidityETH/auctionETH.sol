@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at polygonscan.com on 2022-02-12
+*/
+
 //  Forge Auctions Contract
 //  Auctions Forge tokens every 3 days and users are able to withdraw anytime after!
 //
@@ -232,7 +236,7 @@ contract ForgeMining{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 600; secondsPerDay = 24*60*60*3; 
+        daysPerEra = 600; secondsPerDay = 120; 
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay;
