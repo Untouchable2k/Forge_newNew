@@ -1,11 +1,15 @@
-// ForgeTH - Contract
+/**
+ *Submitted for verification at polygonscan.com on 2022-02-12
+*/
+
+// Forge - Contract
 //
 // Distrubtion of Forge Token is as follows:
-// 15% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
+// 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
-// 57% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the SpiritSwap Liquidity Pool tokens into the LPRewards contract.
+// 25% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the SpiritSwap Liquidity Pool tokens into the LPRewards contract.
 // +
-// 29% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
@@ -20,20 +24,20 @@
 // Symbol: Fge
 // Decimals: 18 
 //
-// Total supply: 73,500,001.000000000000000000
+// Total supply: 42,000,001.000000000000000000
 //   =
 // 21,000,000 Mined over 100+ years using Bitcoins Distrubtion halvings every 4 years. Uses Proof-oF-Work to distribute the tokens. Public Miner is available.  Uses this contract.
 //   +
 // 10,500,000 Auctioned over 100+ years into 4 day auctions split fairly among all buyers. ALL 0xBitcoin proceeds go into THIS contract which it fairly distributes to miners.  Uses the ForgeAuctions contract
 //   +
-// 42,000,000 tokens goes to Liquidity Providers of the token over 100+ year using Bitcoins distribution!  Helps prevent LP losses!  Uses the ForgeRewards Contract
+// 10,500,000 tokens goes to Liquidity Providers of the token over 100+ year using Bitcoins distribution!  Helps prevent LP losses!  Uses the ForgeRewards Contract
 //
 //  =
 //
-// 73,500,001 Tokens is the max Supply
+// 42,000,001 Tokens is the max Supply
 //      
-// 50% of the Ethereum from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn Ethereum per mint!!
-// 50% of the Ethereum from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
+// 66% of the 0xBitcoin Token from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn 0xBitcoin per mint!!
+// 33% of the 0xBitcoin TOken from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
 //
 // No premine, dev cut, or advantage taken at launch. Public miner available at launch.  100% of the token is given away fairly over 100+ years using Bitcoins model!
 //
@@ -41,9 +45,11 @@
 //
 //Viva la Mineables!!! Send this contract any ERC20 complient token (Wrapped NFTs incoming!) and we will fairly to miners and Holders(
 //  Each Mint prints (1/10000) of any ERC20.
+//pThirdDifficulty allows for the difficulty to be cut in a third.  So difficulty 10,000 becomes 3,333.  Costs 333 Fantom  Makes mining 3x easier
 //* 1 tokens in LP are burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
+//* Except for Staking Rewards additional cryptocurrencies
 
 
 pragma solidity ^0.8.11;
@@ -302,7 +308,7 @@ contract ArbiForge is Ownable, IERC20 {
     event MegaMint(address indexed from, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted, uint256 TokenMultipler);
 
 // Managment events
-    uint256 override public totalSupply = 73500001000000000000000000;
+    uint256 override public totalSupply = 42000001000000000000000000;
     bytes32 private constant BALANCE_KEY = keccak256("balance");
 
     //BITCOIN INITALIZE Start
@@ -311,7 +317,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 8;
+    uint public _BLOCKS_PER_READJUSTMENT = 256;
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
@@ -504,6 +510,48 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 	}
 
+	function mintToFREE(bool nonce, bool challenge_digest,  address mintTo) public returns (uint256 owed) {
+
+		_startNewMiningEpoch();
+
+		require(block.timestamp > previousBlockTime, "No same second solves");
+
+		//uint diff = block.timestamp - previousBlockTime;
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+		if(ratio < 3000){
+			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+		}else {
+			totalOwed = (x*8000000).div(888)+475000000;
+			
+		}
+
+
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
+				
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
+		previousBlockTime = block.timestamp;
+
+		if(give0x > 0){
+			if(ratio < 2000){
+            			address payable to = payable(mintTo);
+             			to.send((totalOwed * Token2Per * give0x).div(100000000));
+				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
+			}else{
+               			address payable to = payable(mintTo);
+               			to.send((40 * Token2Per * give0x).div(10));
+				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
+			}
+		}
+
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+
+		return totalOwed;
+
+	}
+
 
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
@@ -516,7 +564,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this), "No base printing of tokens");
+			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
@@ -579,7 +627,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this), "No base printing of tokens");
+			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
