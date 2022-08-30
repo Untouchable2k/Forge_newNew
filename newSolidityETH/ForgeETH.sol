@@ -41,7 +41,7 @@
 //
 //Viva la Mineables!!! Send this contract any ERC20 complient token (Wrapped NFTs incoming!) and we will fairly to miners and Holders(
 //  Each Mint prints (1/10000) of any ERC20.
-//* 1 tokens in LP are burned to create the LP pool.
+//* 1 token is used to setup the Liquidity Pools.
 //
 // Credits: 0xBitcoin, Vether, Synethix
 
