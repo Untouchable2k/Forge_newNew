@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at polygonscan.com on 2022-02-12
-*/
-
 //  Forge Auctions Contract
 //  Auctions Forge tokens every 3 days and users are able to withdraw anytime after!
 //
@@ -179,7 +175,7 @@ contract ForgeMining{
     
     }
 
-  contract ForgeAuctions is  GasPump, Ownabled
+  contract ArbiForgeAuctions is  GasPump, Ownabled
 {
 
     using SafeMath for uint;
@@ -249,11 +245,10 @@ contract ForgeMining{
     
 
 
-        function zSetUP1(address token, address _ZeroXBTCAddress) public onlyOwner22 {
+        function zSetUP1(address token) public onlyOwner22 {
         AddressForgeToken = token;
         owner22 = address(0);
         lastMinted =  0;
-        AddressZeroXBTC = _ZeroXBTCAddress;
         ForgeMiningToken = ForgeMining(token);
         lastMinted = ForgeMiningToken.getMiningMinted();
 
