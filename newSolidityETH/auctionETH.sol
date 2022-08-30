@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at polygonscan.com on 2022-02-12
-*/
-
 //  Forge Auctions Contract
 //  Auctions Forge tokens every 3 days and users are able to withdraw anytime after!
 //
