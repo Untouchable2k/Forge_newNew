@@ -516,7 +516,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
+			require(ExtraFunds[xy] != address(this), "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
@@ -579,7 +579,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
+			require(ExtraFunds[xy] != address(this), "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
