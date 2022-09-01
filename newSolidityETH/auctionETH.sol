@@ -443,7 +443,10 @@ contract ForgeMining{
 
 
     //Helper Function for efficent redeeming of auctions
-    function WithdrawEz(address _member) public {
+    function WithdrawEz(address _member) public {                
+        if(currentDay == 1 && currentEra == 1){
+            return;
+        }
         uint startingday = ZmapMember_DayClaimedTo[_member];
         uint startingera = ZmapMember_EraClaimedTo[_member];
         if(startingday == 0)
@@ -477,6 +480,9 @@ contract ForgeMining{
     
     
     function Check_Withdraw_Amt(address _member) public view returns(uint amt) {
+        if(currentDay == 1 && currentEra == 1){
+            return 0;
+        }
         uint startingday = ZmapMember_DayClaimedTo[_member];
         uint startingera = ZmapMember_EraClaimedTo[_member];
         if(startingday == 0)
