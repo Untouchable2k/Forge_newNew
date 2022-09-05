@@ -303,7 +303,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 16;
+    uint public _BLOCKS_PER_READJUSTMENT = 1024; // should be 1024
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
@@ -670,7 +670,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		epochCount = epochCount.add(1);
 
 		//every so often, readjust difficulty. Dont readjust when deploying
-		if((epochCount) % (_BLOCKS_PER_READJUSTMENT / 4) == 0)
+		if((epochCount) % (_BLOCKS_PER_READJUSTMENT / 8) == 0)
 		{
 			ARewardSender();
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
@@ -702,6 +702,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					Token2Per = Token2Per.mult(3);
 				}
 				_reAdjustDifficulty();
+			}else if(give == 2){
+				reAdjustDifficulty();
 			}
 		}
 
