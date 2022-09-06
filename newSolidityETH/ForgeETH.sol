@@ -281,7 +281,7 @@ interface IERC721 {
 //Main contract
 
 contract ArbiForge is Ownable, IERC20 {
-	uint constant public targetTime = 60 * 6;
+	uint public targetTime = 60 * 6;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -404,9 +404,13 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 runs = block.timestamp - lastrun;
 
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
-		uint256 runsperepoch = runs / epochsPast;
-
-		reward_amount = (24 * 10**uint(decimals)).div( 2**rewardEra );
+		uint256 runsperepoch = runs / epochsPast;if(rewardEra < 15){
+		if(rewardEra < 15){
+			targetTime = ((6 * 60) * 2**rewardEra);
+		}else{
+			reward_amount = (24 * 10**uint(decimals)).div( 2**(rewardEra - 14   ) );
+		}
+		//reward_amount = (24 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
@@ -662,6 +666,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		{
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
+			if(rewardEra < 15){
+			
+				targetTime = ((6 * 60) * 2**rewardEra);
+			}else{
+				reward_amount = (24 * 10**uint(decimals)).div( 2**(rewardEra - 14   ) );
+			}
 		}
 
 		//set the next minted supply at which the era will change
