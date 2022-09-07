@@ -388,7 +388,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = (24 * 10**uint(decimals) ).div( 2**rewardEra );
+	    reward_amount = (6969 * 10**uint(decimals - 4));
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
@@ -426,9 +426,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		if(rewardEra < 15){
 			targetTime = ((6 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = (24 * 10**uint(decimals)).div( 2**(rewardEra - 14   ) );
+			reward_amount = ((6969 * 10**uint(decimals - 4))).div( 2**(rewardEra - 14   ) );
 		}
-		//reward_amount = (24 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
@@ -529,24 +528,24 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			totalOwed = (508606*(15x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (x*8000000).div(888)+475000000;
+			totalOwed = (12x*8000000).div(888)+93475000000;
 			
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(10000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(10000000));
 				
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(10000000));
 		previousBlockTime = block.timestamp;
 
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
-             			to.send((totalOwed * Token2Per * give0x).div(100000000));
-				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
+             			to.send((totalOwed * Token2Per * give0x).div(10000000));
+				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(10000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
                			to.send((40 * Token2Per * give0x).div(10));
@@ -554,7 +553,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			}
 		}
 
-		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(10000000), epochCount, challengeNumber );
 
 		return totalOwed;
 
@@ -588,9 +587,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 5 == 0 && x != 0){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).divRound(10000000 * whatDiv(ExtraFunds[x]));
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).div(10000000 * whatDiv(ExtraFunds[x]));
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
@@ -642,15 +641,15 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		}
 
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888;
-		uint totalIN = 0;
-		if(ratio < 314){
-			totalIN = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+		if(ratio < 3000){
+			totalOwed = (508606*(15x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalIN = (x * 100000000).div(888) + (350000000);
-		} 
-		require(totalIN > 0, "mint issue");
-		uint256 totalOwed;
+			totalOwed = (12x*8000000).div(888)+93475000000;
+			
+		}
+
 		uint256 TotalOwned;
 		for(uint x=0; x<xy; x++)
 		{
@@ -660,9 +659,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0){
-						totalOwed = (TotalOwned * totalIN).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
+						totalOwed = (TotalOwned * totalOwed).divRound(10000000 * whatDiv(ExtraFunds[x]) * 2);
 					}else{
-						totalOwed = (TotalOwned * totalIN).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
+						totalOwed = (TotalOwned * totalOwed).div(10000000 * whatDiv(ExtraFunds[x]) * 2 );
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
@@ -685,10 +684,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 			if(rewardEra < 15){
-			
 				targetTime = ((6 * 60) * 2**rewardEra);
+				if(rewardEra < 6){
+					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2**rewardEra);
+				}
 			}else{
-				reward_amount = (24 * 10**uint(decimals)).div( 2**(rewardEra - 14   ) );
+				reward_amount = ((6969 * 10**uint(decimals - 4))).div( 2**(rewardEra - 14   ) );
 			}
 		}
 
