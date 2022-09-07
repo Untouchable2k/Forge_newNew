@@ -352,8 +352,8 @@ function donateKing(address token, uint amt, uint divz) public {
 }
 
 
-function donate(address token, uint amt, uint divz, address forWho) public {
-	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt
+function donate(address token, uint amt, address forWho) public {
+	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt;
 	IERC20(token).transferFrom(msg.sender, address(this), amt);
 
 }
@@ -362,7 +362,7 @@ function donate(address token, uint amt, uint divz, address forWho) public {
 function setDiv(uint divz, address token) public{
 
 	require(amountPerOwner[msg.sender][token] > ownerAmt[token] || amountPerOwner[msg.sender][token] > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
-	if(ownerAmt[token] > IERC20(token).balanceOf(address(this)){
+	if(ownerAmt[token] > IERC20(token).balanceOf(address(this))) {
 		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - IERC20(token).balanceOf(address(this));
 	}else{
 		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - ownerAmt[token];
@@ -422,7 +422,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 runs = block.timestamp - lastrun;
 
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
-		uint256 runsperepoch = runs / epochsPast;if(rewardEra < 15){
+		uint256 runsperepoch = runs / epochsPast;if(rewardEra < 15)
 		if(rewardEra < 15){
 			targetTime = ((6 * 60) * 2**rewardEra);
 		}else{
@@ -461,7 +461,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 	
 	///add a require statemnt
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % _blocks_per_adjustment == 0, "Only mint on 1028ths mints");
+		require(epochCount % _BLOCKS_PER_READJUSTMENT == 0, "Only mint on 1028ths mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
@@ -486,9 +486,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (x*8000000).div(888)+475000000;
+			totalOwed = (12*x*8000000).div(888)+93475000000;
 			
 		}
 
@@ -528,9 +528,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			totalOwed = (508606*(15x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12x*8000000).div(888)+93475000000;
+			totalOwed = (12*x*8000000).div(888)+93475000000;
 			
 		}
 
@@ -644,9 +644,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			totalOwed = (508606*(15x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12x*8000000).div(888)+93475000000;
+			totalOwed = (12*x*8000000).div(888)+93475000000;
 			
 		}
 
@@ -669,7 +669,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
         }
 
 		previousBlockTime = block.timestamp;
-		return totalIN;   
+		return totalOwed;   
 	}
 
 
@@ -706,20 +706,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
-                /*
-				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
-				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
-				{
-					if(Token2Per.div(2) > Token2Min)
-					{
-						Token2Per = Token2Per.div(2);
-					}
-				}else{
-					Token2Per = Token2Per.mult(3);
-				}
-				_reAdjustDifficulty();
-			}
-            */
+
 			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
 			    if(( balanceOf(address(this)) / Token2Per) <= (15000 + 15000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
@@ -732,8 +719,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				}
 				_reAdjustDifficulty();
 			}else if(give == 2){
-				reAdjustDifficulty();
+					_reAdjustDifficulty();
 			}
+
 		}
 
 		challengeNumber = blockhash(block.number - 1);
