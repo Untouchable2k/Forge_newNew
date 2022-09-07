@@ -388,7 +388,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = (6969 * 10**uint(decimals - 4));
+	    reward_amount = (6969 * 10**uint(decimals - 5));
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
@@ -426,7 +426,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		if(rewardEra < 15){
 			targetTime = ((6 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = ((6969 * 10**uint(decimals - 4))).div( 2**(rewardEra - 14   ) );
+			reward_amount = ((6969 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
 		}
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
@@ -689,7 +689,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2**rewardEra);
 				}
 			}else{
-				reward_amount = ((6969 * 10**uint(decimals - 4))).div( 2**(rewardEra - 14   ) );
+				reward_amount = ((6969 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
 			}
 		}
 
