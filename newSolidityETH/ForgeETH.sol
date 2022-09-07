@@ -328,6 +328,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint previousKingDiv;
     mapping(address => uint) public ownerAmt;
     mapping(address => address) public ownerOfDivide;
+    mapping(address => mapping(address => uint)) public amountPerOwner;
     uint give0x = 0;
     uint give = 1;
     // metadata
@@ -345,16 +346,33 @@ contract ArbiForge is Ownable, IERC20 {
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
-
-function donateKing(address token, uint amt, uint divz) internal {
-	previousKingDiv = whatDiv(token);
-	require(amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
-	IERC20(token).transferFrom(msg.sender, address(this), amt);
-	ownerAmt[token] = amt;
-	require( divz >= 2500  && divz <= 250000, "Must be within 2500 - 250000");
-	divide[token] = divz;
+function donateKing(address token, uint amt, uint divz) public {
+	donate(token, amt, msg.sender);
+	setDiv(divz, token);
 }
 
+
+function donate(address token, uint amt, uint divz, address forWho) public {
+	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt
+	IERC20(token).transferFrom(msg.sender, address(this), amt);
+
+}
+
+
+function setDiv(uint divz, address token) public{
+
+	require(amountPerOwner[msg.sender][token] > ownerAmt[token] || amountPerOwner[msg.sender][token] > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
+	if(ownerAmt[token] > IERC20(token).balanceOf(address(this)){
+		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - IERC20(token).balanceOf(address(this));
+	}else{
+		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - ownerAmt[token];
+	}
+	require( divz >= 2500  && divz <= 250000, "Must be within 2500 - 250000");
+	divide[token] = divz;
+	
+	}
+	
+	
 //Standard distribution is 6 months with 5000
 function whatDiv(address token) public returns(uint suc){
 	if(divide[token] == 0){
@@ -444,7 +462,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 	
 	///add a require statemnt
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % 100 == 0, "Only mint on 100ths mints");
+		require(epochCount % _blocks_per_adjustment == 0, "Only mint on 1028ths mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
