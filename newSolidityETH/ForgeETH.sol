@@ -329,8 +329,8 @@ contract ArbiForge is Ownable, IERC20 {
     mapping(address => uint) public ownerAmt;
     mapping(address => address) public ownerOfDivide;
     mapping(address => mapping(address => uint)) public amountPerOwner;
-    uint give0x = 0;
-    uint give = 1;
+    uint public give0x = 0;
+    uint public give = 1;
     // metadata
     string public name = "ArbiForge";
     string public constant symbol = "AFge";
@@ -367,7 +367,7 @@ function setDiv(uint divz, address token) public{
 	}else{
 		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - ownerAmt[token];
 	}
-	require( divz >= 2500  && divz <= 250000, "Must be within 2500 - 250000");
+	require( divz >= 1000  && divz <= 100000, "Must be within 1000 - 100000");
 	divide[token] = divz;
 	
 	}
@@ -592,7 +592,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(x+1)) == 0){
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					if( x % 5 == 0 && x != 0){
+					if( x % 3 == 0 && x != 0){
 						totalOwed = (TotalOwned * totalOd).divRound(10000000 * whatDiv(ExtraFunds[x]));
 					}else{
 						totalOwed = (TotalOwned * totalOd).div(10000000 * whatDiv(ExtraFunds[x]));
