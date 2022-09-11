@@ -690,14 +690,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 		//if max supply for the era will be exceeded next reward round then enter the new era before that happens
 		//59 is the final reward era, almost all tokens minted
-		if( tokensMinted.add(reward_amount) > maxSupplyForEra && rewardEra < 60)
+		if( tokensMinted.add(reward_amount) > maxSupplyForEra && rewardEra < 50)
 		{
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
-			if(rewardEra < 15){
+			if(rewardEra < 12){
 				targetTime = ((6 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
-					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2**rewardEra);
+					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2);
 				}
 			}else{
 				reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
