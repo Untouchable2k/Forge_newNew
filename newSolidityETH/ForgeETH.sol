@@ -484,10 +484,16 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
+		uint totalOwed = 0
+		
+		require(uint256(digest) < (miningTarget * (300 / (ratio / 10)), "Digest must be smaller than miningTarget");
+		
 		if(ratio < 3000){
+			require(uint256(digest) < (miningTarget * (300 / (ratio / 10)), "Digest must be smaller than miningTarget");
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			
 		}else {
+			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 			totalOwed = (12*x*8000000).div(888)+93475000000;
 			
 		}
@@ -793,15 +799,29 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
+	
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		
+		if(ratio < 3000){
+			return _MAXIMUM_TARGET.div((miningTarget * (300 / (ratio / 10));
+		}else {
+			return _MAXIMUM_TARGET.div(miningTarget);
+		}
 
-		return _MAXIMUM_TARGET.div(miningTarget);
+		return _MAXIMUM_TARGET.div(miningTarget / ratio / 3000);
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
-
-		return miningTarget;
-
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		
+		if(ratio < 3000) {
+			return (miningTarget * (300 / (ratio / 10);
+		}else {
+			return (miningTarget);
+		}
 	}
 
 
