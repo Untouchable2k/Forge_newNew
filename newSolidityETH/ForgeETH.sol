@@ -461,7 +461,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 	
 	///add a require statemnt
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % _BLOCKS_PER_READJUSTMENT == 0, "Only mint on 1028ths mints");
+		require(epochCount % _BLOCKS_PER_READJUSTMENT == 0, "Only mint on _BLOCKS_PER_READJUSTMENT epoch mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
