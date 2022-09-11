@@ -488,7 +488,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		
 		
 		if(ratio < 3000){
-			require(uint256(digest) < (miningTarget * (300 / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
+			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(30))), "Digest must be smaller than miningTarget");
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 			
 		}else {
@@ -649,7 +649,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		if(ratio < 3000){
-			require(uint256(digest) < (miningTarget * (300 / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
+			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(30))), "Digest must be smaller than miningTarget");
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 			
 		}else {
@@ -806,7 +806,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		
 		if(ratio < 3000){
-			return _MAXIMUM_TARGET.div(miningTarget * (300 / (ratio.divRound(10)));
+			return _MAXIMUM_TARGET.div((miningTarget * 100) / (ratio.divRound(30)));
 		}else {
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
@@ -820,7 +820,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint ratio = x * 100 / 888 ;
 		
 		if(ratio < 3000) {
-			return (miningTarget * (300 / (ratio.divRound(10)));
+			return ((miningTarget * 100) / (ratio.divRound(30)));
 		}else {
 			return (miningTarget);
 		}
@@ -828,9 +828,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 
 	function getMiningMinted() public view returns (uint) {
-
 		return tokensMinted;
-
 	}
 
 
