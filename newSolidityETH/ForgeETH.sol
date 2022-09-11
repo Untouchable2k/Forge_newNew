@@ -423,7 +423,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;if(rewardEra < 15)
-		if(rewardEra < 15){
+		if(rewardEra < 12){
 			targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
 			reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
