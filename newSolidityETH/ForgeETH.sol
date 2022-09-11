@@ -697,7 +697,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(rewardEra < 12){
 				targetTime = ((6 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
-					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2);
+					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / 2;
+					if(_BLOCKS_PER_READJUSTMENT < 1){
+						_BLOCKS_PER_READJUSTMENT = 1;
+					}
 				}
 			}else{
 				reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
