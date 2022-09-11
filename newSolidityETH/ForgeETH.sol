@@ -698,8 +698,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				targetTime = ((6 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
 					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / 2;
-					if(_BLOCKS_PER_READJUSTMENT < 1){
-						_BLOCKS_PER_READJUSTMENT = 1;
+					if(_BLOCKS_PER_READJUSTMENT < 8){
+						_BLOCKS_PER_READJUSTMENT = 8;
 					}
 				}
 			}else{
