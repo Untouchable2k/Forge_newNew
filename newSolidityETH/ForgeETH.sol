@@ -33,7 +33,7 @@
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work for 1 year!!!!
 //
 //Viva la Mineables!!! Send this contract any ERC20 complient token (Wrapped NFTs incoming!) and we will fairly to miners and Holders(
-//  Each Mint prints (1/10000) of any ERC20.
+// 
 //* 1 tokens in LP are burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
@@ -367,7 +367,7 @@ function setDiv(uint divz, address token) public{
 	}else{
 		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - ownerAmt[token];
 	}
-	require( divz >= 1000  && divz <= 100000, "Must be within 1000 - 100000");
+	require( divz >= 500  && divz <= 100000, "Must be within 1000 - 100000");
 	divide[token] = divz;
 	
 	}
