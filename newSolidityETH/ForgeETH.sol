@@ -433,20 +433,20 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 totalOwed;
 		
 		 if(ratio < 2000){
-			totalOwed = (508606*(x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
 			totalOwed = (400000000);
 		} 
 
 		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
-			
-            address payable to = payable(AddressLPReward);
-            to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
-            give0x = 1 * give;
+          		 address payable to = payable(AddressLPReward);
+           		 to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+           		 give0x = 1 * give;
 		}else{
 			give0x = 0;
 		}
+		
 		oldecount = epochCount; //actually epoch
 
 		lastrun = block.timestamp;
