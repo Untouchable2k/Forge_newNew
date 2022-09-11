@@ -281,7 +281,7 @@ interface IERC721 {
 //Main contract
 
 contract ArbiForge is Ownable, IERC20 {
-	uint public targetTime = 60 * 6;
+	uint public targetTime = 60 * 12;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -388,7 +388,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = (6969 * 10**uint(decimals - 5));
+	    reward_amount = 13933 * 10**uint(decimals - 5);
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
@@ -424,9 +424,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;if(rewardEra < 15)
 		if(rewardEra < 15){
-			targetTime = ((6 * 60) * 2**rewardEra);
+			targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = ((6969 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
+			reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
 		}
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
@@ -700,7 +700,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / (2**rewardEra);
 				}
 			}else{
-				reward_amount = ((6969 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
+				reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
 			}
 		}
 
