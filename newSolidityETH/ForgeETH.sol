@@ -32,9 +32,9 @@
 //
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work for 1 year!!!!
 //
-//Viva la Mineables!!! Send this contract any ERC20 complient token (Wrapped NFTs incoming!) and we will fairly to miners and Holders(
+// Viva la Mineables!!! Send this contract any ERC20 complient token and we will fairly distribute it to miners and Holders
 // 
-//* 1 tokens in LP are burned to create the LP pool.
+//* 1 tokens are burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
 
