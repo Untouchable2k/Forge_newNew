@@ -703,7 +703,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					}
 				}
 			}else{
-				reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 14   ) );
+				reward_amount = ((13933 * 10**uint(decimals - 5))).div( 2**(rewardEra - 11   ) );
 			}
 		}
 
