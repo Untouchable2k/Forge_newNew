@@ -722,7 +722,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			{
 
 			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
-			    if(( balanceOf(address(this)) / Token2Per) <= (250000 + 250000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+			    if(( balanceOf(address(this)) / Token2Per) <= (200000 + 200000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
