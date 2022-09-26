@@ -364,7 +364,7 @@ function setDiv(uint divz, address token, amt) public{
 	require( (amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
 	amountPerOwner[msg.sender][token]  = amtPerOwner[msg.sender][token] - amt;
 	ownerAmt = amt;
-	require( divz >= 5000  && divz <= 100000, "Must be within 1000 - 100000");
+	require( divz >= 2000  && divz <= 21000000, "Must be within 2000 - 21000000");
 	divide[token] = divz;
 	}
 	
