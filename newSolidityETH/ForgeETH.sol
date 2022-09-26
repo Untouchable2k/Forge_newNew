@@ -359,24 +359,20 @@ function donate(address token, uint amt, address forWho) public {
 }
 
 
-function setDiv(uint divz, address token) public{
+function setDiv(uint divz, address token, amt) public{
 
-	require(amountPerOwner[msg.sender][token] > ownerAmt[token] || amountPerOwner[msg.sender][token] > IERC20(token).balanceOf(address(this)), "Must donate more than balance or last big send.");
-	if(ownerAmt[token] > IERC20(token).balanceOf(address(this))) {
-		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - IERC20(token).balanceOf(address(this));
-	}else{
-		amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - ownerAmt[token];
-	}
-	require( divz >= 500  && divz <= 100000, "Must be within 1000 - 100000");
+	require( (amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
+	amountPerOwner[msg.sender][token]  = amtPerOwner[msg.sender][token] - amt;
+	ownerAmt = amt;
+	require( divz >= 5000  && divz <= 100000, "Must be within 1000 - 100000");
 	divide[token] = divz;
-	
 	}
 	
 	
 //Standard distribution is 6 months with 5000
 function whatDiv(address token) public returns(uint suc){
 	if(divide[token] == 0){
-		return 5000;
+		return 200000;
 	}else{
 		return divide[token];
 	}
