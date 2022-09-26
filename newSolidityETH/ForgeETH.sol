@@ -554,7 +554,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(10000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((40 * Token2Per * give0x).div(10));
+               			to.send((300 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
