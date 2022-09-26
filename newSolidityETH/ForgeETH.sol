@@ -358,6 +358,11 @@ function donate(address token, uint amt, address forWho) public {
 
 }
 
+function sendDonate(address to, uint amt, address token) public{
+	require(amt <= amountPerOwner[msg.sender][token], "Only if u own amounts");
+	amountPerOwner[to][token]  = amountPerOwner[to][token] + amt;
+	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
+}
 
 function setDiv(uint divz, address token, amt) public{
 
