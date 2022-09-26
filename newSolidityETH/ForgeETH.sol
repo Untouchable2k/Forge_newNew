@@ -601,8 +601,13 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
+			    if(ownerAmt[token] > totalOwed )
+			    	ownerAmt[token] = ownerAmt[token] - totalOwed;
+			    }else{
+			       	ownerAmt[token] = 0;
+			    }
 			}
-        }
+        	}
         	
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalOd );
 
@@ -680,10 +685,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			    if(ownerAmt[token] > totalOwed )
 			    	ownerAmt[token] = ownerAmt[token] - totalOwed;
 			    }else{
-			       	ownerAmt[token] = ownerAmt[token] - ownerAmt[token];
+			       	ownerAmt[token] = 0;
 			    }
-            }
-        }
+           		}
+       		}
 
 		previousBlockTime = block.timestamp;
 		return totalOwed;   
