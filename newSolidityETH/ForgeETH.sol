@@ -348,7 +348,7 @@ contract ArbiForge is Ownable, IERC20 {
 
 function donateKing(address token, uint amt, uint divz) public {
 	donate(token, amt, msg.sender);
-	setDiv(divz, token);
+	setDiv(divz, token, amt);
 }
 
 
@@ -364,10 +364,10 @@ function sendDonate(address to, uint amt, address token) public{
 	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
 }
 
-function setDiv(uint divz, address token, amt) public{
+function setDiv(uint divz, address token, uint amt) public{
 
 	require( (amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
-	amountPerOwner[msg.sender][token]  = amtPerOwner[msg.sender][token] - amt;
+	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
 	ownerAmt[token] = amt;
 	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
 	divide[token] = divz;
@@ -485,11 +485,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0
+		uint totalOwed = 0;
 		
 		if(ratio < 100){
 			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
-		else{
+		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 		}
 		if(ratio < 3000){
@@ -601,13 +601,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-			    if(ownerAmt[token] > totalOwed )
-			    	ownerAmt[token] = ownerAmt[token] - totalOwed;
+			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
+			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
 			    }else{
-			       	ownerAmt[token] = 0;
+			       	ownerAmt[ExtraFunds[x]] = 0;
 			    }
 			}
-        	}
+		}
+        	
         	
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalOd );
 
@@ -658,7 +659,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint totalOwed = 0;
 		if(ratio < 100){
 			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
-		else{
+		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 		}
 		if(ratio < 3000){
@@ -669,27 +670,27 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		}
 
 		uint256 TotalOwned;
-		for(uint x=0; x<xy; x++)
+		for(uint z=0; z<xy; z++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
 			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, epoch 16 = 4 extra mints w/ a divRound for the 4th mint(allows small balance token minting aka NFTs)
 			if(epochCount % (2**(x+1)) == 0){
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					if( x % 3 == 0 && x != 0 && totalOd > 17600000 ){
+					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 ){
 						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
 					}else{
 						totalOwed = (TotalOwned * totalOwed).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
 				    }
-			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-			    if(ownerAmt[token] > totalOwed )
-			    	ownerAmt[token] = ownerAmt[token] - totalOwed;
-			    }else{
-			       	ownerAmt[token] = 0;
-			    }
+			    	IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			   		if(ownerAmt[ExtraFunds[x]] > totalOwed ){
+			    		ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
+			    	}else{
+			       		ownerAmt[ExtraFunds[x]] = 0;
+			    	}
            		}
        		}
-
+		}
 		previousBlockTime = block.timestamp;
 		return totalOwed;   
 	}
