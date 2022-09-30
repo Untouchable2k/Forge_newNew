@@ -281,7 +281,7 @@ interface IERC721 {
 //Main contract
 
 contract ArbiForge is Ownable, IERC20 {
-	uint public targetTime = 60 * 6;
+	uint public targetTime = 60 * 12;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -425,9 +425,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
-			targetTime = ((6 * 60) * 2**rewardEra);
+			targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = ( 10179 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+			reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
 		}
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
@@ -706,7 +706,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 			if(rewardEra < 8){
-				targetTime = ((6 * 60) * 2**rewardEra);
+				targetTime = ((12 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
 					if(_BLOCKS_PER_READJUSTMENT <= 16){
 						_BLOCKS_PER_READJUSTMENT = 8;
@@ -715,7 +715,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 					}
 				}
 			}else{
-				reward_amount = ( 10179 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+				reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
 			}
 		}
 
@@ -734,7 +734,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			{
 
 			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); 
-			    if(( balanceOf(address(this)) / Token2Per) <= (200000 + 200000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+			    if(( balanceOf(address(this)) / Token2Per) <= (100000 + 100000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
