@@ -281,7 +281,7 @@ interface IERC721 {
 //Main contract
 
 contract ArbiForge is Ownable, IERC20 {
-	uint public targetTime = 60 * 12;
+	uint public targetTime = 60 * 6;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -425,7 +425,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
-			targetTime = ((12 * 60) * 2**rewardEra);
+			targetTime = ((6 * 60) * 2**rewardEra);
 		}else{
 			reward_amount = ( 10179 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
 		}
@@ -701,16 +701,17 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 
 		//if max supply for the era will be exceeded next reward round then enter the new era before that happens
 		//59 is the final reward era, almost all tokens minted
-		if( tokensMinted.add(reward_amount) > maxSupplyForEra && rewardEra < 50)
+		if( tokensMinted.add(reward_amount) > maxSupplyForEra && rewardEra < 15)
 		{
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 			if(rewardEra < 8){
 				targetTime = ((6 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
-					_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / 2;
-					if(_BLOCKS_PER_READJUSTMENT < 8){
+					if(_BLOCKS_PER_READJUSTMENT <= 16){
 						_BLOCKS_PER_READJUSTMENT = 8;
+					}else{
+						_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT / 2;
 					}
 				}
 			}else{
@@ -732,7 +733,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
 
-			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); //(IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8));
+			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); 
 			    if(( balanceOf(address(this)) / Token2Per) <= (200000 + 200000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
@@ -789,14 +790,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 		
 	}
 
-
-		//42 m coins total
-		// = 
-		//21 million proof of work
-		// + 
-		//10.5 million proof of burn
-		// +
-		//10.5 million rewards for Liquidity Providers
 
 
 	//help debug mining software
