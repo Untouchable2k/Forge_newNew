@@ -286,7 +286,6 @@ contract ArbiForge is Ownable, IERC20 {
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
-    address public AddressZeroXBTC;
 //Events
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
@@ -383,7 +382,7 @@ function whatDiv(address token) public returns(uint suc){
 	}
 }
 
-function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
+function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
         uint x = 21000000000000000000000000; 
         // Only init once
         assert(!initeds);
@@ -403,7 +402,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 	
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
-        AddressZeroXBTC = _ZeroXBTCAddress;
 	
         oldecount = epochCount;
 	
@@ -578,7 +576,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
@@ -648,7 +645,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddre
 			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
 			for(uint y=xy+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
