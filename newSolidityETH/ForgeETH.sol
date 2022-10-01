@@ -363,13 +363,21 @@ function sendDonate(address to, uint amt, address token) public{
 	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
 }
 
+function setDivAgain(uint divz, address token, uint amt) public{
+
+	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
+	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	divide[token] = divz;
+	}
+
 function setDiv(uint divz, address token, uint amt) public{
 
-	require( (amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
+	require((amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
 	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
 	ownerAmt[token] = amt;
 	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
 	divide[token] = divz;
+	ownerOfDivide[token] = msg.sender;
 	}
 	
 	
