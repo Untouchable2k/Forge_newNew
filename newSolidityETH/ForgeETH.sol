@@ -351,6 +351,11 @@ function donateKing(address token, uint amt, uint divz) public {
 }
 
 
+function donateAndAdd(address token, uint amt, uint divz) public {
+	donate(token, amt, msg.sender);
+	addDiv(token, amt);
+}
+
 function donate(address token, uint amt, address forWho) public {
 	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt;
 	IERC20(token).transferFrom(msg.sender, address(this), amt);
@@ -358,10 +363,20 @@ function donate(address token, uint amt, address forWho) public {
 }
 
 function sendDonate(address to, uint amt, address token) public{
+
 	require(amt <= amountPerOwner[msg.sender][token], "Only if u own amounts");
 	amountPerOwner[to][token]  = amountPerOwner[to][token] + amt;
 	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
-}
+	}
+
+
+function addDiv(address token, uint amt) public{
+
+	require(amt <= amountPerOwner[msg.sender][token], "Must have enough tokens to add to King");
+	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
+	ownerAmt[token] = ownerAmt[token] + amt;
+	}
+
 
 function setDivAgain(uint divz, address token, uint amt) public{
 
@@ -369,6 +384,7 @@ function setDivAgain(uint divz, address token, uint amt) public{
 	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
 	divide[token] = divz;
 	}
+
 
 function setDiv(uint divz, address token, uint amt) public{
 
@@ -389,6 +405,8 @@ function whatDiv(address token) public returns(uint suc){
 		return divide[token];
 	}
 }
+
+
 
 function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
         uint x = 21000000000000000000000000; 
