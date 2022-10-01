@@ -388,11 +388,11 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = 10179 * 10**uint(decimals - 3);
+	    reward_amount = 20358 * 10**uint(decimals - 3);
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
-    	miningTarget = _MAXIMUM_TARGET.div(1); //5000000 = 31gh/s @ 7 min for FPGA mining
+    	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
         // Init contract variables and mint
@@ -810,25 +810,28 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	function getMiningDifficulty() public view returns (uint) {
 	
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
+		uint ratio = x * 1000 / 888 ;
 		
-		if(ratio < 100){
-			return _MAXIMUM_TARGET.div((miningTarget * 100) / (ratio.divRound(10)));
-		}else {
+		if(ratio < 1000 && ratio > 1){
+			return _MAXIMUM_TARGET.div(miningTarget * 10 / ratio.divRound(100));
+		}else if(ratio < 1) {
+			return _MAXIMUM_TARGET.div(miningTarget * 10 / 1);
+		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
 
-		return _MAXIMUM_TARGET.div(miningTarget / ratio / 3000);
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
+		uint ratio = x * 1000 / 888 ;
 		
-		if(ratio < 100) {
-			return ((miningTarget * 100) / (ratio.divRound(10)));
-		}else {
+		if(ratio < 1000){
+			return (miningTarget * 10 / ratio.divRound(100));
+		}else if (ratio < 1) {
+			return (miningTarget * 10 / 1);
+		}else{
 			return (miningTarget);
 		}
 	}
@@ -845,8 +848,11 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		//once we get half way thru the coins, only get 25 per block
 		//every reward era, the reward amount halves.
 
-		return (100 * 10**uint(decimals) ).div( 2**rewardEra ) ;
-
+		if(rewardEra < 8){
+			return ( 20358 * 10**uint(decimals - 3));
+		}else{
+			return ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+		}
 		}
 
 
