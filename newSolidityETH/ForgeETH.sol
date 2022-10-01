@@ -485,10 +485,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
+		if(ratio < 100 && ratio >= 1){
+			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+		}else if (ratio < 1){
+			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
 		}else{
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
+			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
@@ -653,11 +655,15 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
-		if(ratio < 100){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget");
+
+		if(ratio < 100 && ratio >= 1){
+			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+		}else if (ratio < 1){
+			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
 		}else{
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
+			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
+
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
@@ -810,12 +816,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	function getMiningDifficulty() public view returns (uint) {
 	
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 1000 / 888 ;
+		uint ratio = x * 100 / 888 ;
 		
-		if(ratio < 1000 && ratio > 1){
-			return _MAXIMUM_TARGET.div(miningTarget * 10 / ratio.divRound(100));
+		if(ratio < 100 && ratio >= 1){
+			return _MAXIMUM_TARGET.div((miningTarget * 10) / ratio.divRound(10));
 		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 10 / 1);
+			return _MAXIMUM_TARGET.div(miningTarget * 10);
 		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
@@ -825,12 +831,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 	function getMiningTarget() public view returns (uint) {
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 1000 / 888 ;
+		uint ratio = x * 100 / 888 ;
 		
-		if(ratio < 1000){
-			return (miningTarget * 10 / ratio.divRound(100));
+		if( ratio < 100 && ratio >= 1){
+			return ((miningTarget * 10) / ratio.divRound(10));
 		}else if (ratio < 1) {
-			return (miningTarget * 10 / 1);
+			return (miningTarget * 10);
 		}else{
 			return (miningTarget);
 		}
