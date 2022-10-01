@@ -516,8 +516,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+		if(ratio < 300 && ratio >= 1){
+			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(30))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
 			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
 		}else{
@@ -688,8 +688,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+		if(ratio < 300 && ratio >= 1){
+			require(uint256(digest) < ((miningTarget * 10) / (ratio.divRound(30))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
 			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
 		}else{
@@ -850,10 +850,10 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 10) / ratio.divRound(10));
+		if(ratio < 300 && ratio >= 1){
+			return _MAXIMUM_TARGET.div((miningTarget * 100) / ratio.divRound(30));
 		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 10);
+			return _MAXIMUM_TARGET.div(miningTarget * 100);
 		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
@@ -865,8 +865,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 10) / ratio.divRound(10));
+		if( ratio < 300 && ratio >= 1){
+			return ((miningTarget * 10) / ratio.divRound(30));
 		}else if (ratio < 1) {
 			return (miningTarget * 10);
 		}else{
