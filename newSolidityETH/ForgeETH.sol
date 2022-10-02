@@ -519,7 +519,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 100 && ratio >= 1){
 			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
 		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
@@ -691,7 +691,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 100 && ratio >= 1){
 			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 10), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
 		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
@@ -711,7 +711,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			if(epochCount % (2**(x+1)) == 0){
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 ){
+					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 && give == 2 ){
 						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
 					}else{
 						totalOwed = (TotalOwned * totalOwed).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
