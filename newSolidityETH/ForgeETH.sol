@@ -491,7 +491,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	
 	
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require((epochCount % _BLOCKS_PER_READJUSTMENT == 0 && give == 1) || (epochCount % ( _BLOCKS_PER_READJUSTMENT / 8) && give == 2), "Only mint on _BLOCKS_PER_READJUSTMENT if fast mining or _Blocks_PER_READJUSTMUNT/8 when slow mints");
+		require(epochCount % ( _BLOCKS_PER_READJUSTMENT / 8) && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
@@ -624,7 +624,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			if(epochCount % (2**(x+1)) == 0){
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					if( x % 3 == 0 && x != 0 && totalOd > 17600000 ){
+					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
 						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
 						
 					}else{
