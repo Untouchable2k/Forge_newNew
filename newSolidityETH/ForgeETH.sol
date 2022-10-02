@@ -302,7 +302,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
 
-    uint public _BLOCKS_PER_READJUSTMENT = 1024; // should be 1024
+    uint public _BLOCKS_PER_READJUSTMENT = 512; // should be 1024
 
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
@@ -491,7 +491,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	
 	///add a require statemnt
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % _BLOCKS_PER_READJUSTMENT == 0, "Only mint on _BLOCKS_PER_READJUSTMENT epoch mints");
+		require(epochCount % _BLOCKS_PER_READJUSTMENT == 0 && give == 1 || epochCount % _BLOCKS_PER_READJUSTMENT, "Only mint on _BLOCKS_PER_READJUSTMENT epoch mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
