@@ -402,10 +402,121 @@ function setDiv(uint divz, address token, uint amt) public{
 	}
 	
 	
+
+
+
+
+
+
+
+
+
+
+
+
+function donateKingNFT(address token, uint id, uint divz) public {
+	donateNFT(token, id, msg.sender);
+	setDivNFT(divz, token, (whatAmtNFT(token) + 1));
+}
+
+
+function donateAndAddNFT(address token, uint id, uint divz) public {
+	donateNFT(token, id, msg.sender);
+	addDivNFT(token, amt);
+}
+
+function donateNFT(address token, uint id, address forWho) public {
+	ERC721(token).transferFrom(msg.sender, address(this), id, amt);
+	amountPerOwnerNFT[forWho][token] = amountPerOwnerNFT[forWho][token] + 1;
+
+}
+
+function sendDonateNFT(address to, uint amt, address token) public{
+
+	require(amt <= amountPerOwnerNFT[msg.sender][token], "Only if u own amounts");
+	amountPerOwnerNFT[to][token]  = amountPerOwnerNFT[to][token] + amt;
+	amountPerOwnerNFT[msg.sender][token] = amountPerOwnerNFT[msg.sender][token] - amt;
+	}
+
+
+function addDivNFT(address token, uint amt) public{
+
+	require(amt <= amountPerOwnerNFT[msg.sender][token], "Must have enough tokens to add to King");
+	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
+	ownerAmtNFT[token] = ownerAmtNFT[token] + amt;
+	}
+
+
+function setDivAgainNFT(uint divz, address token, uint amt) public{
+
+	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
+	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	divideNFT[token] = divz;
+	}
+
+function setDivOwnerNFT(address token, address newOwnerOfDivideNFT)public {
+
+	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
+	ownerOfDivideNFT[token] = newOwnerOfDivideNFT;
+
+}
+function setDivNFT(uint divz, address token, uint amt) public{
+
+	require((amt > ownerAmtNFT[token] || amt > ERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
+	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
+	ownerAmtNFT[token] = amt;
+	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	divideNFT[token] = divz;
+	ownerOfDivideNFT[token] = msg.sender;
+	}
+
+function whatAmtNFT(address token) public returns (uint amtzz23){
+
+	uint amtz = ownerAmtNFT[token];
+	uint amtz2 = ERC721(token).balanceOf(address(this));
+	if(amtz > amtz2){
+		return amtz2;
+	}else{
+		return amtz;
+	}
+}
+
+function whatAmt(address token) public returns (uint amtzz){
+
+	uint amtz = ownerAmt[token];
+	uint amtz2 = ERC20(token).balanceOf(address(this));
+	if(amtz > amtz2){
+		return amtz2;
+	}else{
+		return amtz;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Standard distribution is 6 months with 5000
 function whatDiv(address token) public returns(uint suc){
 	if(divide[token] == 0){
-		return 200000;
+		return 200
+		000;
 	}else{
 		return divide[token];
 	}
