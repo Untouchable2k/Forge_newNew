@@ -456,7 +456,7 @@ function addDivNFT(address token, uint amt) public{
 function setDivAgainNFT(uint divz, address token, uint amt) public{
 
 	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
-	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
 	divideNFT[token] = divz;
 	}
 
@@ -471,7 +471,7 @@ function setDivNFT(uint divz, address token, uint amt) public{
 	require((amt > ownerAmtNFT[token] || amt > ERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
 	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
 	ownerAmtNFT[token] = amt;
-	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
 	divideNFT[token] = divz;
 	ownerOfDivideNFT[token] = msg.sender;
 	}
@@ -616,7 +616,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	}
 	
 	function mintNFTGO(token) public returns (uint num) {
-		return _BLOCKS_PER_READJUSTMENT * whatDivNFT(token) / 8;
+		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
 	}
 	
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
