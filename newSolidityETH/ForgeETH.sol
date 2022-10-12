@@ -612,6 +612,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
+		if(ownerAmtNFT[token]>0){
+			ownerAmtNFT[token] = ownerAmtNFT[token] - 1;
+		}
 		return true;
 	}
 
