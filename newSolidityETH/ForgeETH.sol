@@ -327,10 +327,13 @@ contract ArbiForge is Ownable, IERC20 {
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
     mapping(address => uint) public divide;
-    uint previousKingDiv;
     mapping(address => uint) public ownerAmt;
     mapping(address => address) public ownerOfDivide;
     mapping(address => mapping(address => uint)) public amountPerOwner;
+    mapping(address => uint) public divideNFT;
+    mapping(address => uint) public ownerAmtNFT;
+    mapping(address => address) public ownerOfDivideNFT;
+    mapping(address => mapping(address => uint)) public amountPerOwnerNFT;
     uint public give0x = 0;
     uint public give = 1;
     // metadata
