@@ -521,12 +521,21 @@ function whatAmt(address token) public returns (uint amtzz){
 //Standard distribution is 6 months with 5000
 function whatDiv(address token) public returns(uint suc){
 	if(divide[token] == 0){
-		return 200
-		000;
+		return 200000;
 	}else{
 		return divide[token];
 	}
 }
+
+//Standard distribution is 1 NFT per readjustment
+function whatDivNFT(address token) public returns(uint suc){
+	if(divideNFT[token] == 0){
+		return 1;
+	}else{
+		return divideNFT[token];
+	}
+}
+
 
 
 
@@ -606,9 +615,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		return true;
 	}
 	
+	function mintNFTGO(token) public returns (uint num) {
+		return _BLOCKS_PER_READJUSTMENT * whatDivNFT(token) / 8;
+	}
 	
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % ( _BLOCKS_PER_READJUSTMENT / 8) && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 when slow mints");
+		require(epochCount % (mintNFTGO(token)) && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
@@ -748,7 +760,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).div(100000000 * 
+						(ExtraFunds[x]));
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
