@@ -552,7 +552,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = 20358 * 10**uint(decimals - 3);
+	    reward_amount = 25 * 10**uint(decimals);
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
@@ -590,7 +590,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			
 				targetTime = ((20) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+			reward_amount = ( 25 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
@@ -602,7 +602,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			totalOwed = (2200000000);
 		} 
 
-		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+		if( address(this).balance > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
           		 address payable to = payable(AddressLPReward);
            		 to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
@@ -616,6 +616,14 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		lastrun = block.timestamp;
 	}
 
+	function helper()public view returns (uint num){
+ 		return (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT )/ 4);
+
+	}
+	function helper2()public view returns (uint num){
+ 		return address(this).balance;
+
+	}
 
 	//comability function
 	function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
@@ -951,7 +959,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 					}
 				}
 			}else{
-				reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+				reward_amount = ( 25 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 			}
 		}
 
@@ -969,8 +977,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
 
-			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); 
-			    if(( balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //10,000 / (71.6 * 4 * 2) = 280 days
+			    multipler = address(this).balance / (1 * 10 ** 18); 
+			    if(( address(this).balance / Token2Per) <= (10000 + 10000*(multipler))) //10,000 / (71.6 * 4 * 2) = 280 days
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
@@ -1088,9 +1096,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		//every reward era, the reward amount halves.
 
 		if(rewardEra < 8){
-			return ( 20358 * 10**uint(decimals - 3));
+			return ( 25 * 10**uint(decimals));
 		}else{
-			return ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+			return ( 25 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
 		}
 
