@@ -426,13 +426,13 @@ function donateKingNFT(address token, uint id, uint divz) public {
 }
 
 
-function donateAndAddNFT(address token, uint id, uint divz) public {
+function donateAndAddNFT(address token, uint id, uint amt) public {
 	donateNFT(token, id, msg.sender);
 	addDivNFT(token, amt);
 }
 
 function donateNFT(address token, uint id, address forWho) public {
-	ERC721(token).transferFrom(msg.sender, address(this), id, amt);
+	IERC721(token).transferFrom(msg.sender, address(this), id);
 	amountPerOwnerNFT[forWho][token] = amountPerOwnerNFT[forWho][token] + 1;
 
 }
@@ -468,7 +468,7 @@ function setDivOwnerNFT(address token, address newOwnerOfDivideNFT)public {
 }
 function setDivNFT(uint divz, address token, uint amt) public{
 
-	require((amt > ownerAmtNFT[token] || amt > ERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
+	require((amt > ownerAmtNFT[token] || amt > IERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
 	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
 	ownerAmtNFT[token] = amt;
 	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
@@ -479,7 +479,7 @@ function setDivNFT(uint divz, address token, uint amt) public{
 function whatAmtNFT(address token) public returns (uint amtzz23){
 
 	uint amtz = ownerAmtNFT[token];
-	uint amtz2 = ERC721(token).balanceOf(address(this));
+	uint amtz2 = IERC721(token).balanceOf(address(this));
 	if(amtz > amtz2){
 		return amtz2;
 	}else{
@@ -490,7 +490,7 @@ function whatAmtNFT(address token) public returns (uint amtzz23){
 function whatAmt(address token) public returns (uint amtzz){
 
 	uint amtz = ownerAmt[token];
-	uint amtz2 = ERC20(token).balanceOf(address(this));
+	uint amtz2 = IERC20(token).balanceOf(address(this));
 	if(amtz > amtz2){
 		return amtz2;
 	}else{
@@ -615,17 +615,17 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		return true;
 	}
 	
-	function mintNFTGO(token) public returns (uint num) {
+	function mintNFTGO(address token) public returns (uint num) {
 		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
 	}
 	
 	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % (mintNFTGO(token)) && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
+		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).approve(msg.sender, nftNumber);
 		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
-		if(ownerAmtNFT[token]>0){
-			ownerAmtNFT[token] = ownerAmtNFT[token] - 1;
+		if(ownerAmtNFT[nftaddy]>=1){
+			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
 		}
 		return true;
 	}
@@ -760,8 +760,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * 
-						(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
