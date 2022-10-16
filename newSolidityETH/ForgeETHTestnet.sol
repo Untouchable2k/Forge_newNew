@@ -284,7 +284,7 @@ interface IERC721 {
 //Main contract
 
 contract ArbiForge is Ownable, IERC20 {
-	uint public targetTime = 60;
+	uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -525,7 +525,7 @@ function changeDivFREE(address token, uint newDiv)public{
 }
 
 //Standard distribution is 6 months with 5000
-function whatDiv(address token) public returns(uint suc){
+function whatDiv(address token) public view returns(uint suc){
 	if(divide[token] == 0){
 		return 100000;
 	}else{
@@ -535,7 +535,7 @@ function whatDiv(address token) public returns(uint suc){
 
 
 //Standard distribution is 1 NFT per readjustment
-function whatDivNFT(address token) public returns(uint suc){
+function whatDivNFT(address token) public view returns(uint suc){
 	if(divideNFT[token] == 0){
 		return 1;
 	}else{
@@ -587,7 +587,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
-			targetTime = ((12 * 60) * 2**rewardEra);
+			
+				targetTime = ((20) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
 			reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
 		}
@@ -598,7 +599,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		 if(ratio < 2000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
-			totalOwed = (3000000000);
+			totalOwed = (2200000000);
 		} 
 
 		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
@@ -683,7 +684,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((300 * Token2Per * give0x).div(10));
+               			to.send((220 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -726,7 +727,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((300 * Token2Per * give0x).div(10));
+               			to.send((220 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -941,7 +942,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 			if(rewardEra < 8){
-				targetTime = ((12 * 60) * 2**rewardEra);
+				targetTime = ((20) * 2**rewardEra); // //targetTime = ((12 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
 					if(_BLOCKS_PER_READJUSTMENT <= 16){
 						_BLOCKS_PER_READJUSTMENT = 8;
