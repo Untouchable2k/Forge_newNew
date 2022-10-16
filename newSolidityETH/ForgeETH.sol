@@ -387,7 +387,9 @@ function addDiv(address token, uint amt) public{
 function setDivAgain(uint divz, address token, uint amt) public{
 
 	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
-	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
+	// divz = 10,000 = 36 days
+	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
 	divide[token] = divz;
 	}
 
@@ -397,12 +399,15 @@ function setDivOwner(address token, address newOwnerOfDivide)public {
 	ownerOfDivide[token] = newOwnerOfDivide;
 
 }
+
 function setDiv(uint divz, address token, uint amt) public{
 
 	require((amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
 	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
 	ownerAmt[token] = amt;
-	require( divz >= 2000  && divz <= 5000000, "Must be within 2000 - 5000000");
+	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
+	// divz = 10,000 = 36 days
+	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
 	divide[token] = divz;
 	ownerOfDivide[token] = msg.sender;
 	}
@@ -731,6 +736,67 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	}
 
 
+	function mintTokensArrayToFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
+		uint256 totalOd = mintToFREE(nonce, challenge_digest, MintTo[0]);
+		require(totalOd > 0, "mint issue");
+
+		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
+		uint xy=0;
+		for(xy = 0; xy< ExtraFunds.length; xy++)
+		{
+			if(epochCount % (2**(xy+1)) != 0){
+				break;
+			}
+			for(uint y=xy+1; y< ExtraFunds.length; y++){
+				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
+			}
+		}
+		
+		uint256 totalOwed = 0;
+		uint256 TotalOwned = 0;
+		for(uint x=0; x<xy; x++)
+		{
+			//epoch count must evenly dividable by 2^n in order to get extra mints. 
+			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, ..., epoch 32 = 5 extra mints w/ a divRound for the 5th mint(allows small balance token minting aka NFTs)
+			if(epochCount % (2**(x+1)) == 0){
+				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
+				if(TotalOwned != 0){
+					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
+						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						
+					}else{
+						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+					}
+				}
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
+			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
+			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
+			    }else{
+			       	ownerAmt[ExtraFunds[x]] = 0;
+			    }
+			}
+		}
+        	
+        	
+		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalOd );
+
+		return totalOd;
+
+    }
+
+	function mintTokensSameAddressFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
+		address[] memory dd = new address[](ExtraFunds.length + 1); 
+
+		for(uint x=0; x< (ExtraFunds.length + 1); x++)
+		{
+			dd[x] = MintTo;
+		}
+		
+		mintTokensArrayToFREE(nonce, challenge_digest, ExtraFunds, dd);
+
+		return true;
+	}
+
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
@@ -901,7 +967,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			{
 
 			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); 
-			    if(( balanceOf(address(this)) / Token2Per) <= (100000 + 100000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
+			    if(( balanceOf(address(this)) / Token2Per) <= (200000 + 200000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
@@ -982,7 +1048,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if(ratio < 200 && ratio >= 1){
+		if(ratio < 100 && ratio >= 1){
 			return _MAXIMUM_TARGET.div((miningTarget * 100) / ratio.divRound(10));
 		}else if(ratio < 1) {
 			return _MAXIMUM_TARGET.div(miningTarget * 100);
@@ -997,7 +1063,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if( ratio < 200 && ratio >= 1){
+		if( ratio < 100 && ratio >= 1){
 			return ((miningTarget * 100) / ratio.divRound(10));
 		}else if (ratio < 1) {
 			return (miningTarget * 100);
