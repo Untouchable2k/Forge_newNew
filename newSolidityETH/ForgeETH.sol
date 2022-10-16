@@ -983,7 +983,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if(ratio < 100 && ratio >= 1){
+		if(ratio < 200 && ratio >= 1){
 			return _MAXIMUM_TARGET.div((miningTarget * 100) / ratio.divRound(10));
 		}else if(ratio < 1) {
 			return _MAXIMUM_TARGET.div(miningTarget * 100);
@@ -998,7 +998,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		
-		if( ratio < 100 && ratio >= 1){
+		if( ratio < 200 && ratio >= 1){
 			return ((miningTarget * 100) / ratio.divRound(10));
 		}else if (ratio < 1) {
 			return (miningTarget * 100);
