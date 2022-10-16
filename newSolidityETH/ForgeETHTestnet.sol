@@ -281,9 +281,101 @@ interface IERC721 {
     function isApprovedForAll(address owner, address operator) external view returns (bool);
 }
 
+//Recieve NFTs
+interface IERC721Receiver {
+    /**
+     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+     * by `operator` from `from`, this function is called.
+     *
+     * It must return its Solidity selector to confirm the token transfer.
+     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+     *
+     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
+     */
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4);
+}
 //Main contract
 
+
+interface IERC165 {
+    /**
+     * @dev Returns true if this contract implements the interface defined by
+     * `interfaceId`. See the corresponding
+     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
+     * to learn more about how these ids are created.
+     *
+     * This function call must use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+interface IERC1155Receiver is IERC165 {
+    /**
+     * @dev Handles the receipt of a single ERC1155 token type. This function is
+     * called at the end of a `safeTransferFrom` after the balance has been updated.
+     *
+     * NOTE: To accept the transfer, this must return
+     * `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+     * (i.e. 0xf23a6e61, or its own function selector).
+     *
+     * @param operator The address which initiated the transfer (i.e. msg.sender)
+     * @param from The address which previously owned the token
+     * @param id The ID of the token being transferred
+     * @param value The amount of tokens being transferred
+     * @param data Additional data with no specified format
+     * @return `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))` if transfer is allowed
+     */
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bytes4);
+
+    /**
+     * @dev Handles the receipt of a multiple ERC1155 token types. This function
+     * is called at the end of a `safeBatchTransferFrom` after the balances have
+     * been updated.
+     *
+     * NOTE: To accept the transfer(s), this must return
+     * `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
+     * (i.e. 0xbc197c81, or its own function selector).
+     *
+     * @param operator The address which initiated the batch transfer (i.e. msg.sender)
+     * @param from The address which previously owned the token
+     * @param ids An array containing ids of each token being transferred (order and length must match values array)
+     * @param values An array containing amounts of each token being transferred (order and length must match ids array)
+     * @param data Additional data with no specified format
+     * @return `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` if transfer is allowed
+     */
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external returns (bytes4);
+}
+
+
 contract ArbiForge is Ownable, IERC20 {
+
+    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
+	function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+		return IERC1155Receiver.onERC1155Received.selector;
+		}	
+	function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+		return IERC1155Receiver.onERC1155Received.selector;
+		}
+     
 	uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
@@ -345,7 +437,7 @@ contract ArbiForge is Ownable, IERC20 {
     bool initeds = false;
     
     // mint 1 token to setup LPs
-	    constructor() public {
+	    constructor() {
     balances[msg.sender] = 1000000000000000000;
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
@@ -599,7 +691,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		 if(ratio < 2000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
-			totalOwed = (2200000000);
+			totalOwed = (6000000000);
 		} 
 
 		if( address(this).balance > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
@@ -692,7 +784,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((220 * Token2Per * give0x).div(10));
+               			to.send((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -735,7 +827,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((220 * Token2Per * give0x).div(10));
+               			to.send((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -978,7 +1070,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			{
 
 			    multipler = address(this).balance / (1 * 10 ** 18); 
-			    if(( address(this).balance / Token2Per) <= (10000 + 10000*(multipler))) //10,000 / (71.6 * 4 * 2) = 280 days
+			    if(( address(this).balance / Token2Per) <= (100000 + 100000*(multipler))) //100,000 = 200 days of ETH stored
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
