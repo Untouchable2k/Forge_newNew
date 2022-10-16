@@ -675,7 +675,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (12*x*5086060).div(888)+5034750000;
 		}
 
 
@@ -717,7 +717,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (12*x*5086060).div(888)+5034750000;
 			
 		}
 
@@ -908,7 +908,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (12*x*5086060).div(888)+5034750000;
 			
 		}
 
