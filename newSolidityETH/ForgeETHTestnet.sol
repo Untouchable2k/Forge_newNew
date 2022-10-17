@@ -497,7 +497,7 @@ contract ArbiForge is Ownable, IERC20 {
 
 			IERC721(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, "");
 	}
-	uint public targetTime = 20;
+	uint public targetTime = 12 * 60;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -844,7 +844,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		return true;
 	}
 	
-	function mintNFTGO(address token) public returns (uint num) {
+	function mintNFTGO(address token) public view returns (uint num) {
 		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
 	}
 	
@@ -887,13 +887,14 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint totalOwed = 0;
 		
 		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+			require(uint256(digest) < ((miningTarget * 2) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 2), "Digest must be smaller than 1/10th miningTarget");
 		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
-
+		
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
@@ -1120,9 +1121,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint totalOwed = 0;
 
 		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+			require(uint256(digest) < ((miningTarget * 2) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 2), "Digest must be smaller than 1/10th miningTarget");
 		}else{
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
@@ -1186,7 +1187,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		}
 
 		//set the next minted supply at which the era will change
-		// total supply of MINED tokens is 21000000000000000000000000  because of 16 decimal places
+		// total supply of MINED tokens is 21000000000000000000000000  because of 18 decimal places
 
 		epochCount = epochCount.add(1);
 
@@ -1200,7 +1201,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			{
 
 			    multipler = address(this).balance / (1 * 10 ** 18); 
-			    if(( address(this).balance / Token2Per) <= (100000 + 100000*(multipler))) //100,000 = 200 days of ETH stored
+			    if(( address(this).balance / Token2Per) <= (100000 + 100000*(multipler))) //100,000 = 180 days of ETH stored
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
@@ -1282,9 +1283,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		
 		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 100) / ratio.divRound(10));
+			return _MAXIMUM_TARGET.div((miningTarget * 2) / ratio.divRound(50));
 		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 100);
+			return _MAXIMUM_TARGET.div(miningTarget * 2);
 		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
@@ -1297,9 +1298,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		
 		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 100) / ratio.divRound(10));
+			return ((miningTarget * 2) / ratio.divRound(50));
 		}else if (ratio < 1) {
-			return (miningTarget * 100);
+			return (miningTarget * 2);
 		}else{
 			return (miningTarget);
 		}
