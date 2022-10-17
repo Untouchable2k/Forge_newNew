@@ -314,6 +314,118 @@ interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
 
+interface IERC1155 is IERC165 {
+    /**
+     * @dev Emitted when `value` tokens of token type `id` are transferred from `from` to `to` by `operator`.
+     */
+    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+
+    /**
+     * @dev Equivalent to multiple {TransferSingle} events, where `operator`, `from` and `to` are the same for all
+     * transfers.
+     */
+    event TransferBatch(
+        address indexed operator,
+        address indexed from,
+        address indexed to,
+        uint256[] ids,
+        uint256[] values
+    );
+
+    /**
+     * @dev Emitted when `account` grants or revokes permission to `operator` to transfer their tokens, according to
+     * `approved`.
+     */
+    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
+
+    /**
+     * @dev Emitted when the URI for token type `id` changes to `value`, if it is a non-programmatic URI.
+     *
+     * If an {URI} event was emitted for `id`, the standard
+     * https://eips.ethereum.org/EIPS/eip-1155#metadata-extensions[guarantees] that `value` will equal the value
+     * returned by {IERC1155MetadataURI-uri}.
+     */
+    event URI(string value, uint256 indexed id);
+
+    /**
+     * @dev Returns the amount of tokens of token type `id` owned by `account`.
+     *
+     * Requirements:
+     *
+     * - `account` cannot be the zero address.
+     */
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {balanceOf}.
+     *
+     * Requirements:
+     *
+     * - `accounts` and `ids` must have the same length.
+     */
+    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids)
+        external
+        view
+        returns (uint256[] memory);
+
+    /**
+     * @dev Grants or revokes permission to `operator` to transfer the caller's tokens, according to `approved`,
+     *
+     * Emits an {ApprovalForAll} event.
+     *
+     * Requirements:
+     *
+     * - `operator` cannot be the caller.
+     */
+    function setApprovalForAll(address operator, bool approved) external;
+
+    /**
+     * @dev Returns true if `operator` is approved to transfer ``account``'s tokens.
+     *
+     * See {setApprovalForAll}.
+     */
+    function isApprovedForAll(address account, address operator) external view returns (bool);
+
+    /**
+     * @dev Transfers `amount` tokens of token type `id` from `from` to `to`.
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If the caller is not `from`, it must have been approved to spend ``from``'s tokens via {setApprovalForAll}.
+     * - `from` must have a balance of tokens of type `id` of at least `amount`.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes calldata data
+    ) external;
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {safeTransferFrom}.
+     *
+     * Emits a {TransferBatch} event.
+     *
+     * Requirements:
+     *
+     * - `ids` and `amounts` must have the same length.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
+     * acceptance magic value.
+     */
+    function safeBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] calldata ids,
+        uint256[] calldata amounts,
+        bytes calldata data
+    ) external;
+}
 interface IERC1155Receiver is IERC165 {
     /**
      * @dev Handles the receipt of a single ERC1155 token type. This function is
@@ -375,7 +487,16 @@ contract ArbiForge is Ownable, IERC20 {
 	function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
 		return IERC1155Receiver.onERC1155Received.selector;
 		}
-     
+     function testNFT(address NFT, uint nftNumber) public returns (uint){
+
+			IERC1155(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
+
+	 }
+
+	 function testNFT2(address NFT, uint nftNumber) public returns (uint){
+
+			IERC721(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, "");
+	}
 	uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
@@ -727,11 +848,20 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
 	}
 	
-	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
 		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
-		IERC721(nftaddy).approve(msg.sender, nftNumber);
-		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
+		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
+		if(ownerAmtNFT[nftaddy]>=1){
+			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
+		}
+		return true;
+	}
+
+	function mintNFT1155(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
+		mintTo(nonce, challenge_digest, msg.sender);
+		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
 		if(ownerAmtNFT[nftaddy]>=1){
 			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
 		}
