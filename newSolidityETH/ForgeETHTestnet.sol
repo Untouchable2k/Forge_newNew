@@ -1201,7 +1201,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			{
 
 			    multipler = address(this).balance / (1 * 10 ** 18); 
-			    if(( address(this).balance / Token2Per) <= (250000 + 250000*(multipler))) //100,000 = ~180 days stored per ETH
+			    if(( address(this).balance / Token2Per) <= (2000000 + 2000000*(multipler))) //100,000 = ~180 days stored per ETH
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
