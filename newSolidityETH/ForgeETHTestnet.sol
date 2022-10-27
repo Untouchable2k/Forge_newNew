@@ -601,7 +601,7 @@ function setDivAgain(uint divz, address token, uint amt) public{
 	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
 	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
 	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
+	require( divz >= 10000  && divz <= 2000000, "Must be within 10,000 - 2,000,000");
 	divide[token] = divz;
 	}
 
