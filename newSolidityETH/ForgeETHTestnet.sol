@@ -497,7 +497,7 @@ contract ArbiForge is Ownable, IERC20 {
 
 			IERC721(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, "");
 	}
-	uint public targetTime = 12 * 60;
+	uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -517,8 +517,8 @@ contract ArbiForge is Ownable, IERC20 {
     uint _totalSupply = 21000000000000000000000000;
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
-
-    uint public _BLOCKS_PER_READJUSTMENT = 1028; // should be 512 or 1028
+	uint public latestreAdjustStarted = block.timestamp;
+    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 512 or 1028
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
@@ -737,10 +737,10 @@ function changeDivFREE(address token, uint newDiv)public{
 	divide[token] = newDiv;
 }
 
-//Standard distribution is 6 months with 5000
+//Standard distribution is 6-12 months with 50000
 function whatDiv(address token) public view returns(uint suc){
 	if(divide[token] == 0){
-		return 100000;
+		return 50000;
 	}else{
 		return divide[token];
 	}
@@ -795,13 +795,16 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	function ARewardSender() public {
 		//runs every _BLOCKS_PER_READJUSTMENT / 4
 
+		multipler = address(this).balance / (1 * 10 ** 18); 	
+		Token2Per =address(this).balance / (300000 + 300000*(multipler)); //aimed to give about 200 days of reserves
+
 		uint256 runs = block.timestamp - lastrun;
 
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
 			
-				targetTime = ((12 * 60) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
+				targetTime = ((20) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
 			reward_amount = ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
@@ -907,7 +910,6 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
-
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
@@ -1173,7 +1175,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			rewardEra = rewardEra + 1;
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 			if(rewardEra < 8){
-				targetTime = ((12 * 60) * 2**rewardEra); // //targetTime = ((12 * 60) * 2**rewardEra);
+				targetTime = ((20) * 2**rewardEra); // //targetTime = ((12 * 60) * 2**rewardEra);
 				if(rewardEra < 6){
 					if(_BLOCKS_PER_READJUSTMENT <= 16){
 						_BLOCKS_PER_READJUSTMENT = 8;
@@ -1197,24 +1199,15 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			ARewardSender();
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 
-			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
+			uint256 blktimestamp = block.timestamp;
+			uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
+			latestreAdjustStarted = block.timestamp;
+
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || epochCount % _BLOCKS_PER_READJUSTMENT == 0  )
 			{
-
-			    multipler = address(this).balance / (1 * 10 ** 18); 
-			    if(( address(this).balance / Token2Per) <= (2000000 + 2000000*(multipler))) //100,000 = ~180 days stored per ETH
-				{
-					if(Token2Per.div(2) > Token2Min)
-					{
-						Token2Per = Token2Per.div(2);
-					}
-				}else{
-					Token2Per = Token2Per.mult(3);
-				}
 				_reAdjustDifficulty();
-			}else if(give == 2){
-					_reAdjustDifficulty();
 			}
-
 		}
 
 		challengeNumber = blockhash(block.number - 1);
@@ -1223,6 +1216,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 
 	function _reAdjustDifficulty() internal {
+
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
