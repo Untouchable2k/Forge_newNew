@@ -1201,7 +1201,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 			{
 				_reAdjustDifficulty();
-			}else if((epochCount - oldEpoch) % _BLOCKS_PER_READJUSTMENT == 0){
+			}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
 				_reAdjustDifficulty();
 			}
 		}
@@ -1211,7 +1211,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
  }
 
 
-	function _reAdjustDifficulty()) internal {
+	function _reAdjustDifficulty() internal {
 
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
