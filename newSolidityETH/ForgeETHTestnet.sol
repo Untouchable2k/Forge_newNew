@@ -619,7 +619,7 @@ function setDiv(uint divz, address token, uint amt) public{
 	ownerAmt[token] = amt;
 	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
 	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
+	require( divz >= 10000  && divz <= 2000000, "Must be within 10,0000 - 2,000,000");
 	divide[token] = divz;
 	ownerOfDivide[token] = msg.sender;
 	}
@@ -793,7 +793,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	///
 
 	function ARewardSender() public {
-		//runs every _BLOCKS_PER_READJUSTMENT / 4
+		//runs every _BLOCKS_PER_READJUSTMENT / 8
 
 		multipler = address(this).balance / (1 * 10 ** 18); 	
 		Token2Per =address(this).balance / (300000 + 300000*(multipler)); //aimed to give about 200 days of reserves
@@ -832,14 +832,6 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		lastrun = block.timestamp;
 	}
 
-	function helper()public view returns (uint num){
- 		return (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT )/ 4);
-
-	}
-	function helper2()public view returns (uint num){
- 		return address(this).balance;
-
-	}
 
 	//comability function
 	function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
@@ -1206,7 +1198,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || epochCount % _BLOCKS_PER_READJUSTMENT == 0  )
 			{
-				_reAdjustDifficulty();
+				_reAdjustDifficulty(_BLOCKS_PER_READJUSTMENT / 8);
+			}else if(epochCount % _BLOCKS_PER_READJUSTMENT == 0){
+				_reAdjustDifficulty(_BLOCKS_PER_READJUSTMENT);
 			}
 		}
 
@@ -1215,12 +1209,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
  }
 
 
-	function _reAdjustDifficulty() internal {
+	function _reAdjustDifficulty(uint _BLOCKS_PER_READJUSTMENT2) internal {
 
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
-		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT; 
+		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT2; 
 
 		//if there were less eth blocks passed in time than expected
 		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
