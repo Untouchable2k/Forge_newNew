@@ -1196,7 +1196,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
 			latestreAdjustStarted = block.timestamp;
 
-			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || epochCount % _BLOCKS_PER_READJUSTMENT == 0  )
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 			{
 				_reAdjustDifficulty(_BLOCKS_PER_READJUSTMENT / 8);
 			}else if(epochCount % _BLOCKS_PER_READJUSTMENT == 0){
