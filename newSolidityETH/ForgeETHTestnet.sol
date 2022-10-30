@@ -546,6 +546,7 @@ contract ArbiForge is Ownable, IERC20 {
     mapping(address => uint) public ownerAmtNFT;
     mapping(address => address) public ownerOfDivideNFT;
     mapping(address => mapping(address => uint)) public amountPerOwnerNFT;
+	uint public epochOld = 0;
     uint public give0x = 0;
     uint public give = 1;
     // metadata
@@ -769,6 +770,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
+		epochOld = 0;
     	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
@@ -1198,9 +1200,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 			{
-				_reAdjustDifficulty(_BLOCKS_PER_READJUSTMENT / 8);
-			}else if(epochCount % _BLOCKS_PER_READJUSTMENT == 0){
-				_reAdjustDifficulty(_BLOCKS_PER_READJUSTMENT);
+				_reAdjustDifficulty();
+			}else if((epochCount - oldEpoch) % _BLOCKS_PER_READJUSTMENT == 0){
+				_reAdjustDifficulty();
 			}
 		}
 
@@ -1209,12 +1211,13 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
  }
 
 
-	function _reAdjustDifficulty(uint _BLOCKS_PER_READJUSTMENT2) internal {
+	function _reAdjustDifficulty()) internal {
 
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
-
-		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT2; 
+		uint epochTotal = epochCount - epochOld;
+		uint adjusDiffTargetTime = targetTime *  epochTotal; 
+		epochOld = epochCount;
 
 		//if there were less eth blocks passed in time than expected
 		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
