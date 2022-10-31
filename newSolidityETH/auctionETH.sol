@@ -235,7 +235,7 @@ contract ForgeMining{
         daysPerEra = 155; secondsPerDay = 120; //start out at 12 days
         totalBurnt = 0;
         totalEmitted = 0;
-        nextDayTime = block.timestamp + secondsPerDay;
+        nextDayTime = block.timestamp + secondsPerDay * 10000;
         mapEra_Emission[currentEra] = emission; 
         mapEraDay_EmissionRemaining[currentEra][currentDay] = emission; 
                                                               
@@ -246,6 +246,7 @@ contract ForgeMining{
 
 
         function zSetUP1(address token) public onlyOwner22 {
+        nextDayTime = block.timestamp + secondsPerDay;
         AddressForgeToken = token;
         owner22 = address(0);
         lastMinted =  0;
