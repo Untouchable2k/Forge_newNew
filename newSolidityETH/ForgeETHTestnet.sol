@@ -840,7 +840,19 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		mintTo(nonce, challenge_digest, msg.sender);
 		return true;
 	}
-	
+	function blockstoNFTMint(address token) public view returns (uint blocksToGo){
+		uint x = epochCount % (mintNFTGO(token));
+		return x;
+
+	}
+	function willmintNFT()public view returns (bool doesNFTMint){
+			if(give == 2){
+				return true;
+			}else{
+				return false;
+			}
+	}
+
 	function mintNFTGO(address token) public view returns (uint num) {
 		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
 	}
@@ -1201,9 +1213,11 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 			{
 				_reAdjustDifficulty();
-			}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
-				_reAdjustDifficulty();
 			}
+		}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
+			_reAdjustDifficulty();
+			ARewardSender();
+
 		}
 
 		challengeNumber = blockhash(block.number - 1);
