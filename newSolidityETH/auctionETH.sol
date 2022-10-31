@@ -589,9 +589,9 @@ contract ForgeMining{
             mapEraDay_UnitsRemaining[_era][_day] = mapEraDay_UnitsRemaining[_era][_day].sub(memberUnits);  // Decrement Member Units
             mapEraDay_EmissionRemaining[_era][_day] = mapEraDay_EmissionRemaining[_era][_day].sub(value);  // Decrement emission
             totalEmitted += value*16;            
-            emit Withdrawal(msg.sender, _member, _era, _day, value*4, mapEraDay_EmissionRemaining[_era][_day]);
+            emit Withdrawal(msg.sender, _member, _era, _day, value*16, mapEraDay_EmissionRemaining[_era][_day]);
             // ERC20 transfer function
-            IERC20(AddressForgeToken).transfer(_member, value*4); // 8,192 tokens a auction aka almost half the supply an era!
+            IERC20(AddressForgeToken).transfer(_member, value*16); // 8,192 tokens a auction aka almost half the supply an era!
         }
         
         return value*16;
@@ -633,7 +633,7 @@ contract ForgeMining{
             nextDayTime = _now + secondsPerDay;                                             // Set next Day time
          
             emission = getDayEmission();  
-            totalAuctioned = totalAuctioned + emission*4;
+            totalAuctioned = totalAuctioned + emission*16;
             // Check daily Dmission
             mapEraDay_EmissionRemaining[currentEra][currentDay] = emission;                 // Map emission to Day
             uint _era = currentEra; uint _day = currentDay-1;
@@ -664,7 +664,7 @@ contract ForgeMining{
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
         uint balance = (totalEmitted + IERC20(AddressForgeToken).balanceOf(address(this))) - totalAuctioned;                                     // Find remaining balance
-        if (balance > emission*4) {                                                           // Balance is sufficient
+        if (balance > emission*16) {                                                           // Balance is sufficient
             return emission;                                                                // Return emission
         } else {                                                                            // Balance has dropped low
             return balance/4;                                                                 // Return full balance
