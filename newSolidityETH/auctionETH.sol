@@ -232,7 +232,7 @@ contract ForgeMining{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 600; secondsPerDay = 120; 
+        daysPerEra = 155; secondsPerDay = 120; //start out at 7 days
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay;
@@ -253,12 +253,12 @@ contract ForgeMining{
         lastMinted = ForgeMiningToken.getMiningMinted();
 
     }
-
+    //Emission * 8 * 4.12 = 66,519 * 157 = 10.5 million
     function changeAuctionAmt() internal {
         uint tokensMinted = ForgeMiningToken.getMiningMinted();
       
         uint diff = tokensMinted - lastMinted;
-        uint expected = emission.mult(8*106).div(100);
+        uint expected = emission.mult(8*412).div(100);
         if(diff != 0){
             if( diff < expected )
             {
