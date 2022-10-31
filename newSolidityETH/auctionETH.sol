@@ -535,7 +535,7 @@ contract ForgeMining{
             } 
         }
     
-        return stricttotal*4;
+        return stricttotal*16;
     }
 
     
@@ -570,11 +570,11 @@ contract ForgeMining{
             mapEraDay_MemberUnits[_era][_day][_member] = 0;                                 // Set to 0 since it will be withdrawn
             mapEraDay_UnitsRemaining[_era][_day] = mapEraDay_UnitsRemaining[_era][_day].sub(memberUnits);  // Decrement Member Units
             mapEraDay_EmissionRemaining[_era][_day] = mapEraDay_EmissionRemaining[_era][_day].sub(value);  // Decrement emission
-            totalEmitted += value*4;
+            totalEmitted += value*16;
             //We emit all in one transfer.   
         }
         
-        return value*4;
+        return value*16;
         
     }
     
@@ -588,13 +588,13 @@ contract ForgeMining{
             mapEraDay_MemberUnits[_era][_day][_member] = 0;                                 // Set to 0 since it will be withdrawn
             mapEraDay_UnitsRemaining[_era][_day] = mapEraDay_UnitsRemaining[_era][_day].sub(memberUnits);  // Decrement Member Units
             mapEraDay_EmissionRemaining[_era][_day] = mapEraDay_EmissionRemaining[_era][_day].sub(value);  // Decrement emission
-            totalEmitted += value*4;            
+            totalEmitted += value*16;            
             emit Withdrawal(msg.sender, _member, _era, _day, value*4, mapEraDay_EmissionRemaining[_era][_day]);
             // ERC20 transfer function
             IERC20(AddressForgeToken).transfer(_member, value*4); // 8,192 tokens a auction aka almost half the supply an era!
         }
         
-        return value*4;
+        return value*16;
         
     }
     
