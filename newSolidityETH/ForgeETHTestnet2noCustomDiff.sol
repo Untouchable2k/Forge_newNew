@@ -539,13 +539,7 @@ contract ArbiForge is Ownable, IERC20 {
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
     mapping(address => uint) public divide;
-    mapping(address => uint) public ownerAmt;
-    mapping(address => address) public ownerOfDivide;
-    mapping(address => mapping(address => uint)) public amountPerOwner;
-    mapping(address => uint) public divideNFT;
-    mapping(address => uint) public ownerAmtNFT;
-    mapping(address => address) public ownerOfDivideNFT;
-    mapping(address => mapping(address => uint)) public amountPerOwnerNFT;
+    uint slowBlocks;
 	uint public epochOld = 0;
     uint public give0x = 0;
     uint public give = 1;
@@ -553,7 +547,7 @@ contract ArbiForge is Ownable, IERC20 {
     string public name = "ArbiForge";
     string public constant symbol = "AFge";
     uint8 public constant decimals = 18;
-
+	
     uint256 lastrun = block.timestamp;
     uint public latestDifficultyPeriodStarted = block.number;
     bool initeds = false;
@@ -586,7 +580,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
-	
+	slow
         oldecount = epochCount;
 	
 		setOwner(address(0));
@@ -647,19 +641,19 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	}
 	
 
-	function mintNFTGO(address token) public view returns (uint num) {
+	function mintNFTGO() public view returns (uint num) {
 		return slowBlocks % _Blocks_PER_READJUSTMUNT/8;
 	}
 	
 	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 when slow mints");
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
 		return true;
 	}
 
 	function mintNFT1155(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 when slow mints");
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
 		return true;
@@ -688,6 +682,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		}else if (ratio < 1){
 			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/10th miningTarget");
 		}else{
+			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
 		
@@ -912,6 +907,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		}else if (ratio < 1){
 			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/10th miningTarget");
 		}else{
+			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
 
