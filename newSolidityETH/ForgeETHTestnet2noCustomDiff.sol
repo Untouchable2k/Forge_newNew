@@ -564,201 +564,6 @@ contract ArbiForge is Ownable, IERC20 {
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
-function donateKing(address token, uint amt, uint divz) public {
-	donate(token, amt, msg.sender);
-	setDiv(divz, token, amt);
-}
-
-
-function donateAndAdd(address token, uint amt, uint divz) public {
-	donate(token, amt, msg.sender);
-	addDiv(token, amt);
-}
-
-function donate(address token, uint amt, address forWho) public {
-	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt;
-	IERC20(token).transferFrom(msg.sender, address(this), amt);
-
-}
-
-function sendDonate(address to, uint amt, address token) public{
-
-	require(amt <= amountPerOwner[msg.sender][token], "Only if u own amounts");
-	amountPerOwner[to][token]  = amountPerOwner[to][token] + amt;
-	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
-	}
-
-
-function addDiv(address token, uint amt) public{
-
-	require(amt <= amountPerOwner[msg.sender][token], "Must have enough tokens to add to King");
-	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
-	ownerAmt[token] = ownerAmt[token] + amt;
-	}
-
-
-function setDivAgain(uint divz, address token, uint amt) public{
-
-	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
-	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
-	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 10,000 - 2,000,000");
-	divide[token] = divz;
-	}
-
-function setDivOwner(address token, address newOwnerOfDivide)public {
-
-	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
-	ownerOfDivide[token] = newOwnerOfDivide;
-
-}
-
-function setDiv(uint divz, address token, uint amt) public{
-
-	require((amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
-	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
-	ownerAmt[token] = amt;
-	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
-	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 10,0000 - 2,000,000");
-	divide[token] = divz;
-	ownerOfDivide[token] = msg.sender;
-	}
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-function donateKingNFT(address token, uint id, uint divz) public {
-	donateNFT(token, id, msg.sender);
-	setDivNFT(divz, token, (whatAmtNFT(token) + 1));
-}
-
-
-function donateAndAddNFT(address token, uint id, uint amt) public {
-	donateNFT(token, id, msg.sender);
-	addDivNFT(token, amt);
-}
-
-function donateNFT(address token, uint id, address forWho) public {
-	IERC721(token).transferFrom(msg.sender, address(this), id);
-	amountPerOwnerNFT[forWho][token] = amountPerOwnerNFT[forWho][token] + 1;
-
-}
-
-function sendDonateNFT(address to, uint amt, address token) public{
-
-	require(amt <= amountPerOwnerNFT[msg.sender][token], "Only if u own amounts");
-	amountPerOwnerNFT[to][token]  = amountPerOwnerNFT[to][token] + amt;
-	amountPerOwnerNFT[msg.sender][token] = amountPerOwnerNFT[msg.sender][token] - amt;
-	}
-
-
-function addDivNFT(address token, uint amt) public{
-
-	require(amt <= amountPerOwnerNFT[msg.sender][token], "Must have enough tokens to add to King");
-	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
-	ownerAmtNFT[token] = ownerAmtNFT[token] + amt;
-	}
-
-
-function setDivAgainNFT(uint divz, address token, uint amt) public{
-
-	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
-	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
-	divideNFT[token] = divz;
-	}
-
-function setDivOwnerNFT(address token, address newOwnerOfDivideNFT)public {
-
-	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
-	ownerOfDivideNFT[token] = newOwnerOfDivideNFT;
-
-}
-function setDivNFT(uint divz, address token, uint amt) public{
-
-	require((amt > ownerAmtNFT[token] || amt > IERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
-	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
-	ownerAmtNFT[token] = amt;
-	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
-	divideNFT[token] = divz;
-	ownerOfDivideNFT[token] = msg.sender;
-	}
-
-function whatAmtNFT(address token) public view returns (uint amtzz23){
-
-	uint amtz = ownerAmtNFT[token];
-	uint amtz2 = IERC721(token).balanceOf(address(this));
-	if(amtz > amtz2){
-		return amtz2;
-	}else{
-		return amtz;
-	}
-}
-
-function whatAmt(address token) public view returns (uint amtzz){
-
-	uint amtz = ownerAmt[token];
-	uint amtz2 = IERC20(token).balanceOf(address(this));
-	if(amtz > amtz2){
-		return amtz2;
-	}else{
-		return amtz;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function changeDivFREE(address token, uint newDiv)public{
-	divide[token] = newDiv;
-}
-
-//Standard distribution is 6-12 months with 50000
-function whatDiv(address token) public view returns(uint suc){
-	if(divide[token] == 0){
-		return 50000;
-	}else{
-		return divide[token];
-	}
-}
-
-
-//Standard distribution is 1 NFT per readjustment
-function whatDivNFT(address token) public view returns(uint suc){
-	if(divideNFT[token] == 0){
-		return 1;
-	}else{
-		return divideNFT[token];
-	}
-}
-
-
-
 
 function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
         uint x = 21000000000000000000000000; 
@@ -840,40 +645,23 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		mintTo(nonce, challenge_digest, msg.sender);
 		return true;
 	}
-	function blockstoNFTMint(address token) public view returns (uint blocksToGo){
-		uint x = epochCount % (mintNFTGO(token));
-		return x;
-
-	}
-	function willmintNFT()public view returns (bool doesNFTMint){
-			if(give == 2){
-				return true;
-			}else{
-				return false;
-			}
-	}
+	
 
 	function mintNFTGO(address token) public view returns (uint num) {
-		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
+		return slowBlocks % _Blocks_PER_READJUSTMUNT/8;
 	}
 	
 	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
+		require(slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
-		if(ownerAmtNFT[nftaddy]>=1){
-			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
-		}
 		return true;
 	}
 
 	function mintNFT1155(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
+		require(slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 when slow mints");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
-		if(ownerAmtNFT[nftaddy]>=1){
-			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
-		}
 		return true;
 	}
 
@@ -1004,18 +792,14 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    }else{
-			       	ownerAmt[ExtraFunds[x]] = 0;
-			    }
+
 			}
 		}
         	
@@ -1065,18 +849,13 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = (TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    }else{
-			       	ownerAmt[ExtraFunds[x]] = 0;
-			    }
 			}
 		}
         	
@@ -1152,9 +931,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 && give == 2 ){
-						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
+						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 20000);
 					}else{
-						totalOwed = (TotalOwned * totalOwed).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
+						totalOwed = (TotalOwned * totalOwed).div(100000000 * 20000 );
 				    }
 			    	IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			   		if(ownerAmt[ExtraFunds[x]] > totalOwed ){
