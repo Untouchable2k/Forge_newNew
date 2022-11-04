@@ -538,9 +538,8 @@ contract ArbiForge is Ownable, IERC20 {
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    mapping(address => uint) public divide;
     uint slowBlocks;
-	uint public epochOld = 0;
+    uint public epochOld = 0;
     uint public give0x = 0;
     uint public give = 1;
     // metadata
@@ -605,7 +604,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
 			
-				targetTime = ((20) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
+			targetTime = ((20) * 2**rewardEra);  //targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
 			reward_amount = ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
@@ -680,7 +679,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 100 && ratio >= 1){
 			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
 		}else{
 			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
@@ -905,7 +904,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 100 && ratio >= 1){
 			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
 		}else{
 			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
@@ -932,11 +931,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 						totalOwed = (TotalOwned * totalOwed).div(100000000 * 20000 );
 				    }
 			    	IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-			   		if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    		ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    	}else{
-			       		ownerAmt[ExtraFunds[x]] = 0;
-			    	}
+
            		}
        		}
 		}
