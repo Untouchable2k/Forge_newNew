@@ -502,6 +502,7 @@ contract ArbiForge is Ownable, IERC20 {
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
+    address public AddressLPReward2;
 //Events
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
@@ -558,7 +559,7 @@ contract ArbiForge is Ownable, IERC20 {
 	}
 
 
-function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
+function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) public onlyOwner{
         uint x = 21000000000000000000000000; 
         // Only init once
         assert(!initeds);
@@ -579,6 +580,7 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
+        AddressLPReward2 = payable(LPGuild3);
 	slow
         oldecount = epochCount;
 	
@@ -621,7 +623,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if( address(this).balance > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
           		 address payable to = payable(AddressLPReward);
+			 address payable to2 = payable(AddressLPReward2);
            		 to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+           		 to2.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
            		 give0x = 1 * give;
 		}else{
 			give0x = 0;
@@ -694,7 +698,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
@@ -736,8 +741,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
-				
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
+		
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
