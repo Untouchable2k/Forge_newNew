@@ -598,7 +598,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//runs every _BLOCKS_PER_READJUSTMENT / 8
 
 		multipler = address(this).balance / (1 * 10 ** 18); 	
-		Token2Per =address(this).balance / (300000 + 300000*(multipler)); //aimed to give about 200 days of reserves for first era, doubles every era
+		Token2Per = (2** rewardEra) * address(this).balance / (300000 + 300000*(multipler)); //aimed to give about 200 days of reserves for first era, doubles every era
 
 		uint256 runs = block.timestamp - lastrun;
 
@@ -792,10 +792,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 20000);
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * 20000);
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
@@ -849,10 +849,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 20000);
+						totalOwed = ( (2** rewardEra) *TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * 20000);
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
@@ -932,9 +932,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 && give == 2 ){
-						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 20000);
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOwed).divRound(100000000 * 20000);
 					}else{
-						totalOwed = (TotalOwned * totalOwed).div(100000000 * 20000 );
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOwed).div(100000000 * 20000 );
 				    }
 			    	IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 
