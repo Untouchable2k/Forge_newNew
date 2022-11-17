@@ -564,12 +564,15 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
         // Only init once
         assert(!initeds);
         initeds = true;
-	    previousBlockTime = block.timestamp;
-	    reward_amount = 20 * 10**uint(decimals);
+	previousBlockTime = block.timestamp;
+	reward_amount = 20 * 10**uint(decimals);
     	rewardEra = 0;
-	    tokensMinted = 0;
-	    epochCount = 0;
-		epochOld = 0;
+	tokensMinted = 0;
+	epochCount = 0;
+	epochOld = 0;
+	multipler = address(this).balance / (1 * 10 ** 18); 	
+	Token2Per = (2** rewardEra) * address(this).balance / (600000 + 600000*(multipler)); //aimed to give about 400 days of reserves
+
     	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
