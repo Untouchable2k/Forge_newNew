@@ -644,8 +644,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 	
 
+	function mintNFTGOBlocksUntil() public view returns (uint num) {
+		return _Blocks_PER_READJUSTMUNT/8 - slowBlocks % (_Blocks_PER_READJUSTMUNT/8 );
+	}
+	
 	function mintNFTGO() public view returns (uint num) {
-		return slowBlocks % _Blocks_PER_READJUSTMUNT/8;
+		return slowBlocks % (_Blocks_PER_READJUSTMUNT/8);
 	}
 	
 	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
