@@ -584,7 +584,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
         AddressLPReward2 = payable(LPGuild3);
-	slow
+	    slowBlocks = 0;
         oldecount = epochCount;
 	
 		setOwner(address(0));
@@ -627,8 +627,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
           		 address payable to = payable(AddressLPReward);
 			 address payable to2 = payable(AddressLPReward2);
-           		 to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
-           		 to2.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+           		 to.transfer(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+           		 to2.transfer(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
            		 give0x = 1 * give;
 		}else{
 			give0x = 0;
@@ -648,28 +648,28 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	
 
 	function mintNFTGOBlocksUntil() public view returns (uint num) {
-		return _Blocks_PER_READJUSTMUNT/8 - slowBlocks % (_Blocks_PER_READJUSTMUNT/8 );
+		return _BLOCKS_PER_READJUSTMENT/8 - slowBlocks % (_BLOCKS_PER_READJUSTMENT/8 );
 	}
 	
 	function mintNFTGO() public view returns (uint num) {
-		return slowBlocks % (_Blocks_PER_READJUSTMUNT/8);
+		return slowBlocks % (_BLOCKS_PER_READJUSTMENT/8);
 	}
 	
 	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(mintNFTGO() == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0");
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
 		return true;
 	}
 
 	function mintNFT1155(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(mintNFTGO() == 0, "Only mint on slowBlocks % _Blocks_PER_READJUSTMUNT/8 == 0");
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
 		return true;
 	}
 
-	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uint256 owed) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -713,11 +713,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
-             			to.send((totalOwed * Token2Per * give0x).div(100000000));
+             			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((600 * Token2Per * give0x).div(10));
+               			to.transfer((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -757,11 +757,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
-             			to.send((totalOwed * Token2Per * give0x).div(100000000));
+             			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((600 * Token2Per * give0x).div(10));
+               			to.transfer((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
