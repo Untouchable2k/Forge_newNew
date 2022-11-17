@@ -598,7 +598,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//runs every _BLOCKS_PER_READJUSTMENT / 8
 
 		multipler = address(this).balance / (1 * 10 ** 18); 	
-		Token2Per = (2** rewardEra) * address(this).balance / (300000 + 300000*(multipler)); //aimed to give about 200 days of reserves for first era, doubles every era
+		Token2Per = (2** rewardEra) * address(this).balance / (600000 + 600000*(multipler)); //aimed to give about 400 days of reserves
 
 		uint256 runs = block.timestamp - lastrun;
 
@@ -620,7 +620,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			totalOwed = (6000000000);
 		} 
 
-		if( address(this).balance > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+		if( address(this).balance > (200 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
           		 address payable to = payable(AddressLPReward);
 			 address payable to2 = payable(AddressLPReward2);
