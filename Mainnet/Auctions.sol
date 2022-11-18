@@ -3,12 +3,12 @@
 //
 //  The Ethereum collected by Forge Auctions go to miners and liquidity providers!
 //
-//  10,500,000 Forge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
+//  10,500,000 ArbiForge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
 //  Distributes 32,768 ArbiForge tokens every 10-14 days for the first era(~5 years) and halves the amount of ArbiForge every era after.
 //
-// By using the burn0xForMember function
-//       Ethereum Token is taken from the user and used to recieve your share of the 32,768 tokens auctioned every ~12 days
+// By simply sending this contract Ethereum, you will be auto entered into the current auction!
+// *You must control the wallet sending the Ethereum to retrieve your ArbiForge
 
 
 pragma solidity ^0.8.11;
