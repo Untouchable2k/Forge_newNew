@@ -8,7 +8,7 @@
 //  Distributes 32,768 ArbiForge tokens every 10-14 days for the first era(~5 years) and halves the amount of ArbiForge every era after.
 //
 // By using the burn0xForMember function
-//       Ethereum Token is taken from the user and used to recieve your share of the 8,192 tokens auctioned every ~4 days
+//       Ethereum Token is taken from the user and used to recieve your share of the 32,768 tokens auctioned every ~4 days
 
 
 pragma solidity ^0.8.11;
