@@ -257,7 +257,7 @@ contract ForgeMining{
         lastMinted = ForgeMiningToken.getMiningMinted();
 
     }
-    //Emission * 8 * 4.12 = 66,519 * 157 = 10.5 million
+    //Emission * 8 * 4.12 = 66,519 * 150 = 10.2 million ArbiForge
     function changeAuctionAmt() internal {
         uint tokensMinted = ForgeMiningToken.getMiningMinted();
       
