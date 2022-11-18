@@ -225,6 +225,7 @@ contract ForgeMining{
     event MegaWithdrawal(address indexed caller, address indexed member, uint era, uint TotalDays, uint256 stricttotal);
     uint256 public lastMinted = 0;
     bool onlyOnce = false;
+    bool inited = false;
     //=====================================CREATION=========================================//
 
     // Constructor
@@ -232,7 +233,7 @@ contract ForgeMining{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 150; secondsPerDay = 120; //start out at 12 days
+        daysPerEra = 150; secondsPerDay = 12 * 60 * 60 * 24; //start out at 12 days
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay * 10000;
@@ -246,6 +247,8 @@ contract ForgeMining{
 
 
         function zSetUP1(address token) public onlyOwner22 {
+            require(!inited, "Must only run once");
+            inited = true;
         nextDayTime = block.timestamp + secondsPerDay;
         AddressForgeToken = token;
         owner22 = address(0);
@@ -280,7 +283,7 @@ contract ForgeMining{
         }else{
             secondsPerDay = secondsPerDay * 2;
         }
-       if(secondsPerDay <= 5)
+       if(secondsPerDay <= 5)  
        {
            secondsPerDay = 10;
        }
