@@ -601,7 +601,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//runs every _BLOCKS_PER_READJUSTMENT / 8
 
 		multipler = address(this).balance / (1 * 10 ** 18); 	
-		Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
+		Token2Per = (2** rewardEra) * address(this).balance / (600000 + 600000*(multipler)); //aimed to give about 400 days of reserves
 
 		uint256 runs = block.timestamp - lastrun;
 
