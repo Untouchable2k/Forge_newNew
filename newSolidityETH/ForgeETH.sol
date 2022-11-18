@@ -1,6 +1,6 @@
 // ForgeTH - Contract
 //
-// Distrubtion of Forge Token is as follows:
+// Distrubtion of ArbiForge Token is as follows:
 // 15% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
 // 57% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contract.
@@ -281,14 +281,228 @@ interface IERC721 {
     function isApprovedForAll(address owner, address operator) external view returns (bool);
 }
 
+//Recieve NFTs
+interface IERC721Receiver {
+    /**
+     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+     * by `operator` from `from`, this function is called.
+     *
+     * It must return its Solidity selector to confirm the token transfer.
+     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+     *
+     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
+     */
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4);
+}
 //Main contract
 
+
+interface IERC165 {
+    /**
+     * @dev Returns true if this contract implements the interface defined by
+     * `interfaceId`. See the corresponding
+     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
+     * to learn more about how these ids are created.
+     *
+     * This function call must use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+interface IERC1155 is IERC165 {
+    /**
+     * @dev Emitted when `value` tokens of token type `id` are transferred from `from` to `to` by `operator`.
+     */
+    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+
+    /**
+     * @dev Equivalent to multiple {TransferSingle} events, where `operator`, `from` and `to` are the same for all
+     * transfers.
+     */
+    event TransferBatch(
+        address indexed operator,
+        address indexed from,
+        address indexed to,
+        uint256[] ids,
+        uint256[] values
+    );
+
+    /**
+     * @dev Emitted when `account` grants or revokes permission to `operator` to transfer their tokens, according to
+     * `approved`.
+     */
+    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
+
+    /**
+     * @dev Emitted when the URI for token type `id` changes to `value`, if it is a non-programmatic URI.
+     *
+     * If an {URI} event was emitted for `id`, the standard
+     * https://eips.ethereum.org/EIPS/eip-1155#metadata-extensions[guarantees] that `value` will equal the value
+     * returned by {IERC1155MetadataURI-uri}.
+     */
+    event URI(string value, uint256 indexed id);
+
+    /**
+     * @dev Returns the amount of tokens of token type `id` owned by `account`.
+     *
+     * Requirements:
+     *
+     * - `account` cannot be the zero address.
+     */
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {balanceOf}.
+     *
+     * Requirements:
+     *
+     * - `accounts` and `ids` must have the same length.
+     */
+    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids)
+        external
+        view
+        returns (uint256[] memory);
+
+    /**
+     * @dev Grants or revokes permission to `operator` to transfer the caller's tokens, according to `approved`,
+     *
+     * Emits an {ApprovalForAll} event.
+     *
+     * Requirements:
+     *
+     * - `operator` cannot be the caller.
+     */
+    function setApprovalForAll(address operator, bool approved) external;
+
+    /**
+     * @dev Returns true if `operator` is approved to transfer ``account``'s tokens.
+     *
+     * See {setApprovalForAll}.
+     */
+    function isApprovedForAll(address account, address operator) external view returns (bool);
+
+    /**
+     * @dev Transfers `amount` tokens of token type `id` from `from` to `to`.
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If the caller is not `from`, it must have been approved to spend ``from``'s tokens via {setApprovalForAll}.
+     * - `from` must have a balance of tokens of type `id` of at least `amount`.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes calldata data
+    ) external;
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {safeTransferFrom}.
+     *
+     * Emits a {TransferBatch} event.
+     *
+     * Requirements:
+     *
+     * - `ids` and `amounts` must have the same length.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
+     * acceptance magic value.
+     */
+    function safeBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] calldata ids,
+        uint256[] calldata amounts,
+        bytes calldata data
+    ) external;
+}
+interface IERC1155Receiver is IERC165 {
+    /**
+     * @dev Handles the receipt of a single ERC1155 token type. This function is
+     * called at the end of a `safeTransferFrom` after the balance has been updated.
+     *
+     * NOTE: To accept the transfer, this must return
+     * `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+     * (i.e. 0xf23a6e61, or its own function selector).
+     *
+     * @param operator The address which initiated the transfer (i.e. msg.sender)
+     * @param from The address which previously owned the token
+     * @param id The ID of the token being transferred
+     * @param value The amount of tokens being transferred
+     * @param data Additional data with no specified format
+     * @return `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))` if transfer is allowed
+     */
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bytes4);
+
+    /**
+     * @dev Handles the receipt of a multiple ERC1155 token types. This function
+     * is called at the end of a `safeBatchTransferFrom` after the balances have
+     * been updated.
+     *
+     * NOTE: To accept the transfer(s), this must return
+     * `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
+     * (i.e. 0xbc197c81, or its own function selector).
+     *
+     * @param operator The address which initiated the batch transfer (i.e. msg.sender)
+     * @param from The address which previously owned the token
+     * @param ids An array containing ids of each token being transferred (order and length must match values array)
+     * @param values An array containing amounts of each token being transferred (order and length must match ids array)
+     * @param data Additional data with no specified format
+     * @return `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` if transfer is allowed
+     */
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external returns (bytes4);
+}
+
+
 contract ArbiForge is Ownable, IERC20 {
-	uint public targetTime = 60 * 12;
+
+    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
+	function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+		return IERC1155Receiver.onERC1155Received.selector;
+		}	
+	function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+		return IERC1155Receiver.onERC1155Received.selector;
+		}
+     function testNFT(address NFT, uint nftNumber) public returns (uint){
+
+			IERC1155(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
+
+	 }
+
+	 function testNFT2(address NFT, uint nftNumber) public returns (uint){
+
+			IERC721(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, "");
+	}
+	uint public targetTime = 12 * 60;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
+    address public AddressLPReward2;
 //Events
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
@@ -304,9 +518,8 @@ contract ArbiForge is Ownable, IERC20 {
     uint _totalSupply = 21000000000000000000000000;
     uint public latestDifficultyPeriodStarted2 = block.timestamp;
     uint public epochCount = 0;//number of 'blocks' mined
-
-    uint public _BLOCKS_PER_READJUSTMENT = 512; // should be 1024
-
+	uint public latestreAdjustStarted = block.timestamp;
+    uint public _BLOCKS_PER_READJUSTMENT = 1028; // should be 512 or 1028
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
@@ -326,234 +539,40 @@ contract ArbiForge is Ownable, IERC20 {
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    mapping(address => uint) public divide;
-    mapping(address => uint) public ownerAmt;
-    mapping(address => address) public ownerOfDivide;
-    mapping(address => mapping(address => uint)) public amountPerOwner;
-    mapping(address => uint) public divideNFT;
-    mapping(address => uint) public ownerAmtNFT;
-    mapping(address => address) public ownerOfDivideNFT;
-    mapping(address => mapping(address => uint)) public amountPerOwnerNFT;
+    uint slowBlocks;
+    uint public epochOld = 0;
     uint public give0x = 0;
     uint public give = 1;
     // metadata
     string public name = "ArbiForge";
     string public constant symbol = "AFge";
     uint8 public constant decimals = 18;
-
+	
     uint256 lastrun = block.timestamp;
     uint public latestDifficultyPeriodStarted = block.number;
     bool initeds = false;
     
     // mint 1 token to setup LPs
-	    constructor() public {
+	    constructor() {
     balances[msg.sender] = 1000000000000000000;
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
 
-function donateKing(address token, uint amt, uint divz) public {
-	donate(token, amt, msg.sender);
-	setDiv(divz, token, amt);
-}
 
-
-function donateAndAdd(address token, uint amt, uint divz) public {
-	donate(token, amt, msg.sender);
-	addDiv(token, amt);
-}
-
-function donate(address token, uint amt, address forWho) public {
-	amountPerOwner[forWho][token] = amountPerOwner[forWho][token] + amt;
-	IERC20(token).transferFrom(msg.sender, address(this), amt);
-
-}
-
-function sendDonate(address to, uint amt, address token) public{
-
-	require(amt <= amountPerOwner[msg.sender][token], "Only if u own amounts");
-	amountPerOwner[to][token]  = amountPerOwner[to][token] + amt;
-	amountPerOwner[msg.sender][token] = amountPerOwner[msg.sender][token] - amt;
-	}
-
-
-function addDiv(address token, uint amt) public{
-
-	require(amt <= amountPerOwner[msg.sender][token], "Must have enough tokens to add to King");
-	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
-	ownerAmt[token] = ownerAmt[token] + amt;
-	}
-
-
-function setDivAgain(uint divz, address token, uint amt) public{
-
-	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
-	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
-	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
-	divide[token] = divz;
-	}
-
-function setDivOwner(address token, address newOwnerOfDivide)public {
-
-	require(ownerOfDivide[token] == msg.sender, "Must own token donation, use setDiv first");
-	ownerOfDivide[token] = newOwnerOfDivide;
-
-}
-
-function setDiv(uint divz, address token, uint amt) public{
-
-	require((amt > ownerAmt[token] || amt > IERC20(token).balanceOf(address(this)) ) && (amt <= amountPerOwner[msg.sender][token]), "Must donate more than balance or last big send.");
-	amountPerOwner[msg.sender][token]  = amountPerOwner[msg.sender][token] - amt;
-	ownerAmt[token] = amt;
-	// divz = 1,000,000 = 10 years(3650 days), should not go higher than this
-	// divz = 10,000 = 36 days
-	require( divz >= 10000  && divz <= 2000000, "Must be within 1,0000 - 2,000,000");
-	divide[token] = divz;
-	ownerOfDivide[token] = msg.sender;
-	}
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-function donateKingNFT(address token, uint id, uint divz) public {
-	donateNFT(token, id, msg.sender);
-	setDivNFT(divz, token, (whatAmtNFT(token) + 1));
-}
-
-
-function donateAndAddNFT(address token, uint id, uint amt) public {
-	donateNFT(token, id, msg.sender);
-	addDivNFT(token, amt);
-}
-
-function donateNFT(address token, uint id, address forWho) public {
-	IERC721(token).transferFrom(msg.sender, address(this), id);
-	amountPerOwnerNFT[forWho][token] = amountPerOwnerNFT[forWho][token] + 1;
-
-}
-
-function sendDonateNFT(address to, uint amt, address token) public{
-
-	require(amt <= amountPerOwnerNFT[msg.sender][token], "Only if u own amounts");
-	amountPerOwnerNFT[to][token]  = amountPerOwnerNFT[to][token] + amt;
-	amountPerOwnerNFT[msg.sender][token] = amountPerOwnerNFT[msg.sender][token] - amt;
-	}
-
-
-function addDivNFT(address token, uint amt) public{
-
-	require(amt <= amountPerOwnerNFT[msg.sender][token], "Must have enough tokens to add to King");
-	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
-	ownerAmtNFT[token] = ownerAmtNFT[token] + amt;
-	}
-
-
-function setDivAgainNFT(uint divz, address token, uint amt) public{
-
-	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
-	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
-	divideNFT[token] = divz;
-	}
-
-function setDivOwnerNFT(address token, address newOwnerOfDivideNFT)public {
-
-	require(ownerOfDivideNFT[token] == msg.sender, "Must own token donation, use setDiv first");
-	ownerOfDivideNFT[token] = newOwnerOfDivideNFT;
-
-}
-function setDivNFT(uint divz, address token, uint amt) public{
-
-	require((amt > ownerAmtNFT[token] || amt > IERC721(token).balanceOf(address(this)) ) && (amt <= amountPerOwnerNFT[msg.sender][token]), "Must donate more than balance or last big send.");
-	amountPerOwnerNFT[msg.sender][token]  = amountPerOwnerNFT[msg.sender][token] - amt;
-	ownerAmtNFT[token] = amt;
-	require( divz >= 1  && divz <= 500000, "Must be within 1 - 500000");
-	divideNFT[token] = divz;
-	ownerOfDivideNFT[token] = msg.sender;
-	}
-
-function whatAmtNFT(address token) public returns (uint amtzz23){
-
-	uint amtz = ownerAmtNFT[token];
-	uint amtz2 = IERC721(token).balanceOf(address(this));
-	if(amtz > amtz2){
-		return amtz2;
-	}else{
-		return amtz;
-	}
-}
-
-function whatAmt(address token) public returns (uint amtzz){
-
-	uint amtz = ownerAmt[token];
-	uint amtz2 = IERC20(token).balanceOf(address(this));
-	if(amtz > amtz2){
-		return amtz2;
-	}else{
-		return amtz;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Standard distribution is 6 months with 5000
-function whatDiv(address token) public returns(uint suc){
-	if(divide[token] == 0){
-		return 200000;
-	}else{
-		return divide[token];
-	}
-}
-
-//Standard distribution is 1 NFT per readjustment
-function whatDivNFT(address token) public returns(uint suc){
-	if(divideNFT[token] == 0){
-		return 1;
-	}else{
-		return divideNFT[token];
-	}
-}
-
-
-
-
-function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
+function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) public onlyOwner{
         uint x = 21000000000000000000000000; 
         // Only init once
         assert(!initeds);
         initeds = true;
 	    previousBlockTime = block.timestamp;
-	    reward_amount = 20358 * 10**uint(decimals - 3);
+	    reward_amount = 20 * 10**uint(decimals);
     	rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
+	    epochOld = 0;
+	    multipler = address(this).balance / (1 * 10 ** 18); 	
+	    Token2Per = (2** rewardEra) * address(this).balance / (600000 + 600000*(multipler)); //aimed to give about 400 days of reserves
+
     	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
@@ -564,7 +583,8 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
-	
+        AddressLPReward2 = payable(LPGuild3);
+	    slowBlocks = 0;
         oldecount = epochCount;
 	
 		setOwner(address(0));
@@ -578,16 +598,20 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 	///
 
 	function ARewardSender() public {
-		//runs every _BLOCKS_PER_READJUSTMENT / 4
+		//runs every _BLOCKS_PER_READJUSTMENT / 8
+
+		multipler = address(this).balance / (1 * 10 ** 18); 	
+		Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
 
 		uint256 runs = block.timestamp - lastrun;
 
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 		if(rewardEra < 8){
+			
 			targetTime = ((12 * 60) * 2**rewardEra);
 		}else{
-			reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+			reward_amount = ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
@@ -596,13 +620,15 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		 if(ratio < 2000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
-			totalOwed = (3000000000);
+			totalOwed = (6000000000);
 		} 
 
-		if( balanceOf(address(this)) > (50 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
+		if( address(this).balance > (200 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			//IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(100000000));
           		 address payable to = payable(AddressLPReward);
-           		 to.send(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+			 address payable to2 = payable(AddressLPReward2);
+           		 to.transfer(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
+           		 to2.transfer(((epochsPast) * totalOwed * Token2Per * give0x).div(100000000));
            		 give0x = 1 * give;
 		}else{
 			give0x = 0;
@@ -620,22 +646,30 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		return true;
 	}
 	
-	function mintNFTGO(address token) public returns (uint num) {
-		return _BLOCKS_PER_READJUSTMENT / 8 + whatDivNFT(token);
+
+	function mintNFTGOBlocksUntil() public view returns (uint num) {
+		return _BLOCKS_PER_READJUSTMENT/8 - slowBlocks % (_BLOCKS_PER_READJUSTMENT/8 );
 	}
 	
-	function mintNFT(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-		require(epochCount % (mintNFTGO(nftaddy)) == 0 && give == 2, "Only mint on _Blocks_PER_READJUSTMUNT/8 * whatDiv(token) when slow mints");
+	function mintNFTGO() public view returns (uint num) {
+		return slowBlocks % (_BLOCKS_PER_READJUSTMENT/8);
+	}
+	
+	function mintNFT721(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
-		IERC721(nftaddy).approve(msg.sender, nftNumber);
-		IERC721(nftaddy).transferFrom(address(this), msg.sender, nftNumber);
-		if(ownerAmtNFT[nftaddy]>=1){
-			ownerAmtNFT[nftaddy] = ownerAmtNFT[nftaddy] - 1;
-		}
+		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
 		return true;
 	}
 
-	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uint256 owed) {
+	function mintNFT1155(address nftaddy, uint nftNumber, uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
+		mintTo(nonce, challenge_digest, msg.sender);
+		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
+		return true;
+	}
+
+	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -654,37 +688,88 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint totalOwed = 0;
 		
 		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
 		}else{
+			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
-
+		
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (24*x*5086060).div(888)+3456750000;
 		}
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
-
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
-             			to.send((totalOwed * Token2Per * give0x).div(100000000));
+             			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((300 * Token2Per * give0x).div(10));
+               			to.transfer((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
+
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+
+		return totalOwed;
+
+	}
+
+	function mintToJustArbiForge(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+
+		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+
+		//the challenge digest must match the expected
+		require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+
+		//the digest must be smaller than the target
+		require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+		_startNewMiningEpoch();
+
+		require(block.timestamp > previousBlockTime, "No same second solves");
+
+		//uint diff = block.timestamp - previousBlockTime;
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+		
+		if(ratio < 100 && ratio >= 1){
+			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
+		}else if (ratio < 1){
+			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
+		}else{
+			slowBlocks = slowBlocks.add(1);
+			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		}
+		
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
+		if(ratio < 3000){
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+		}else {
+			totalOwed = (24*x*5086060).div(888)+3456750000;
+		}
+
+
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
+				
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
+		previousBlockTime = block.timestamp;
+		
 
 		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
@@ -706,25 +791,26 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (24*x*5086060).div(888)+3456750000;
 			
 		}
 
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((2 * reward_amount * totalOwed).div(100000000));
-				
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
+		
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
 		if(give0x > 0){
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
-             			to.send((totalOwed * Token2Per * give0x).div(100000000));
+             			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.send((300 * Token2Per * give0x).div(10));
+               			to.transfer((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -762,18 +848,14 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    }else{
-			       	ownerAmt[ExtraFunds[x]] = 0;
-			    }
+
 			}
 		}
         	
@@ -823,18 +905,13 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = (TotalOwned * totalOd).divRound(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = ( (2** rewardEra) *TotalOwned * totalOd).divRound(100000000 * 20000);
 						
 					}else{
-						totalOwed = (TotalOwned * totalOd).div(100000000 * whatDiv(ExtraFunds[x]));
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).div(100000000 * 20000);
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-			    if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    	ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    }else{
-			       	ownerAmt[ExtraFunds[x]] = 0;
-			    }
 			}
 		}
         	
@@ -887,17 +964,18 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint totalOwed = 0;
 
 		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 100) / (ratio.divRound(10))), "Digest must be smaller than miningTarget by ratio");
+			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
 		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 100), "Digest must be smaller than 1/10th miningTarget");
+			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
 		}else{
+			slowBlocks = slowBlocks.add(1);
 			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		}
 
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
-			totalOwed = (12*x*5086060).div(888)+4534750000;
+			totalOwed = (24*x*5086060).div(888)+3456750000;
 			
 		}
 
@@ -910,16 +988,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
 					if( x % 3 == 0 && x != 0 && totalOwed > 17600000 && give == 2 ){
-						totalOwed = (TotalOwned * totalOwed).divRound(100000000 * whatDiv(ExtraFunds[x]) * 2);
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOwed).divRound(100000000 * 20000);
 					}else{
-						totalOwed = (TotalOwned * totalOwed).div(100000000 * whatDiv(ExtraFunds[x]) * 2 );
+						totalOwed = ( (2** rewardEra) * TotalOwned * totalOwed).div(100000000 * 20000 );
 				    }
 			    	IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-			   		if(ownerAmt[ExtraFunds[x]] > totalOwed ){
-			    		ownerAmt[ExtraFunds[x]] = ownerAmt[ExtraFunds[x]] - totalOwed;
-			    	}else{
-			       		ownerAmt[ExtraFunds[x]] = 0;
-			    	}
+
            		}
        		}
 		}
@@ -948,12 +1022,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 					}
 				}
 			}else{
-				reward_amount = ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+				reward_amount = ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 			}
 		}
 
 		//set the next minted supply at which the era will change
-		// total supply of MINED tokens is 21000000000000000000000000  because of 16 decimal places
+		// total supply of MINED tokens is 21000000000000000000000000  because of 18 decimal places
 
 		epochCount = epochCount.add(1);
 
@@ -963,23 +1037,18 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 			ARewardSender();
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 
-			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
-			{
+			uint256 blktimestamp = block.timestamp;
+			uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
+			latestreAdjustStarted = block.timestamp;
 
-			    multipler = balanceOf(address(this)) / (1 * 10 ** 18); 
-			    if(( balanceOf(address(this)) / Token2Per) <= (200000 + 200000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
-				{
-					if(Token2Per.div(2) > Token2Min)
-					{
-						Token2Per = Token2Per.div(2);
-					}
-				}else{
-					Token2Per = Token2Per.mult(3);
-				}
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
+			{
 				_reAdjustDifficulty();
-			}else if(give == 2){
-					_reAdjustDifficulty();
 			}
+		}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
+			_reAdjustDifficulty();
+			ARewardSender();
 
 		}
 
@@ -989,10 +1058,12 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 
 
 	function _reAdjustDifficulty() internal {
+
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
-
-		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT; 
+		uint epochTotal = epochCount - epochOld;
+		uint adjusDiffTargetTime = targetTime *  epochTotal; 
+		epochOld = epochCount;
 
 		//if there were less eth blocks passed in time than expected
 		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
@@ -1049,9 +1120,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		
 		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 100) / ratio.divRound(10));
+			return _MAXIMUM_TARGET.div((miningTarget * 3) / ratio.divRound(50));
 		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 100);
+			return _MAXIMUM_TARGET.div(miningTarget * 3);
 		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
 		}
@@ -1064,9 +1135,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		uint ratio = x * 100 / 888 ;
 		
 		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 100) / ratio.divRound(10));
+			return ((miningTarget * 3) / ratio.divRound(50));
 		}else if (ratio < 1) {
-			return (miningTarget * 100);
+			return (miningTarget * 3);
 		}else{
 			return (miningTarget);
 		}
@@ -1085,9 +1156,9 @@ function zinit(address AuctionAddress2, address LPGuild2) public onlyOwner{
 		//every reward era, the reward amount halves.
 
 		if(rewardEra < 8){
-			return ( 20358 * 10**uint(decimals - 3));
+			return ( 20 * 10**uint(decimals));
 		}else{
-			return ( 20358 * 10**uint(decimals - 3)).div( 2**(rewardEra - 7  ) );
+			return ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
 		}
 		}
 
