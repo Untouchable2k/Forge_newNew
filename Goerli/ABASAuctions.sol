@@ -1,14 +1,14 @@
-//  Forge Auctions Contract
-//  Auctions Forge tokens every 12 days and users are able to withdraw anytime after!
+//  Arbitrum Bitcoin and Staking - Auctions Contract
+//  Auctions Arbitrum Bitcoin and Staking (ABAS) tokens every 12 days and users are able to withdraw anytime after!
 //
-//  The 0xBitcoin tokens collected by Forge Auctions go to miners and liquidity providers!
+//  The Ethereum collected by Forge Auctions go to miners and liquidity providers!
 //
-//  10,500,000 Forge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
+//  10,500,000 ABAS tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
-//  Distributes 32,768 ArbiForge tokens every 10-14 days for the first era(~5 years) and halves the amount of ArbiForge every era after.
+//  Distributes 32,768 ABAS tokens every 10-14 days for the first era(~5 years) and halves the amount of ABAS every era after.
 //
-// By using the burn0xBTCForMember function
-//       0xBitcoin Token is taken from the user and used to recieve your share of the 8,192 tokens auctioned every ~4 days
+// By simply sending this contract Ethereum, you will be auto entered into the current auction!
+// *You must control the wallet sending the Ethereum to retrieve your ArbiForge
 
 
 pragma solidity ^0.8.11;
@@ -175,7 +175,7 @@ contract ForgeMining{
     
     }
 
-  contract ArbiForgeAuctions is  GasPump, Ownabled
+  contract ArbitrumBitcoinAndStakingAuctions is  GasPump, Ownabled
 {
 
     using SafeMath for uint;
@@ -229,8 +229,8 @@ contract ForgeMining{
     //=====================================CREATION=========================================//
 
     // Constructor
-    constructor () {
-        name = "Auction Contract"; decimals = 18; 
+    constructor () public {
+        name = "ABAS Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
         daysPerEra = 150; secondsPerDay = 120; //start out at 12 days
@@ -257,7 +257,7 @@ contract ForgeMining{
         lastMinted = ForgeMiningToken.getMiningMinted();
 
     }
-    //Emission * 8 * 4.12 = 66,519 * 157 = 10.5 million
+    //Emission * 8 * 4.12 = 66,519 * 150 = 10.2 million ArbiForge
     function changeAuctionAmt() internal {
         uint tokensMinted = ForgeMiningToken.getMiningMinted();
       
@@ -595,7 +595,7 @@ contract ForgeMining{
             totalEmitted += value*16;            
             emit Withdrawal(msg.sender, _member, _era, _day, value*16, mapEraDay_EmissionRemaining[_era][_day]);
             // ERC20 transfer function
-            IERC20(AddressForgeToken).transfer(_member, value*16); // 32,768 tokens a auction aka almost half the supply an era!
+            IERC20(AddressForgeToken).transfer(_member, value*16); // 8,192 tokens a auction aka almost half the supply an era!
         }
         
         return value*16;
@@ -690,7 +690,7 @@ contract ForgeMining{
 * MIT License
 * ===========
 *
-* Copyright (c) 2022 Forge
+* Copyright (c) 2022 Arbitrum Bitcoin and Staking (ABAS)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
