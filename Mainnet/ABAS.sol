@@ -675,9 +675,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		_startNewMiningEpoch();
 
 		require(block.timestamp > previousBlockTime, "No same second solves");
-		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 		
-		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
@@ -736,7 +734,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 		
-		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
