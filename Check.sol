@@ -1,16 +1,16 @@
-// ForgeTH - Contract
+// Arbitrum Bitcoin and Staking (ABAS) - Token and Mining Contract
 //
-// Distrubtion of ArbiForge Token is as follows:
-// 15% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
+// Distrubtion of Arbitrum Bitcoin and Staking (ABAS) Token is as follows:
+// 29% of ABAS Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 // +
-// 57% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contract.
+// 15% of ABAS Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
 // +
-// 29% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// 57% of ABAS Token is distributed as Liquidiy Pools as rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
 	
-// Symbol: Fge
+// Symbol: ABAS
 // Decimals: 18 
 //
 // Total supply: 73,500,001.000000000000000000
@@ -19,25 +19,21 @@
 //   +
 // 10,500,000 Auctioned over 100+ years into 4 day auctions split fairly among all buyers. ALL Ethereum proceeds go into THIS contract which it fairly distributes to miners and stakers.  Uses the ForgeAuctions contract
 //   +
-// 42,000,000 tokens goes to Liquidity Providers of the token over 100+ year using Bitcoin distribution!  Helps prevent LP losses!  Uses the ForgeRewards Contract
+// 42,000,000 tokens goes to Liquidity Providers of the token over 100+ year using Bitcoin distribution!  Helps prevent LP losses!  Uses the ForgeRewards1 & ForgeRewards2 Contract!
 //
 //  =
 //
-// 73,501,001 Tokens is the max Supply
+// 73,500,001 Tokens is the max Supply
 //      
-// 50% of the Ethereum from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn Ethereum per mint!
-// 50% of the Ethereum from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
+// 33% of the Ethereum from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn Ethereum per mint!
+// 66% of the Ethereum from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
 //
 // No premine, dev cut, or advantage taken at launch. Public miner available at launch.  100% of the token is given away fairly over 100+ years using Bitcoins model!
 //
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work!
-// Donate using this contracts functions any ERC20 token and the largest donator per token is able to take control of the distribution length via our donation functions
-
 // Donate this contract any NFT and we will also distribute it via Proof of Work to our miners!  
-// Control the length using the donation functions!  Largest donation per NFT collection controls the distribution!
-//   
-// Same with NFTs
-//* 1 tokens are burned to create the LP pool.
+//  
+//* 1 token were burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
 
@@ -476,7 +472,14 @@ interface IERC1155Receiver is IERC165 {
 }
 
 
-contract ArbiForge is Ownable, IERC20 {
+contract ABASAuctionsCT{
+    uint256 public secondsPerDay;
+    uint256 public currentEra;
+    uint256 public currentDay;
+    uint256 public daysPerEra;
+    }
+    
+contract ArbitrumBitcoinAndStaking Ownable, IERC20 {
 
     function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
@@ -501,6 +504,7 @@ contract ArbiForge is Ownable, IERC20 {
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
+    ABASAuctioinsCT public AuctionsCT;
     address public AddressLPReward;
     address public AddressLPReward2;
 //Events
@@ -544,8 +548,8 @@ contract ArbiForge is Ownable, IERC20 {
     uint public give0x = 0;
     uint public give = 1;
     // metadata
-    string public name = "ArbiForge";
-    string public constant symbol = "AFge";
+    string public name = "Arbitrum Bitcoin and Staking Token";
+    string public constant symbol = "ABAS";
     uint8 public constant decimals = 18;
 	
     uint256 lastrun = block.timestamp;
@@ -582,6 +586,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
         emit Transfer(address(0), AuctionAddress2, x/2);
 	
     	AddressAuction = AuctionAddress2;
+	AuctionsCT = ABASAuctionsCT(AddressAuction)
         AddressLPReward = payable(LPGuild2);
         AddressLPReward2 = payable(LPGuild3);
 	    slowBlocks = 0;
@@ -687,14 +692,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
+
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -728,7 +733,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	}
 
-	function mintToJustArbiForge(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -746,14 +751,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
+
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -775,108 +780,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 		return totalOwed;
 
-	}
-
-	function mintToFREE(bool nonce, bool challenge_digest,  address mintTo) public returns (uint256 owed) {
-
-		_startNewMiningEpoch();
-
-		require(block.timestamp > previousBlockTime, "No same second solves");
-
-		//uint diff = block.timestamp - previousBlockTime;
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
-
-		if(ratio < 3000){
-			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
-		}else {
-			totalOwed = (24*x*5086060).div(888)+3456750000;
-			
-		}
-
-
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
-		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
-		
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
-		previousBlockTime = block.timestamp;
-
-		if(give0x > 0){
-			if(ratio < 2000){
-            			address payable to = payable(mintTo);
-             			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
-				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
-			}else{
-               			address payable to = payable(mintTo);
-               			to.transfer((600 * Token2Per * give0x).div(10));
-				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
-			}
-		}
-
-		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
-
-		return totalOwed;
-
-	}
-
-
-	function mintTokensArrayToFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
-		uint256 totalOd = mintToFREE(nonce, challenge_digest, MintTo[0]);
-		require(totalOd > 0, "mint issue");
-
-		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
-		uint xy=0;
-		for(xy = 0; xy< ExtraFunds.length; xy++)
-		{
-			if(epochCount % (2**(xy+1)) != 0){
-				break;
-			}
-			for(uint y=xy+1; y< ExtraFunds.length; y++){
-				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
-			}
-		}
-		
-		uint256 totalOwed = 0;
-		uint256 TotalOwned = 0;
-		for(uint x=0; x<xy; x++)
-		{
-			//epoch count must evenly dividable by 2^n in order to get extra mints. 
-			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, ..., epoch 32 = 5 extra mints w/ a divRound for the 5th mint(allows small balance token minting aka NFTs)
-			if(epochCount % (2**(x+1)) == 0){
-				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
-				if(TotalOwned != 0){
-					if( x % 3 == 0 && x != 0 && totalOd > 17600000 && give == 2){
-						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).divRound(100000000 * 20000);
-						
-					}else{
-						totalOwed = ( (2** rewardEra) * TotalOwned * totalOd).div(100000000 * 20000);
-					}
-				}
-			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
-
-			}
-		}
-        	
-        	
-		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalOd );
-
-		return totalOd;
-
-    }
-
-	function mintTokensSameAddressFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
-		address[] memory dd = new address[](ExtraFunds.length + 1); 
-
-		for(uint x=0; x< (ExtraFunds.length + 1); x++)
-		{
-			dd[x] = MintTo;
-		}
-		
-		mintTokensArrayToFREE(nonce, challenge_digest, ExtraFunds, dd);
-
-		return true;
 	}
 
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
@@ -962,14 +865,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
-
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
 
 		if(ratio < 3000){
@@ -1115,37 +1016,22 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
-	
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		
-		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 3) / ratio.divRound(50));
-		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 3);
-		}else{
-			return _MAXIMUM_TARGET.div(miningTarget);
-		}
-
+		return _MAXIMUM_TARGET.div(miningTarget);
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
+		return miningTarget;
 		
-		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 3) / ratio.divRound(50));
-		}else if (ratio < 1) {
-			return (miningTarget * 3);
-		}else{
-			return (miningTarget);
-		}
 	}
 
 
 	function getMiningMinted() public view returns (uint) {
 		return tokensMinted;
+	}
+
+	function getCirculatingSupply() public view returns (uint) {
+		return tokensMinted*3 + ( (AuctionsCT.currentDay() - 1) + (AuctionsCT.currentEra() - 1) * AuctionsCT.daysPerEra()  )* 31982 * 10 ** 18;
 	}
 
 
@@ -1310,7 +1196,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 * MIT License
 * ===========
 *
-* Copyright (c) 2022 Forge
+* Copyright (c) 2022 Arbitrum Bitcoin and Staking (ABAS)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
