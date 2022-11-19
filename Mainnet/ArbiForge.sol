@@ -728,7 +728,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	}
 
-	function mintToJustArbiForge(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
