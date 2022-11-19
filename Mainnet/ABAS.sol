@@ -31,11 +31,8 @@
 // No premine, dev cut, or advantage taken at launch. Public miner available at launch.  100% of the token is given away fairly over 100+ years using Bitcoins model!
 //
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work!
-// Donate using this contracts functions any ERC20 token and the largest donator per token is able to take control of the distribution length via our donation functions
-
 // Donate this contract any NFT and we will also distribute it via Proof of Work to our miners!  
-// Control the length using the donation functions!  Largest donation per NFT collection controls the distribution!
-//   
+//  
 // Same with NFTs
 //* 1 tokens are burned to create the LP pool.
 //
