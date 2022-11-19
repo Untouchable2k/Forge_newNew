@@ -284,7 +284,9 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function NewRewardTime() public returns (bool success){
 	    uint64 poolLength2 = uint64(AuctionCT.secondsPerDay());
 	    uint _era = AuctionCT.currentEra();
-	    if(_era<5){
+	    if(_era < 2 ){
+	    	poolLength = poolLength;
+	    }else if(_era < 5){
 	    	poolLength = poolLength2*3;
 	    }else if(_era  < 10){
 	    	poolLength = poolLength2*5;
