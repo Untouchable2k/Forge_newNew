@@ -37,6 +37,7 @@
 //
 // Credits: 0xBitcoin, Vether, Synethix
 
+
 pragma solidity ^0.8.11;
 
 contract Ownable {
@@ -471,8 +472,12 @@ interface IERC1155Receiver is IERC165 {
     ) external returns (bytes4);
 }
 
+contract ABASAuctionsCT{
+    uint256 public totalEmitted;
+    }
+    
 
-contract ArbitrumBitcoinAndStaking Ownable, IERC20 {
+contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 
     function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
@@ -497,6 +502,7 @@ contract ArbitrumBitcoinAndStaking Ownable, IERC20 {
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
+    ABASAuctionsCT public AuctionsCT;
     address public AddressLPReward;
     address public AddressLPReward2;
 //Events
@@ -578,6 +584,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
         emit Transfer(address(0), AuctionAddress2, x/2);
 	
     	AddressAuction = AuctionAddress2;
+        AuctionsCT = ABASAuctionsCT(AddressAuction);
         AddressLPReward = payable(LPGuild2);
         AddressLPReward2 = payable(LPGuild3);
 	    slowBlocks = 0;
@@ -690,7 +697,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			slowBlocks = slowBlocks.add(1);
 			
 		}
-
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -724,7 +730,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	}
 
-	function mintJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -749,7 +755,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			slowBlocks = slowBlocks.add(1);
 			
 		}
-
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -772,6 +777,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return totalOwed;
 
 	}
+
 
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
@@ -856,6 +862,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
+
 		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		
 		if(ratio > 100){
@@ -863,7 +870,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			slowBlocks = slowBlocks.add(1);
 			
 		}
-
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		}else {
@@ -1007,13 +1013,32 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
-		return _MAXIMUM_TARGET.div(miningTarget);
+	
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		
+		if(ratio < 100 && ratio >= 1){
+			return _MAXIMUM_TARGET.div((miningTarget * 3) / ratio.divRound(50));
+		}else if(ratio < 1) {
+			return _MAXIMUM_TARGET.div(miningTarget * 3);
+		}else{
+			return _MAXIMUM_TARGET.div(miningTarget);
+		}
+
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
-		return miningTarget;
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
 		
+		if( ratio < 100 && ratio >= 1){
+			return ((miningTarget * 3) / ratio.divRound(50));
+		}else if (ratio < 1) {
+			return (miningTarget * 3);
+		}else{
+			return (miningTarget);
+		}
 	}
 
 
@@ -1021,7 +1046,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return tokensMinted;
 	}
 
-
+    function getCirculatingSupply() public view returns (uint) {
+        return tokensMinted * 3 + AuctionsCT.totalEmitted();
+    }
 	//21m coins total
 	//reward begins at 150 and is cut in half every reward era (as tokens are mined)
 	function getMiningReward() public view returns (uint) {
