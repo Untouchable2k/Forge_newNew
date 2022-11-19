@@ -690,7 +690,7 @@ contract ForgeMining{
 * MIT License
 * ===========
 *
-* Copyright (c) 2022 Forge
+* Copyright (c) 2022 Arbitrum Bitcoin and Staking (ABAS)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
