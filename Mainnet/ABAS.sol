@@ -473,7 +473,7 @@ interface IERC1155Receiver is IERC165 {
 }
 
 contract ABASAuctionsCT{
-    uint256 public totalEmitted;
+    uint256 public totalAuctioned;
     }
     
 
@@ -1047,7 +1047,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
     function getCirculatingSupply() public view returns (uint) {
-        return tokensMinted * 3 + AuctionsCT.totalEmitted();
+        return tokensMinted * 3 + AuctionsCT.totalAuctioned();
     }
 	//21m coins total
 	//reward begins at 150 and is cut in half every reward era (as tokens are mined)
