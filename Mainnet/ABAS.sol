@@ -1,11 +1,11 @@
 // Arbitrum Bitcoin and Staking (ABAS) - Token and Mining Contract
 //
 // Distrubtion of Arbitrum Bitcoin and Staking (ABAS) Token is as follows:
+// 29% of ABAS Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// +
 // 15% of ABAS Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
 // +
 // 57% of ABAS Token is distributed as Liquidiy Pools as rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
-// +
-// 29% of ABAS Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
