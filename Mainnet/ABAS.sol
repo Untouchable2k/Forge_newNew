@@ -473,7 +473,7 @@ interface IERC1155Receiver is IERC165 {
 }
 
 
-contract ArbiBTCandStaking is Ownable, IERC20 {
+contract ArbitrumBitcoinAndStaking Ownable, IERC20 {
 
     function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
