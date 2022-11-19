@@ -684,14 +684,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
+
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -743,14 +743,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
+
 		
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
@@ -857,14 +857,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
-
-		if(ratio < 100 && ratio >= 1){
-			require(uint256(digest) < ((miningTarget * 3) / (ratio.divRound(50))), "Digest must be smaller than miningTarget by ratio");
-		}else if (ratio < 1){
-			require(uint256(digest) < (miningTarget * 3), "Digest must be smaller than 1/3th miningTarget");
-		}else{
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+		
+		if(ratio > 100){
+			
 			slowBlocks = slowBlocks.add(1);
-			require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
+			
 		}
 
 		if(ratio < 3000){
@@ -1010,32 +1008,13 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
-	
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		
-		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 3) / ratio.divRound(50));
-		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 3);
-		}else{
-			return _MAXIMUM_TARGET.div(miningTarget);
-		}
-
+		return _MAXIMUM_TARGET.div(miningTarget);
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
+		return miningTarget;
 		
-		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 3) / ratio.divRound(50));
-		}else if (ratio < 1) {
-			return (miningTarget * 3);
-		}else{
-			return (miningTarget);
-		}
 	}
 
 
