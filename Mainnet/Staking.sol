@@ -1,4 +1,4 @@
-// Arbitrum Bitcoin and Staking Rewards Contract #1
+// Arbitrum Bitcoin and Staking - Staking Contract #1
 //
 // Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
 // Recieves 28% or 21,000,000 Forge Tokens from the ForgeMining Contract over 100+ years.
