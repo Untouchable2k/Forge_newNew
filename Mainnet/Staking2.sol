@@ -154,7 +154,7 @@ contract ForgeAuctionsCT{
     uint256 public currentEra;
     }
 
-contract ForgeRewards is StakedTokenWrapper, Ownable2 {
+contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
     bool activated6 = false;
     bool activated5 = false;
     bool activated4 = false;
@@ -1017,7 +1017,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 * MIT License
 * ===========
 *
-* Copyright (c) 2022 Forge
+* Copyright (c) 2022 Arbitrum Bitcoin and Staking (ABAS)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
