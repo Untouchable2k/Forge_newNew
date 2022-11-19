@@ -1,16 +1,16 @@
-// ForgeTH - Contract
+// Arbitrum Bitcoin and Staking (ABAS) - Token and Mining Contract
 //
-// Distrubtion of ArbiForge Token is as follows:
-// 15% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
+// Distrubtion of Arbitrum Bitcoin and Staking (ABAS) Token is as follows:
+// 15% of ABAS Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
 // +
-// 57% of Forge Token is distributed as Liquidiy Pools as rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
+// 57% of ABAS Token is distributed as Liquidiy Pools as rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
 // +
-// 29% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// 29% of ABAS Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
 	
-// Symbol: AFge
+// Symbol: ABAS
 // Decimals: 18 
 //
 // Total supply: 73,500,001.000000000000000000
@@ -476,7 +476,7 @@ interface IERC1155Receiver is IERC165 {
 }
 
 
-contract ArbiForge is Ownable, IERC20 {
+contract ArbiBTCandStaking is Ownable, IERC20 {
 
     function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
@@ -544,8 +544,8 @@ contract ArbiForge is Ownable, IERC20 {
     uint public give0x = 0;
     uint public give = 1;
     // metadata
-    string public name = "ArbiForge";
-    string public constant symbol = "AFge";
+    string public name = "Arbitrum Bitcoin and Staking Token";
+    string public constant symbol = "ABAS";
     uint8 public constant decimals = 18;
 	
     uint256 lastrun = block.timestamp;
@@ -1208,7 +1208,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 * MIT License
 * ===========
 *
-* Copyright (c) 2022 Forge
+* Copyright (c) 2022 Arbitrum Bitcoin and Staking (ABAS)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
