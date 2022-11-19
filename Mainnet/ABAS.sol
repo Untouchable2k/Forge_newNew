@@ -705,11 +705,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			if(ratio < 2000){
             			address payable to = payable(mintTo);
              			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
-				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
                			to.transfer((600 * Token2Per * give0x).div(10));
-				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
 
