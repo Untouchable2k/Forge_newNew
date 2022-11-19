@@ -1,0 +1,15 @@
+MUST LAUNCH ON LEDGER to safetly have admin in Staking
+
+1) Launch ArbiForge Token
+	2)Get 1 Token and start Balancer LP with bForge(33%) and 0xBTC(33%) and LP with ETH (2 LPs)
+    **HALF A TOKEN FOR EACH POOL MAX**
+3) Launch Auction Contract
+
+4) Launch Rewards Contract #1
+5) Launch Rewards Contract #2
+
+6)Go back to ArbiForge and confirm Auction and rewards contract addresses (zinit)
+
+7) Go back to Auctions and start them zSetup
+
+Setup dAPP and Mining Pool.
