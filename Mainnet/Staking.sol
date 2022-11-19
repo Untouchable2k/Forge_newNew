@@ -1,16 +1,16 @@
-// Forge Rewards Contract
-// Balancer Liquidity Pool ETH / ArbiForge Staking
+// Arbitrum Bitcoin and Staking Rewards Contract #1
+//
+// Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
 // Recieves 28% or 21,000,000 Forge Tokens from the ForgeMining Contract over 100+ years.
 // Also recieve 33% of the Ethereum Tokens from the ForgeMining Contract over forever.
-
-
-// What we are staking:  ArbiForge/Ethereum Liquidity Pool Tokens
+//
+// What we are staking:  ABAS/Ethereum Liquidity Pool Tokens
 //What is it?  It is the pool traders use to buy and sell the coin
 //The larger the pool, the larger the order the token can handle
-
 //
-//Rewards: ArbiForge, 0xBitcoin, and Ethereum currently.
-// Funds gathered will be dispered over 21 days. 7 Day reward period for 40%.
+//
+//Rewards: Arbitrum Bitcoin and Staking (ABAS), 0xBitcoin, and Ethereum currently.
+// Funds gathered will be dispered over 2 months. 24 Day reward period for 40%.
 //Room to Expand to three other cryptocurrencies(Only admin function in all three contracts is to add up to three more cryptocurrencies!)
 
 pragma solidity ^0.8.11;
