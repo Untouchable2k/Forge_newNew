@@ -529,7 +529,6 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint oldecount = 0;
     uint public previousBlockTime  =  block.timestamp;
     uint public Token2Per=           1000000;
-    uint Token2Min=                       88;
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
@@ -676,13 +675,13 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		_startNewMiningEpoch();
 
 		require(block.timestamp > previousBlockTime, "No same second solves");
-
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
+		
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		
 		if(ratio > 100){
 			
@@ -735,12 +734,13 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 		require(block.timestamp > previousBlockTime, "No same second solves");
 
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
+		
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 		
-		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		
 		if(ratio > 100){
 			
@@ -840,6 +840,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 		require(block.timestamp > previousBlockTime, "No same second solves");
 		require(MintTo.length == ExtraFunds.length,"MintTo has to have same number of addressses as ExtraFunds");
+		
+		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
 		{
@@ -855,7 +857,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 
-		require(uint256(digest) < (miningTarget), "Digest must be smaller than miningTarget avg+ blocktime");
 		
 		if(ratio > 100){
 			
@@ -1005,32 +1006,12 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
-	
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		
-		if(ratio < 100 && ratio >= 1){
-			return _MAXIMUM_TARGET.div((miningTarget * 3) / ratio.divRound(50));
-		}else if(ratio < 1) {
-			return _MAXIMUM_TARGET.div(miningTarget * 3);
-		}else{
 			return _MAXIMUM_TARGET.div(miningTarget);
-		}
-
 	}
 
 
 	function getMiningTarget() public view returns (uint) {
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		
-		if( ratio < 100 && ratio >= 1){
-			return ((miningTarget * 3) / ratio.divRound(50));
-		}else if (ratio < 1) {
-			return (miningTarget * 3);
-		}else{
 			return (miningTarget);
-		}
 	}
 
 
