@@ -488,16 +488,8 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
 		return IERC1155Receiver.onERC1155Received.selector;
 		}
-     function testNFT(address NFT, uint nftNumber) public returns (uint){
-
-			IERC1155(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
-
-	 }
-
-	 function testNFT2(address NFT, uint nftNumber) public returns (uint){
-
-			IERC721(NFT).safeTransferFrom(address(this), msg.sender, nftNumber, "");
-	}
+	
+	
 	uint public targetTime = 12 * 60;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
