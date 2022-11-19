@@ -1,11 +1,11 @@
-//  Forge Auctions Contract
-//  Auctions Forge tokens every 12 days and users are able to withdraw anytime after!
+//  Arbitrum Bitcoin and Staking - Auctions Contract
+//  Auctions Arbitrum Bitcoin and Staking (ABAS) tokens every 12 days and users are able to withdraw anytime after!
 //
 //  The Ethereum collected by Forge Auctions go to miners and liquidity providers!
 //
-//  10,500,000 ArbiForge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
+//  10,500,000 ABAS tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
-//  Distributes 32,768 ArbiForge tokens every 10-14 days for the first era(~5 years) and halves the amount of ArbiForge every era after.
+//  Distributes 32,768 ABAS tokens every 10-14 days for the first era(~5 years) and halves the amount of ABAS every era after.
 //
 // By simply sending this contract Ethereum, you will be auto entered into the current auction!
 // *You must control the wallet sending the Ethereum to retrieve your ArbiForge
@@ -175,7 +175,7 @@ contract ForgeMining{
     
     }
 
-  contract ArbiForgeAuctions is  GasPump, Ownabled
+  contract ArbitrumBitcoinAndStakingAuctions is  GasPump, Ownabled
 {
 
     using SafeMath for uint;
@@ -230,7 +230,7 @@ contract ForgeMining{
 
     // Constructor
     constructor () public {
-        name = "Auction Contract"; decimals = 18; 
+        name = "ABAS Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
         daysPerEra = 150; secondsPerDay = 12 * 60 * 60 * 24; //start out at 12 days
