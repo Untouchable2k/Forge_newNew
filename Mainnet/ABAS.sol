@@ -33,8 +33,7 @@
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work!
 // Donate this contract any NFT and we will also distribute it via Proof of Work to our miners!  
 //  
-// Same with NFTs
-//* 1 tokens are burned to create the LP pool.
+//* 1 token were burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
 
