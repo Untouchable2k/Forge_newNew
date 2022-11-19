@@ -23,7 +23,7 @@
 //
 //  =
 //
-// 73,501,001 Tokens is the max Supply
+// 73,500,001 Tokens is the max Supply
 //      
 // 33% of the Ethereum from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn Ethereum per mint!
 // 66% of the Ethereum from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
