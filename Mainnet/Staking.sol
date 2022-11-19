@@ -4,7 +4,7 @@
 // Recieves 28% or 21,000,000 Forge Tokens from the ForgeMining Contract over 100+ years.
 // Also recieve 33% of the Ethereum Tokens from the ForgeMining Contract over forever.
 //
-// What we are staking:  ABAS/Ethereum Liquidity Pool Tokens
+//// What we are staking: Balancer Liquidity Pool tokens for the pair ABAS / Ethereum
 //
 //Rewards: Arbitrum Bitcoin and Staking (ABAS), 0xBitcoin, and Ethereum currently.
 // Funds gathered will be dispered over 2 months. 24 Day reward period for 40%.
