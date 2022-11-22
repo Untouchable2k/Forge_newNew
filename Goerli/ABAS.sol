@@ -1053,6 +1053,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
 			_reAdjustDifficulty();
 			ARewardSender();
+			latestreAdjustStarted = block.timestamp;
 
 		}
 
@@ -1062,7 +1063,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 
 	function _reAdjustDifficulty() internal {
-
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 		uint epochTotal = epochCount - epochOld;
