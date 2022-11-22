@@ -1036,7 +1036,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		epochCount = epochCount.add(1);
 
 		//every so often, readjust difficulty. Dont readjust when deploying
-		if((epochCount) % (_BLOCKS_PER_READJUSTMENT / 8) == 0)
+		if((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT / 8) == 0)
 		{
 			ARewardSender();
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
