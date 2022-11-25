@@ -505,7 +505,6 @@ contract ArbitrumBitcoin is IERC20 {
     uint public latestDifficultyPeriodStarted = block.number;
     bool initeds = false;
     
-    // mint 1 token to setup LPs
 	    constructor() {    
 	    previousBlockTime = block.timestamp;
 	    reward_amount = 20 * 10**uint(decimals);
