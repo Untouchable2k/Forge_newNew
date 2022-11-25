@@ -485,10 +485,6 @@ contract ArbitrumBitcoin is Ownable, IERC20 {
     uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
-    address public AddressAuction;
-    ABASAuctionsCT public AuctionsCT;
-    address public AddressLPReward;
-    address public AddressLPReward2;
 //Events
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
@@ -520,36 +516,26 @@ contract ArbitrumBitcoin is Ownable, IERC20 {
     //Stuff for Functions
     uint public previousBlockTime  =  block.timestamp; // Previous Blocktime
     uint public Token2Per=           1000000; //Amount of ETH distributed per mint somewhat
-    uint public tokensMinted;			//Tokens Minted only for Miners
+    uint public tokensMinted = 0;			//Tokens Minted only for Miners
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    uint public slowBlocks;
+    uint public slowBlocks = 0;
     uint public epochOld = 0;  //Epoch count at each readjustment 
     uint public give0x = 0;
     uint public give = 1;
     // metadata
-    string public name = "Arbitrum Bitcoin and Staking Token";
-    string public constant symbol = "ABAS";
+    string public name = "Arbitrum Bitcoin";
+    string public constant symbol = "ArbiBTC";
     uint8 public constant decimals = 18;
 	
     uint public latestDifficultyPeriodStarted = block.number;
     bool initeds = false;
     
     // mint 1 token to setup LPs
-	    constructor() {
-    balances[msg.sender] = 1000000000000000000;
-    emit Transfer(address(0), msg.sender, 1000000000000000000);
-	}
-
-
-function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) public onlyOwner{
-        uint x = 21000000000000000000000000; 
-        // Only init once
-        assert(!initeds);
-        initeds = true;
+	    constructor() {    
 	    previousBlockTime = block.timestamp;
 	    reward_amount = 20 * 10**uint(decimals);
-    	rewardEra = 0;
+    	    rewardEra = 0;
 	    tokensMinted = 0;
 	    epochCount = 0;
 	    epochOld = 0;
@@ -559,20 +545,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
     	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
-        // Init contract variables and mint
-        balances[AuctionAddress2] = x/2;
-	
-        emit Transfer(address(0), AuctionAddress2, x/2);
-	
-    	AddressAuction = AuctionAddress2;
-        AuctionsCT = ABASAuctionsCT(AddressAuction);
-        AddressLPReward = payable(LPGuild2);
-        AddressLPReward2 = payable(LPGuild3);
+        // Init contract variables
 	    slowBlocks = 0;
-	
-		setOwner(address(0));
-     
-    }
+	}
+
 
 
 
