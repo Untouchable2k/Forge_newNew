@@ -480,7 +480,7 @@ contract ArbitrumBitcoin is IERC20 {
     uint public  _MINIMUM_TARGET = 2**16;
     
     uint public  _MAXIMUM_TARGET = 2**234;
-    uint public miningTarget = _MAXIMUM_TARGET.div(200000000000*25);  //1000 million difficulty to start until i enable mining
+    uint public miningTarget = _MAXIMUM_TARGET.div(1000);  //1000 million difficulty to start until i enable mining
     
     bytes32 public challengeNumber = blockhash(block.number - 1);   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
