@@ -924,9 +924,6 @@ contract ArbitrumBitcoin is IERC20 {
 		return tokensMinted;
 	}
 
-    function getCirculatingSupply() public view returns (uint) {
-        return tokensMinted;
-    }
 	//21m coins total
 	//reward begins at 150 and is cut in half every reward era (as tokens are mined)
 	function getMiningReward() public view returns (uint) {
