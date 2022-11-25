@@ -520,6 +520,34 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 
 
+	function timeFromLastSolve() public returns (uint256 timez){
+		uint256 timez = block.timestamp - previousBlockTime;
+		return timez;
+	}
+
+	function currentRewardAtTime() public returns (uint256 rewardz){
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+
+
+		if(ratio > 100){
+
+			slowBlocks = slowBlocks.add(1);
+
+		}
+
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
+		if(ratio < 3000){
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+		}else {
+			totalOwed = (24*x*5086060).div(888)+3456750000;
+		}
+
+		uint256 rewardz = (reward_amount * totalOwed).div(100000000);
+
+		return rewardz;
+	}
 
 
 	///
