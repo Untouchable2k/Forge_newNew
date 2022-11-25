@@ -884,6 +884,11 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 	
 
+	function blocksFromReadjust() public view returns (uint256 blockz){
+		blockz = (epochCount - epochOld);
+		return blockz;
+	}
+	
 	function checkBlocksToReadjust() public view returns (uint amtz){
 	
 		uint256 blktimestamp = block.timestamp;
