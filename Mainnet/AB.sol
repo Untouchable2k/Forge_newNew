@@ -2,7 +2,7 @@
 //
 // Distrubtion of Arbitrum Bitcoin (ArbiBTC) Token is as follows:
 // 100% of ArbiBTC Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
-/
+//
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
 	
@@ -537,12 +537,6 @@ contract ArbitrumBitcoin is IERC20 {
 		uint totalOwed = 0;
 
 
-		if(ratio > 100){
-
-			slowBlocks = slowBlocks.add(1);
-
-		}
-
 		//best @ 3000 ratio totalOwed / 100000000 = 71.6
 		if(ratio < 3000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
@@ -875,7 +869,7 @@ contract ArbitrumBitcoin is IERC20 {
 		uint rewardsz = rewardAtTime(timePerEpoch);
 		uint year = 365 * 24 * 60 * 60;
 		uint diff = year / TimeSinceLastDifficultyPeriod2;
-		uint amt = rewardz * diff;
+		amt = rewardsz * diff;
 		return amt;
 	}
 	
@@ -899,15 +893,13 @@ contract ArbitrumBitcoin is IERC20 {
 
 		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 		{
-				uint amtz = _BLOCKS_PER_READJUSTMENT/8 - (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8;
+				amtz = _BLOCKS_PER_READJUSTMENT/8 - (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8;
 				return amtz;
-		}
 		}else{
-			uint amtz = _BLOCK_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
-			return amtz;
+			    amtz = _BLOCKS_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
+			    return amtz;
 		}
 	
-		return 0;
 	}
 	
 	
