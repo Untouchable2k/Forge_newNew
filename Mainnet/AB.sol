@@ -520,13 +520,19 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 
 
-	function timeFromLastSolve() public returns (uint256 timez){
+	function timeFromLastSolve() public view returns (uint256 timez){
 		uint256 timez = block.timestamp - previousBlockTime;
 		return timez;
 	}
 
-	function currentRewardAtTime() public returns (uint256 rewardz){
-		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+	function currentRewardAtTime() public view returns (uint256 rewardz){
+		uint256 x = (block.timestamp - previousBlockTime);
+		rewardz = rewardAtTime(x);
+		return rewardz;
+	}
+	
+	function rewardAtTime(uint timeDifference) public view returns (uint256 rewardz){
+		uint256 x = (timeDifference * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
 		uint totalOwed = 0;
 
@@ -862,6 +868,21 @@ contract ArbitrumBitcoin is IERC20 {
 		challengeNumber = blockhash(block.number - 1);
         
  }
+
+	function inflation () public view returns (uint amt){
+		if(epochCount - epochOld == 0){
+			return 0;
+		}
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
+		uint rewardsz = rewardAtTime(timePerEpoch);
+		uint year = 365 * 24 * 60 * 60;
+		uint diff = year / TimeSinceLastDifficultyPeriod2;
+		uint amt = rewardz * diff;
+		return amt;
+	}
+	
 
 	function checkBlocksToReadjust() public view returns (uint amtz){
 	
