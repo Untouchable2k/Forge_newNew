@@ -855,14 +855,10 @@ contract ArbitrumBitcoin is IERC20 {
 			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
 			latestreAdjustStarted = block.timestamp;
 
-			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0)
 			{
 				_reAdjustDifficulty();
 			}
-		}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
-			_reAdjustDifficulty();
-			latestreAdjustStarted = block.timestamp;
-
 		}
 
 		challengeNumber = blockhash(block.number - 1);
@@ -890,7 +886,13 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 	
 	function checkBlocksToReadjust() public view returns (uint amtz){
-	
+		if(epochCount - epochOld == 0){
+			if(give == 1){
+				return _BLOCKS_PER_READJUSTMENT;
+			}else{
+				return _BLOCKS_PER_READJUSTMENT / 8;
+			}
+		}
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
 		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
