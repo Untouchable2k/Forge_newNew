@@ -844,7 +844,6 @@ contract ArbitrumBitcoin is IERC20 {
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
 		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
-		latestreAdjustStarted = block.timestamp;
 
 		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 		{
