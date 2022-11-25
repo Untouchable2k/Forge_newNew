@@ -1,6 +1,6 @@
 // Arbitrum Bitcoin Token Contract
 //
-// Distrubtion of Arbitrum Bitcoin Token is as follows:
+// Distrubtion of Arbitrum Bitcoin (AB) Token is as follows:
 // 100% of AB Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 /
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
