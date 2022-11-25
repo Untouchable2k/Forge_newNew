@@ -904,9 +904,10 @@ contract ArbitrumBitcoin is IERC20 {
 		}
 		}else{
 			uint amtz = _BLOCK_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
+			return amtz;
 		}
 	
-	
+		return 0;
 	}
 	
 	
