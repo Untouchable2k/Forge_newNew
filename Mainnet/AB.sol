@@ -839,7 +839,26 @@ contract ArbitrumBitcoin is IERC20 {
         
  }
 
+	function checkBlocksToReadjust() public returns (uint amtz){
+	
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
+		latestreAdjustStarted = block.timestamp;
 
+		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
+		{
+				uint amtz = _BLOCKS_PER_READJUSTMENT/8 - (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8;
+				return amtz;
+		}
+		}else{
+			uint amtz = _BLOCK_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
+		}
+	
+	
+	}
+	
+	
 	function _reAdjustDifficulty() internal {
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
