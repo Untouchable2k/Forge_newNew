@@ -1,7 +1,5 @@
 // Arbitrum Bitcoin Token Contract
 //
-// Distrubtion of Arbitrum Bitcoin (ArbiBTC) // Arbitrum Bitcoin Token and Mining Contract
-//
 // Distrubtion of Arbitrum Bitcoin (ArbiBTC) Token is as follows:
 // 100% of ArbiBTC Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 /
@@ -14,17 +12,20 @@
 // Total supply: 21,000,000.000000000000000000
 //   =
 // 21,000,000 Mined over 100+ years using Bitcoins Distrubtion halvings every 4 years @ 360 min solves. Uses Proof-oF-Work to distribute the tokens. Public Miner is available.  Uses this contract.
-//
+//    Normal ArbiBTC block time is set at 12 minutes for first era.  Best payouts are at 30x = 360 minutes.  Fight for the slowest answer instead of the fastest!  
+//      Saves thousands on fees and that money goes back to miners!!
 //  =
 //
 // 21,000,000 Tokens is the max Supply
 //      
 // No premine, dev cut, or advantage taken at launch. Public miner available at launch.  100% of the token is given away fairly over 100+ years using Bitcoins model!
+// Normal ArbiBTC block time is set at 12 minutes to start.  Best payouts are at 30x = 360 minutes.  Fight for the slowest answer instead of the fastest!  
+// Saves thousands on fees and that money goes back to miners!!
+//
 //
 // Send this contract any ERC20 token and it will become instantly mineable and able to distribute using proof-of-work!
 // Donate this contract any NFT and we will also distribute it via Proof of Work to our miners!  
 //  
-//* 1 token were burned to create the LP pool.
 //
 // Credits: 0xBitcoin
 
