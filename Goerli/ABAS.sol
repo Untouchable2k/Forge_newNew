@@ -482,15 +482,16 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
     }
-	function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
-		return IERC1155Receiver.onERC1155Received.selector;
-		}	
-	function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
-		return IERC1155Receiver.onERC1155Received.selector;
-		}
+    
+    function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+	return IERC1155Receiver.onERC1155Received.selector;
+	}	
+    function onERC1155BatchReceived(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4){
+	return IERC1155Receiver.onERC1155Received.selector;
+	}
 	
 	
-	  uint public targetTime = 20;
+    uint public targetTime = 20;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -510,9 +511,9 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     //BITCOIN INITALIZE Start
 	
     uint _totalSupply = 21000000000000000000000000;
-    uint public latestDifficultyPeriodStarted2 = block.timestamp;
+    uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
     uint public epochCount = 0;//number of 'blocks' mined
-	uint public latestreAdjustStarted = block.timestamp;
+	uint public latestreAdjustStarted = block.timestamp; // shorter blocktime of attempted readjustment
     uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 512 or 1028
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
@@ -526,14 +527,14 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public reward_amount = 0;
     
     //Stuff for Functions
-    uint oldecount = 0;
-    uint public previousBlockTime  =  block.timestamp;
-    uint public Token2Per=           1000000;
-    uint public tokensMinted;
+    uint public oldecount = 0; //Previous block count for ArewardSender function
+    uint public previousBlockTime  =  block.timestamp; // Previous Blocktime
+    uint public Token2Per=           1000000; //Amount of ETH distributed per mint somewhat
+    uint public tokensMinted;			//Tokens Minted only for Miners
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    uint slowBlocks;
-    uint public epochOld = 0;
+    uint public slowBlocks;
+    uint public epochOld = 0;  //Epoch count at each readjustment 
     uint public give0x = 0;
     uint public give = 1;
     // metadata
