@@ -503,8 +503,7 @@ contract ArbitrumBitcoin is IERC20 {
     uint8 public constant decimals = 18;
 	
     uint public latestDifficultyPeriodStarted = block.number;
-    bool initeds = false;
-    
+
 	    constructor() {    
 	    previousBlockTime = block.timestamp;
 	    reward_amount = 20 * 10**uint(decimals);
@@ -514,12 +513,10 @@ contract ArbitrumBitcoin is IERC20 {
 	    epochOld = 0;
 	    multipler = address(this).balance / (1 * 10 ** 18); 	
 	    Token2Per = (2** rewardEra) * address(this).balance / (600000 + 600000*(multipler)); //aimed to give about 400 days of reserves
-
-    	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
-        latestDifficultyPeriodStarted2 = block.timestamp;
-    	_startNewMiningEpoch();
-        // Init contract variables
-	    slowBlocks = 0;
+    	    miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
+            latestDifficultyPeriodStarted2 = block.timestamp;
+    	    _startNewMiningEpoch();
+       	    slowBlocks = 0;
 	}
 
 
