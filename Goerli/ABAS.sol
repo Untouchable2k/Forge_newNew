@@ -1006,6 +1006,62 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return totalOwed;   
 	}
 
+	function timeFromLastSolve() public view returns (uint256 time){
+		time = block.timestamp - previousBlockTime;
+		return time;
+	}
+
+	function rewardAtCurrentTime() public view returns (uint256 reward){
+		uint256 x = (block.timestamp - previousBlockTime);
+		reward = rewardAtTime(x);
+		return reward;
+	}
+	
+	function rewardAtTime(uint timeDifference) public view returns (uint256 rewards){
+		uint256 x = (timeDifference * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+
+
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
+		if(ratio < 3000){
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+		}else {
+			totalOwed = (24*x*5086060).div(888)+3456750000;
+		}
+
+		rewards = (reward_amount * totalOwed).div(100000000);
+
+		return rewards;
+	}
+
+	function blocksFromReadjust() public view returns (uint256 blocks){
+		blocks = (epochCount - epochOld);
+		return blocks;
+	}
+	
+	function blocksToReadjust() public view returns (uint block){
+		if((epochCount - epochOld) == 0){
+			if(give == 1){
+				return (_BLOCKS_PER_READJUSTMENT);
+			}else{
+				return (_BLOCKS_PER_READJUSTMENT / 8);
+			}
+		}
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8)); 
+
+		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
+		{
+				block = _BLOCKS_PER_READJUSTMENT/8 - ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8));
+				return (block);
+		}else{
+			    block = _BLOCKS_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
+			    return (block);
+		}
+	
+	}
 
 
 	function _startNewMiningEpoch() internal {
@@ -1047,15 +1103,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
 			latestreAdjustStarted = block.timestamp;
 
-			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0) )
 			{
 				_reAdjustDifficulty();
 			}
-		}else if((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0){
-			_reAdjustDifficulty();
-			ARewardSender();
-			latestreAdjustStarted = block.timestamp;
-
 		}
 
 		challengeNumber = blockhash(block.number - 1);
