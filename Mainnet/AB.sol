@@ -520,6 +520,21 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 
 
+
+	function ARewardSender() public {
+		//runs every _BLOCKS_PER_READJUSTMENT / 8
+
+		multipler = address(this).balance / (1 * 10 ** 18); 	
+		Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
+
+		if(rewardEra < 8){
+			
+			targetTime = ((12 * 60) * 2**rewardEra);
+		}else{
+			reward_amount = ( 20 * 10**uint(decimals)).div( 2**(rewardEra - 7  ) );
+		}
+		
+	}
 	function timeFromLastSolve() public view returns (uint256 timez){
 		uint256 timez = block.timestamp - previousBlockTime;
 		return timez;
@@ -842,6 +857,7 @@ contract ArbitrumBitcoin is IERC20 {
 		//every so often, readjust difficulty. Dont readjust when deploying
 		if((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT / 8) == 0)
 		{
+            ARewardSender();
 			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 
 			uint256 blktimestamp = block.timestamp;
@@ -859,18 +875,20 @@ contract ArbitrumBitcoin is IERC20 {
         
  }
 
-	function inflation () public view returns (uint amt){
+	function inflation () public view returns (uint amt, uint z2, uint z3, uint z4){
 		if(epochCount - epochOld == 0){
-			return 0;
+			return (0, 0, 0, 0);
 		}
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
-		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
+
+        
+		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust(); 
 		uint rewardsz = rewardAtTime(timePerEpoch);
 		uint year = 365 * 24 * 60 * 60;
-		uint diff = year / TimeSinceLastDifficultyPeriod2;
+		uint diff = year / timePerEpoch;
 		amt = rewardsz * diff;
-		return amt;
+		return (amt, diff, rewardsz, timePerEpoch);
 	}
 	
 
@@ -879,7 +897,7 @@ contract ArbitrumBitcoin is IERC20 {
 		return blockz;
 	}
 	
-	function checkBlocksToReadjust() public view returns (uint amtz){
+	function blocksToReadjust() public view returns (uint amtz){
 		if((epochCount - epochOld) == 0){
 			if(give == 1){
 				return (_BLOCKS_PER_READJUSTMENT);
