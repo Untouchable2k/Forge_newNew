@@ -599,7 +599,7 @@ contract ArbitrumBitcoin is IERC20 {
 		return true;
 	}
 
-	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintToAddress) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -632,23 +632,23 @@ contract ArbitrumBitcoin is IERC20 {
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 		if(give0x > 0){
 			if(ratio < 2000){
-            			address payable to = payable(mintTo);
+            			address payable to = payable(mintToAddress);
              			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-               			address payable to = payable(mintTo);
+               			address payable to = payable(mintToAddress);
                			to.transfer((600 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
 
-		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+		emit Mint(mintToAddress, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
 		return totalOwed;
 
@@ -656,7 +656,7 @@ contract ArbitrumBitcoin is IERC20 {
 
 
 
-	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintToAddress) public returns (uint256 owed2) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -691,7 +691,7 @@ contract ArbitrumBitcoin is IERC20 {
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 		
@@ -1013,9 +1013,9 @@ contract ArbitrumBitcoin is IERC20 {
 
 
 	//help debug mining software
-	function getMintDigest(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number) public view returns (bytes32 digesttest) {
+	function getMintDigest(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number) public view returns (bytes32 digest) {
 
-		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+		digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
 		return digest;
 
