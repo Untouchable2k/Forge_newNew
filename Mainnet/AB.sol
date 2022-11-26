@@ -456,7 +456,7 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 	
 	
-    uint public targetTime = 20;
+    uint public targetTime = 60 * 12;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
 //Events
@@ -475,7 +475,7 @@ contract ArbitrumBitcoin is IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
     uint public epochCount = 0;//number of 'blocks' mined
 	uint public latestreAdjustStarted = block.timestamp; // shorter blocktime of attempted readjustment
-    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 512 or 1028
+    uint public _BLOCKS_PER_READJUSTMENT = 1028; // should be 512 or 1028
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
@@ -880,24 +880,24 @@ contract ArbitrumBitcoin is IERC20 {
 	}
 	
 	function checkBlocksToReadjust() public view returns (uint amtz){
-		if(epochCount - epochOld == 0){
+		if((epochCount - epochOld) == 0){
 			if(give == 1){
-				return _BLOCKS_PER_READJUSTMENT;
+				return (_BLOCKS_PER_READJUSTMENT);
 			}else{
-				return _BLOCKS_PER_READJUSTMENT / 8;
+				return (_BLOCKS_PER_READJUSTMENT / 8);
 			}
 		}
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
-		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8); 
+		uint adjusDiffTargetTime = targetTime * ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8)); 
 
 		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 		{
-				amtz = _BLOCKS_PER_READJUSTMENT/8 - (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT/8;
-				return amtz;
+				amtz = _BLOCKS_PER_READJUSTMENT/8 - ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8));
+				return (amtz);
 		}else{
 			    amtz = _BLOCKS_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
-			    return amtz;
+			    return (amtz);
 		}
 	
 	}
