@@ -536,7 +536,7 @@ contract ArbitrumBitcoin is IERC20 {
 		
 	}
 	function timeFromLastSolve() public view returns (uint256 timez){
-		uint256 timez = block.timestamp - previousBlockTime;
+		timez = block.timestamp - previousBlockTime;
 		return timez;
 	}
 
