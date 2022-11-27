@@ -531,7 +531,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public tokensMinted;			//Tokens Minted only for Miners
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    uint public slowBlocks;
+    uint public slowBlocks = 0;
     uint public epochOld = 0;  //Epoch count at each readjustment 
     uint public give0x = 0;
     uint public give = 1;
