@@ -1113,6 +1113,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 
 	function reAdjustsToWhatDifficulty() public view returns (uint difficulty) {
+		if(epochCount - epochOld == 0){
+			return _MAXIMUM_TARGET.div(miningTarget);
+		}
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 		uint epochTotal = epochCount - epochOld;
@@ -1124,24 +1127,24 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
 			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
 			//make it harder 
-			uint miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
+			uint miningTarget2 = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
 		}else{
 			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
 
 			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 			//make it easier
-			uint miningTarget = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
+			uint miningTarget2 = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
 		}
 
-		if(miningTarget < _MINIMUM_TARGET) //very difficult
+		if(miningTarget2 < _MINIMUM_TARGET) //very difficult
 		{
-			miningTarget = _MINIMUM_TARGET;
+			miningTarget2 = _MINIMUM_TARGET;
 		}
-		if(miningTarget > _MAXIMUM_TARGET) //very easy
+		if(miningTarget2 > _MAXIMUM_TARGET) //very easy
 		{
-			miningTarget = _MAXIMUM_TARGET;
+			miningTarget2 = _MAXIMUM_TARGET;
 		}
-		difficulty = _MAXIMUM_TARGET.div(miningTarget);
+		difficulty = _MAXIMUM_TARGET.div(miningTarget2);
 			return difficulty;
 	}
 
@@ -1200,12 +1203,18 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 	
 	function toNextEraDays () public view returns (uint amt, uint z2, uint z3, uint z4){
+
 		(uint amtDaily) = inflationMined() / 365;
+		if(amtDaily == 0){
+			return(0,0,0,0);
+		}
 		uint daysToEra = (maxSupplyForEra - tokensMinted) / amtDaily
 		return (daysToEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
 	function toNextEraBlocks () public view returns ( uint blocks){
+		if(blocksFromReadjust() == 0){
+			return (0);
 		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
 		uint days = ToNextEraDays();
 		uint amt = days * (60*60*24) / timePerEpoch
