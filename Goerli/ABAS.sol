@@ -1112,7 +1112,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
  }
 
 
-	function reAdjustsToWhatMiningTarget() public view returns (uint difficulty) {
+	function reAdjustsToWhatDifficulty() public view returns (uint difficulty) {
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 		uint epochTotal = epochCount - epochOld;
