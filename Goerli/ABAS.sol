@@ -1199,6 +1199,18 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return (amt, diff, rewardsz, timePerEpoch);
 	}
 	
+	function toNextEraDays () public view returns (uint amt, uint z2, uint z3, uint z4){
+		(uint amtDaily) = inflationMined() / 365;
+		uint daysToEra = (maxSupplyForEra - tokensMinted) / amtDaily
+		return (daysToEra, maxSupplyForEra, tokensMinted, amtDaily);
+	}
+	
+	function toNextEraBlocks () public view returns ( uint blocks){
+		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
+		uint days = ToNextEraDays();
+		uint amt = days * (60*60*24) / timePerEpoch
+		return amt;
+	}
 
 	//help debug mining software
 	function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
