@@ -1183,6 +1183,22 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
 
+	function inflationMined () public view returns (uint amt, uint z2, uint z3, uint z4){
+		if(epochCount - epochOld == 0){
+			return (0, 0, 0, 0);
+		}
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+
+        
+		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust(); 
+		uint rewardsz = rewardAtTime(timePerEpoch);
+		uint year = 365 * 24 * 60 * 60;
+		uint diff = year / timePerEpoch;
+		amt = rewardsz * diff;
+		return (amt, diff, rewardsz, timePerEpoch);
+	}
+	
 
 	//help debug mining software
 	function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
