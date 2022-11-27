@@ -1112,6 +1112,40 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
  }
 
 
+	function reAdjustsToWhatMiningTarget() public view returns (uint difficulty) {
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
+		uint epochTotal = epochCount - epochOld;
+		uint adjusDiffTargetTime = targetTime *  epochTotal; 
+
+		//if there were less eth blocks passed in time than expected
+		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
+		{
+			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
+			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
+			//make it harder 
+			uint miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
+		}else{
+			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
+
+			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
+			//make it easier
+			uint miningTarget = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
+		}
+
+		if(miningTarget < _MINIMUM_TARGET) //very difficult
+		{
+			miningTarget = _MINIMUM_TARGET;
+		}
+		if(miningTarget > _MAXIMUM_TARGET) //very easy
+		{
+			miningTarget = _MAXIMUM_TARGET;
+		}
+		difficulty = _MAXIMUM_TARGET.div(miningTarget);
+			return difficulty;
+	}
+
+
 	function _reAdjustDifficulty() internal {
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
