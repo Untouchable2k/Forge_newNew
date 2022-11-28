@@ -300,7 +300,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 
     function Z_addNewToken(IERC20 tokenExtra, uint _decimalsExtra) external OnlyModerators returns (bool success){
       	require(rewardTokenExtraExtra3 != tokenExtra && tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra && tokenExtra != rewardTokenExtraExtra2, "no same token");
-	      require(!activated4, "Only allowed to add one token");
+	require(!activated4, "Only allowed to add one token");
         decimalsExtra = _decimalsExtra;
         rewardRateExtra = 0;
         rewardTokenExtra = tokenExtra;
@@ -311,8 +311,8 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 	
 
     function Z_addNewToken2(IERC20 tokenTWOExtra, uint _decimalsExtraExtra) external OnlyModerators returns (bool success){
-	     require(rewardTokenExtraExtra3 != tokenTWOExtra &&  tokenTWOExtra != rewardToken && tokenTWOExtra != stakedToken && tokenTWOExtra != rewardToken2 && tokenTWOExtra != rewardTokenExtra && tokenTWOExtra != rewardTokenExtraExtra && tokenTWOExtra != rewardTokenExtraExtra2, "no same token");
-	      require(!activated5, "Only allowed to add one token");
+	require(rewardTokenExtraExtra3 != tokenTWOExtra &&  tokenTWOExtra != rewardToken && tokenTWOExtra != stakedToken && tokenTWOExtra != rewardToken2 && tokenTWOExtra != rewardTokenExtra && tokenTWOExtra != rewardTokenExtraExtra && tokenTWOExtra != rewardTokenExtraExtra2, "no same token");
+	require(!activated5, "Only allowed to add one token");
         decimalsExtraExtra = _decimalsExtraExtra;
         rewardRateExtraExtra = 0;
         rewardTokenExtraExtra = tokenTWOExtra;
@@ -322,8 +322,8 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     }
         
     function Z_addNewToken3(IERC20 tokenTWOExtra2, uint _decimalsExtraExtra2) external OnlyModerators returns (bool success){
-	     require(rewardTokenExtraExtra3 != tokenTWOExtra2 && tokenTWOExtra2 != rewardToken && tokenTWOExtra2 != stakedToken && tokenTWOExtra2 != rewardToken2 && tokenTWOExtra2 != rewardTokenExtra && tokenTWOExtra2 != rewardTokenExtraExtra && tokenTWOExtra2 != rewardTokenExtraExtra2, "no same token");
-	      require(!activated6, "Only allowed to add one token");
+	require(rewardTokenExtraExtra3 != tokenTWOExtra2 && tokenTWOExtra2 != rewardToken && tokenTWOExtra2 != stakedToken && tokenTWOExtra2 != rewardToken2 && tokenTWOExtra2 != rewardTokenExtra && tokenTWOExtra2 != rewardTokenExtraExtra && tokenTWOExtra2 != rewardTokenExtraExtra2, "no same token");
+	require(!activated6, "Only allowed to add one token");
         decimalsExtraExtra2 = _decimalsExtraExtra2;
         rewardRateExtraExtra2 = 0;
         rewardTokenExtraExtra2 = tokenTWOExtra2;
