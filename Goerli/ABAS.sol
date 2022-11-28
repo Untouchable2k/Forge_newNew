@@ -1185,7 +1185,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
 
-	function inflationMined () public view returns (uint amt, uint z2, uint z3, uint z4){
+	function inflationMined () public view returns (uint YearlyInflation, uint EpochsPerYear, uint RewardsAtTime, uint TimePerEpoch){
 		if(epochCount - epochOld == 0){
 			return (0, 0, 0, 0);
 		}
@@ -1193,23 +1193,23 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
 
         
-		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust(); 
-		uint rewardsz = rewardAtTime(timePerEpoch);
+		TimePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust(); 
+		RewardsAtTime = rewardAtTime(TimePerEpoch);
 		uint year = 365 * 24 * 60 * 60;
-		uint diff = year / timePerEpoch;
-		amt = rewardsz * diff;
-		return (amt, diff, rewardsz, timePerEpoch);
+		EpochsPerYear = year / TimePerEpoch;
+		YearlyInflation = RewardsAtTime * EpochsPerYear;
+		return (YearlyInflation, EpochsPerYear, RewardsAtTime, TimePerEpoch);
 	}
 	
-	function toNextEraDays () public view returns (uint amt, uint z2, uint z3, uint z4){
+	function toNextEraDays () public view returns (uint daysToNextEra, uint _maxSupplyForEra, uint _tokensMinted, uint amtDaily){
 
         (uint totalamt,,,) = inflationMined();
-		(uint amtDaily) = totalamt / 365;
+		(amtDaily) = totalamt / 365;
 		if(amtDaily == 0){
 			return(0,0,0,0);
 		}
-		uint daysToEra = (maxSupplyForEra - tokensMinted) / amtDaily;
-		return (daysToEra, maxSupplyForEra, tokensMinted, amtDaily);
+		daysToNextEra = (maxSupplyForEra - tokensMinted) / amtDaily;
+		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
 	function toNextEraBlocks () public view returns ( uint blocks){
