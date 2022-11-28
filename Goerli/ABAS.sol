@@ -613,7 +613,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		 if(ratio < 2000){
 			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
 		 }else {
-			totalOwed = (6000000000);
+			totalOwed = (3200000000);
 		} 
 
 		if( address(this).balance > (200 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
@@ -708,7 +708,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.transfer((600 * Token2Per * give0x).div(10));
+               			to.transfer((320 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
@@ -758,7 +758,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
                			address payable to = payable(mintTo);
-               			to.transfer((600 * Token2Per * give0x).div(10));
+               			to.transfer((320 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
 		}
