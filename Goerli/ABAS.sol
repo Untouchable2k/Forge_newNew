@@ -43,7 +43,7 @@ contract Ownable {
 
     event TransferOwnership(address _from, address _to);
 
-    constructor() public {
+    constructor() {
         owner = msg.sender;
         emit TransferOwnership(address(0), msg.sender);
     }
@@ -662,7 +662,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return true;
 	}
 
-	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest, address mintToAddress) public returns (uint256 totalOwed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -678,8 +678,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
-		
+	
 		
 		if(ratio > 100){
 			
@@ -695,7 +694,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
@@ -703,11 +702,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		previousBlockTime = block.timestamp;
 		if(give0x > 0){
 			if(ratio < 2000){
-            			address payable to = payable(mintTo);
+            			address payable to = payable(mintToAddress);
              			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-               			address payable to = payable(mintTo);
+               			address payable to = payable(mintToAddress);
                			to.transfer((320 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
@@ -719,8 +718,10 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 	}
 
-	function mintToFREE(bool nonce, bool challenge_digest, address mintTo) public returns (uint256 owed) {
-        
+	function mintToFREE(bool nonce, bool challenge_digest, address mintToAddress) public returns (uint256 totalOwed) {
+        if(nonce && challenge_digest){
+            give = give;
+        }
         _startNewMiningEpoch();
 
 		require(block.timestamp > previousBlockTime, "No same second solves");
@@ -728,7 +729,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
 		
 		
 		if(ratio > 100){
@@ -745,7 +745,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
@@ -753,11 +753,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		previousBlockTime = block.timestamp;
 		if(give0x > 0){
 			if(ratio < 2000){
-            			address payable to = payable(mintTo);
+            			address payable to = payable(mintToAddress);
              			to.transfer((totalOwed * Token2Per * give0x).div(100000000));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000 * 2));
 			}else{
-               			address payable to = payable(mintTo);
+               			address payable to = payable(mintToAddress);
                			to.transfer((320 * Token2Per * give0x).div(10));
 				//IERC20(AddressZeroXBTC).transfer(mintTo, (40 * Token2Per * give0xBTC).div(10 * 2));
 			}
@@ -770,8 +770,8 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
 
-	function mintTokensArrayToFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
-		uint256 totalOd = mintToFREE(nonce,challenge_digest, MintTo[0]);
+	function mintTokensArrayToFREE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 totalOd) {
+		totalOd = mintToFREE(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
 
 		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
@@ -833,7 +833,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 
 
-	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintTo) public returns (uint256 owed) {
+	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintToAddress) public returns (uint256 totalOwed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -851,7 +851,6 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
 		
 		
 		if(ratio > 100){
@@ -868,7 +867,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}
 
 
-		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
@@ -1038,7 +1037,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return blocks;
 	}
 	
-	function blocksToReadjust() public view returns (uint block){
+	function blocksToReadjust() public view returns (uint blocks){
 		if((epochCount - epochOld) == 0){
 			if(give == 1){
 				return (_BLOCKS_PER_READJUSTMENT);
@@ -1052,11 +1051,11 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 
 		if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime)
 		{
-				block = _BLOCKS_PER_READJUSTMENT/8 - ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8));
-				return (block);
+				blocks = _BLOCKS_PER_READJUSTMENT/8 - ((epochCount - epochOld) % (_BLOCKS_PER_READJUSTMENT/8));
+				return (blocks);
 		}else{
-			    block = _BLOCKS_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
-			    return (block);
+			    blocks = _BLOCKS_PER_READJUSTMENT - ((epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT);
+			    return (blocks);
 		}
 	
 	}
@@ -1101,7 +1100,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 			uint adjusDiffTargetTime = targetTime *  (_BLOCKS_PER_READJUSTMENT / 8) ; 
 			latestreAdjustStarted = block.timestamp;
 
-			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0) )
+			if( TimeSinceLastDifficultyPeriod2 > adjusDiffTargetTime || (epochCount - epochOld) % _BLOCKS_PER_READJUSTMENT == 0) 
 			{
 				_reAdjustDifficulty();
 			}
@@ -1120,20 +1119,20 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 		uint epochTotal = epochCount - epochOld;
 		uint adjusDiffTargetTime = targetTime *  epochTotal; 
-
+        uint miningTarget2 = 0;
 		//if there were less eth blocks passed in time than expected
 		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
 		{
 			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
 			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
 			//make it harder 
-			uint miningTarget2 = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
+			miningTarget2 = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
 		}else{
 			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
 
 			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 			//make it easier
-			uint miningTarget2 = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
+			miningTarget2 = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
 		}
 
 		if(miningTarget2 < _MINIMUM_TARGET) //very difficult
@@ -1204,20 +1203,24 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	
 	function toNextEraDays () public view returns (uint amt, uint z2, uint z3, uint z4){
 
-		(uint amtDaily) = inflationMined() / 365;
+        (uint totalamt,,,) = inflationMined();
+		(uint amtDaily) = totalamt / 365;
 		if(amtDaily == 0){
 			return(0,0,0,0);
 		}
-		uint daysToEra = (maxSupplyForEra - tokensMinted) / amtDaily
+		uint daysToEra = (maxSupplyForEra - tokensMinted) / amtDaily;
 		return (daysToEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
 	function toNextEraBlocks () public view returns ( uint blocks){
 		if(blocksFromReadjust() == 0){
 			return (0);
+        }
+		uint256 blktimestamp = block.timestamp;
+        uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
 		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
-		uint days = ToNextEraDays();
-		uint amt = days * (60*60*24) / timePerEpoch
+		(uint daysz,,,) = toNextEraDays();
+		uint amt = daysz * (60*60*24) / timePerEpoch;
 		return amt;
 	}
 
