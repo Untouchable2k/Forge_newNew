@@ -1212,16 +1212,16 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
-	function toNextEraBlocks () public view returns ( uint blocks){
+	function toNextEraBlocks () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
-			return (0);
+			return (0,0,0);
         }
 		uint256 blktimestamp = block.timestamp;
         uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
 		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
 		(uint daysz,,,) = toNextEraDays();
 		uint amt = daysz * (60*60*24) / timePerEpoch;
-		return amt;
+		return (amt, timePerEpoch, daysToNextEra);
 	}
 
 	//help debug mining software
