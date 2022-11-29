@@ -512,7 +512,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
     uint public epochCount = 0;//number of 'blocks' mined
 	uint public latestreAdjustStarted = block.timestamp; // shorter blocktime of attempted readjustment
-    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 512 or 1028
+    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 1024 = 2^10
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
@@ -555,9 +555,9 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	    previousBlockTime = block.timestamp;
 	    reward_amount = 20 * 10**uint(decimals);
     	rewardEra = 0;
-	    tokensMinted = 10499999000000000000000000;
-	    epochCount = 20000;
-	    epochOld = 20000;
+	    tokensMinted = 0;
+	    epochCount = 0;
+	    epochOld = 0;
 	    multipler = address(this).balance / (1 * 10 ** 18); 	
 	    Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
 
