@@ -1219,7 +1219,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
-	function toNextEraEpochs () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
+	function toNextEraEpochs () public view returns ( uint epochs, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
 			return (0,0,0);
         }
