@@ -1225,7 +1225,7 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
-	function toNextEraEpochs () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
+	function toNextEraEpochs () public view returns ( uint epochs, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
 			return (0,0,0);
         }
@@ -1234,7 +1234,7 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
 		(uint daysz,,,) = toNextEraDays();
 		uint amt = daysz * (60*60*24) / timePerEpoch;
-		return (amt, timePerEpoch, daysToNextEra);
+		return (epochs, timePerEpoch, daysToNextEra);
 	}
 
 
