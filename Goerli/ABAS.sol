@@ -652,7 +652,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
-		slowBlocks = slowBlocks.add(1);
+		if(mintNFTGO() == 0){
+			slowBlocks = slowBlocks.add(1);
+		}
 		return true;
 	}
 
@@ -660,7 +662,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
-		slowBlocks = slowBlocks.add(1);
+		if(mintNFTGO() == 0){
+			slowBlocks = slowBlocks.add(1);
+		}
 		return true;
 	}
 
