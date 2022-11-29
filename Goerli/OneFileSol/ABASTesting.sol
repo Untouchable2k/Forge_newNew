@@ -555,9 +555,9 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	    previousBlockTime = block.timestamp;
 	    reward_amount = 20 * 10**uint(decimals);
     	rewardEra = 0;
-	    tokensMinted = 0;
-	    epochCount = 0;
-	    epochOld = 0;
+	    tokensMinted = 10499999000000000000000000;
+	    epochCount = 20000;
+	    epochOld = 20000;
 	    multipler = address(this).balance / (1 * 10 ** 18); 	
 	    Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
 
@@ -565,11 +565,12 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
         // Init contract variables and mint
-        balances[AuctionAddress2] = x/2;
-	
-        emit Transfer(address(0), AuctionAddress2, x/2);
-	
+        
     	AddressAuction = 0xB6eD7644C69416d67B522e20bC294A9a9B405B31; // AuctionAddress2;
+        
+        balances[AddressAuction] = x/2;
+        emit Transfer(address(0), AddressAuction, x/2);
+	
         AuctionsCT = ABASAuctionsCT(AddressAuction);
         AddressLPReward = payable(0xDA5cA446B312ee5BAd10668c2Fe41bb1C9f0828E); //payable(LPGuild2);
         AddressLPReward2 = payable(0x0bB21eDCe13500147eD84dc7d3BA47Bcbc6dACfa);//payable(LPGuild3);
@@ -681,6 +682,9 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC721(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, "");
+        if(mintNFTGO() == 0){
+			slowBlocks = slowBlocks.add(1);
+		}
 		return true;
 	}
 
@@ -688,6 +692,9 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintTo(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
+        if(mintNFTGO() == 0){
+			slowBlocks = slowBlocks.add(1);
+		}
 		return true;
 	}
 
@@ -695,6 +702,9 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		require(mintNFTGO() == 0, "Only mint on slowBlocks % _BLOCKS_PER_READJUSTMENT/8 == 0");
 		mintToFREE(nonce, challenge_digest, msg.sender);
 		IERC1155(nftaddy).safeTransferFrom(address(this), msg.sender, nftNumber, 1, "" );
+        if(mintNFTGO() == 0){
+			slowBlocks = slowBlocks.add(1);
+		}
 		return true;
 	}
 
@@ -1038,36 +1048,6 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		previousBlockTime = block.timestamp;
 		return totalOwed;   
 	}
-
-	function timeFromLastSolve() public view returns (uint256 time){
-		time = block.timestamp - previousBlockTime;
-		return time;
-	}
-
-	function rewardAtCurrentTime() public view returns (uint256 reward){
-		uint256 x = (block.timestamp - previousBlockTime);
-		reward = rewardAtTime(x);
-		return reward;
-	}
-	
-	function rewardAtTime(uint timeDifference) public view returns (uint256 rewards){
-		uint256 x = (timeDifference * 888) / targetTime;
-		uint ratio = x * 100 / 888 ;
-		uint totalOwed = 0;
-
-
-		//best @ 3000 ratio totalOwed / 100000000 = 71.6
-		if(ratio < 3000){
-			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
-		}else {
-			totalOwed = (24*x*5086060).div(888)+3456750000;
-		}
-
-		rewards = (reward_amount * totalOwed).div(100000000);
-
-		return rewards;
-	}
-
 	function blocksFromReadjust() public view returns (uint256 blocks){
 		blocks = (epochCount - epochOld);
 		return blocks;
@@ -1147,43 +1127,6 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
  }
 
 
-	function reAdjustsToWhatDifficulty() public view returns (uint difficulty) {
-		if(epochCount - epochOld == 0){
-			return _MAXIMUM_TARGET.div(miningTarget);
-		}
-		uint256 blktimestamp = block.timestamp;
-		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
-		uint epochTotal = epochCount - epochOld;
-		uint adjusDiffTargetTime = targetTime *  epochTotal; 
-        uint miningTarget2 = 0;
-		//if there were less eth blocks passed in time than expected
-		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
-		{
-			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
-			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
-			//make it harder 
-			miningTarget2 = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
-		}else{
-			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
-
-			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
-			//make it easier
-			miningTarget2 = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
-		}
-
-		if(miningTarget2 < _MINIMUM_TARGET) //very difficult
-		{
-			miningTarget2 = _MINIMUM_TARGET;
-		}
-		if(miningTarget2 > _MAXIMUM_TARGET) //very easy
-		{
-			miningTarget2 = _MAXIMUM_TARGET;
-		}
-		difficulty = _MAXIMUM_TARGET.div(miningTarget2);
-			return difficulty;
-	}
-
-
 	function _reAdjustDifficulty() internal {
 		uint256 blktimestamp = block.timestamp;
 		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
@@ -1221,6 +1164,40 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 	}
 
 
+
+//STATS UNDER HERE//
+
+
+	function timeFromLastSolve() public view returns (uint256 time){
+		time = block.timestamp - previousBlockTime;
+		return time;
+	}
+
+	function rewardAtCurrentTime() public view returns (uint256 reward){
+		uint256 x = (block.timestamp - previousBlockTime);
+		reward = rewardAtTime(x);
+		return reward;
+	}
+	
+	function rewardAtTime(uint timeDifference) public view returns (uint256 rewards){
+		uint256 x = (timeDifference * 888) / targetTime;
+		uint ratio = x * 100 / 888 ;
+		uint totalOwed = 0;
+
+
+		//best @ 3000 ratio totalOwed / 100000000 = 71.6
+		if(ratio < 3000){
+			totalOwed = (508606*(15*x**2)).div(888 ** 2)+ (9943920 * (x)).div(888);
+		}else {
+			totalOwed = (24*x*5086060).div(888)+3456750000;
+		}
+
+		rewards = (reward_amount * totalOwed).div(100000000);
+
+		return rewards;
+	}
+
+
 	function inflationMined () public view returns (uint YearlyInflation, uint EpochsPerYear, uint RewardsAtTime, uint TimePerEpoch){
 		if(epochCount - epochOld == 0){
 			return (0, 0, 0, 0);
@@ -1248,7 +1225,7 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
-	function toNextEraEpochs () public view returns ( uint epochs, uint epochTime, uint daysToNextEra){
+	function toNextEraEpochs () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
 			return (0,0,0);
         }
@@ -1259,6 +1236,47 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		uint amt = daysz * (60*60*24) / timePerEpoch;
 		return (amt, timePerEpoch, daysToNextEra);
 	}
+
+
+
+
+	function reAdjustsToWhatDifficulty() public view returns (uint difficulty) {
+		if(epochCount - epochOld == 0){
+			return _MAXIMUM_TARGET.div(miningTarget);
+		}
+		uint256 blktimestamp = block.timestamp;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
+		uint epochTotal = epochCount - epochOld;
+		uint adjusDiffTargetTime = targetTime *  epochTotal; 
+        uint miningTarget2 = 0;
+		//if there were less eth blocks passed in time than expected
+		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
+		{
+			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
+			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
+			//make it harder 
+			miningTarget2 = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
+		}else{
+			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
+
+			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
+			//make it easier
+			miningTarget2 = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
+		}
+
+		if(miningTarget2 < _MINIMUM_TARGET) //very difficult
+		{
+			miningTarget2 = _MINIMUM_TARGET;
+		}
+		if(miningTarget2 > _MAXIMUM_TARGET) //very easy
+		{
+			miningTarget2 = _MAXIMUM_TARGET;
+		}
+		difficulty = _MAXIMUM_TARGET.div(miningTarget2);
+			return difficulty;
+	}
+
+
 
 	//help debug mining software
 	function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
