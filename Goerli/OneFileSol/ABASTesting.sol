@@ -489,7 +489,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	}
 	
 	
-    uint public targetTime = 20;
+    uint public targetTime = 60 * 12;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -548,6 +548,35 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	    constructor() {
     balances[msg.sender] = 1000000000000000000;
     emit Transfer(address(0), msg.sender, 1000000000000000000);
+            uint x = 21000000000000000000000000; 
+        // Only init once
+        assert(!initeds);
+        initeds = true;
+	    previousBlockTime = block.timestamp;
+	    reward_amount = 20 * 10**uint(decimals);
+    	rewardEra = 0;
+	    tokensMinted = 0;
+	    epochCount = 0;
+	    epochOld = 0;
+	    multipler = address(this).balance / (1 * 10 ** 18); 	
+	    Token2Per = (2** rewardEra) * address(this).balance / (250000 + 250000*(multipler)); //aimed to give about 400 days of reserves
+
+    	miningTarget = _MAXIMUM_TARGET.div(1000); //5000000 = 31gh/s @ 7 min for FPGA mining
+        latestDifficultyPeriodStarted2 = block.timestamp;
+    	_startNewMiningEpoch();
+        // Init contract variables and mint
+        balances[AuctionAddress2] = x/2;
+	
+        emit Transfer(address(0), AuctionAddress2, x/2);
+	
+    	AddressAuction = 0xB6eD7644C69416d67B522e20bC294A9a9B405B31; // AuctionAddress2;
+        AuctionsCT = ABASAuctionsCT(AddressAuction);
+        AddressLPReward = payable(0xDA5cA446B312ee5BAd10668c2Fe41bb1C9f0828E); //payable(LPGuild2);
+        AddressLPReward2 = payable(0x0bB21eDCe13500147eD84dc7d3BA47Bcbc6dACfa);//payable(LPGuild3);
+	    slowBlocks = 0;
+        oldecount = epochCount;
+	
+		setOwner(address(0));
 	}
 
 //REINCLUDE THE // LINES FOR REAL LAUNCH
