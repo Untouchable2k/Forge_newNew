@@ -1248,7 +1248,7 @@ function zinit(address AuctionAddress2) public onlyOwner{ //, address LPGuild2, 
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
-	function toNextEraBlocks () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
+	function toNextEraEpochs () public view returns ( uint blocks, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
 			return (0,0,0);
         }
