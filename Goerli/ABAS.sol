@@ -1,4 +1,4 @@
-//MUST REMOVE mintToFREE
+//MUST REMOVE mintToFREE, change _BLOCKS_PER_READJUSTMENT back to 1024, and change targetTime = 60 * 12 = 720 for 12 minutes
 // Arbitrum Bitcoin and Staking (ABAS) - Token and Mining Contract
 //
 // Distrubtion of Arbitrum Bitcoin and Staking (ABAS) Token is as follows:
