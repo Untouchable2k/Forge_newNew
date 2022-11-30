@@ -514,7 +514,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
     uint public epochCount = 0;//number of 'blocks' mined
 	uint public latestreAdjustStarted = block.timestamp; // shorter blocktime of attempted readjustment
-    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 512 or 1028
+    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 1024
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
