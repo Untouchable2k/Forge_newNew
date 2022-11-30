@@ -233,7 +233,7 @@ contract ForgeMining{
         name = "ABAS Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 150; secondsPerDay = 14 * 60 * 60 * 24; //start out at 14 days avg
+        daysPerEra = 150; secondsPerDay = 15 * 60 * 60 * 24; //start out at 15 days avg
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay * 10000;
@@ -671,7 +671,7 @@ contract ForgeMining{
         if (balance > emission*16) {                                                           // Balance is sufficient
             return emission;                                                                // Return emission
         } else {                                                                            // Balance has dropped low
-            return balance/4;                                                                 // Return full balance
+            return balance/3;                                                                 // Return full balance
         }
     }
     
