@@ -5,8 +5,9 @@
 //
 //  10,500,000 ABAS tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
-//  Distributes 32,768 ABAS tokens every 10-14 days for the first era(~5 years) and halves the amount of ABAS every era after.
-//
+//  Distributes 32,768 ABAS tokens per auction
+//  At a rate of~68,000 Mined ABAS per 32,768 Auctioned ABAS for the first era and halves the amount of ABAS every era after.
+// 
 // By simply sending this contract Ethereum, you will be auto entered into the current auction!
 // *You must control the wallet sending the Ethereum to retrieve your ArbiForge
 
