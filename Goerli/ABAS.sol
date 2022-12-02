@@ -491,7 +491,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 	}
 	
 	
-    uint public targetTime = 20;
+    uint public targetTime = 60 * 12;
     uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -514,7 +514,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
     uint public epochCount = 0;//number of 'blocks' mined
 	uint public latestreAdjustStarted = block.timestamp; // shorter blocktime of attempted readjustment
-    uint public _BLOCKS_PER_READJUSTMENT = 16; // should be 1024
+    uint public _BLOCKS_PER_READJUSTMENT = 1024; // should be 1024
     //a little number
     uint public  _MINIMUM_TARGET = 2**16;
     
@@ -530,7 +530,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public oldecount = 0; //Previous block count for ArewardSender function
     uint public previousBlockTime  =  block.timestamp; // Previous Blocktime
     uint public Token2Per=           1000000; //Amount of ETH distributed per mint somewhat
-    uint public tokensMinted;			//Tokens Minted only for Miners
+    uint public tokensMinted = 0;			//Tokens Minted only for Miners
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
     uint public slowBlocks = 0;
