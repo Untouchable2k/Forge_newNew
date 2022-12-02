@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at Etherscan.io on 2022-11-19
-*/
-
 // Arbitrum Bitcoin and Staking (ABAS) - Staking Contract #2
 //
 // Balancer Liquidity Pool 0xBitcoin / bForge / Arbitrum Bitcoin and Staking (ABAS) Staking
