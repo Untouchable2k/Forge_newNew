@@ -224,7 +224,6 @@ contract ForgeMining{
     event Withdrawal(address indexed caller, address indexed member, uint era, uint day, uint value, uint vetherRemaining);
     event MegaWithdrawal(address indexed caller, address indexed member, uint era, uint TotalDays, uint256 stricttotal);
     uint256 public lastMinted = 0;
-    bool onlyOnce = false;
     bool inited = false;
     //=====================================CREATION=========================================//
 
