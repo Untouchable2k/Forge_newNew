@@ -1,11 +1,11 @@
 // Arbitrum Bitcoin and Staking (ABAS) - Token and Mining Contract
 //
 // Distrubtion of Arbitrum Bitcoin and Staking (ABAS) Token is as follows:
-// 57% of ABAS Token is distributed as Liquidiy Pools as rewards in the ForgeRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
+// 57% of ABAS Token is distributed as Liquidiy Pools as rewards in the ABASRewards Contract which distributes tokens to users who deposit the Liquidity Pool tokens into the LPRewards contracts.
 // +
-// 29% of ABAS Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// 29% of ABAS Token is distributed using ABAS Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 // +
-// 15% of ABAS Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
+// 15% of ABAS Token is Auctioned in the ABASAuctions Contract which distributes tokens to users who use Ethereum to buy tokens in fair price. Each auction lasts ~12 days. Using the Auctions contract.
 // +
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
@@ -19,12 +19,12 @@
 //   +
 // 21,000,000 Mined over 100+ years using Bitcoins Distrubtion halvings every 4 years @ 360 min solves. Uses Proof-oF-Work to distribute the tokens. Public Miner is available.  Uses this contract.
 //   +
-// 10,500,000 Auctioned over 100+ years into 4 day auctions split fairly among all buyers. ALL Ethereum proceeds go into THIS contract which it fairly distributes to miners and stakers.  Uses the ForgeAuctions contract
+// 10,500,000 Auctioned over 100+ years into 4 day auctions split fairly among all buyers. ALL Ethereum proceeds go into THIS contract which it fairly distributes to miners and stakers.  Uses the ABASAuctions contract
 //  
 //
 //      
 // 33% of the Ethereum from this contract goes to the Miner to pay for the transaction cost and if the token grows enough earn Ethereum per mint!
-// 66% of the Ethereum from this contract goes to the Liquidity Providers via ForgeRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
+// 66% of the Ethereum from this contract goes to the Liquidity Providers via ABASRewards Contract.  Helps prevent Impermant Loss! Larger Liquidity!
 //
 // No premine, dev cut, or advantage taken at launch. Public miner available at launch.  100% of the token is given away fairly over 100+ years using Bitcoins model!
 //
@@ -59,6 +59,31 @@ contract Ownable {
     }
 }
 
+pragma solidity >=0.4.21 <0.9.0;
+
+/**
+* @title Precompiled contract that exists in every Arbitrum chain at address(100), 0x0000000000000000000000000000000000000064. Exposes a variety of system-level functionality.
+ */
+interface ArbSys {
+    /**
+    * @notice Get internal version number identifying an ArbOS build
+    * @return version number as int
+     */
+	function arbBlockHash(uint blockNumber) external view returns(bytes32);
+    /**
+    * @notice Get Arbitrum block number (distinct from L1 block number; Arbitrum genesis block has block number 0)
+    * @return block number as int
+     */ 
+    function arbBlockNumber() external view returns (uint);
+
+    /** 
+    * @notice Send given amount of Eth to dest from sender.
+    * This is a convenience function, which is equivalent to calling sendTxToL1 with empty calldataForL1.
+    * @param destination recipient address on L1
+    * @return unique identifier for this L2-to-L1 transaction.
+    */
+   
+}
 
 
 
@@ -506,7 +531,6 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
 // Managment events
     uint256 override public totalSupply = 73500001000000000000000000;
     bytes32 private constant BALANCE_KEY = keccak256("balance");
-
     //BITCOIN INITALIZE Start
 	
     uint _totalSupply = 21000000000000000000000000;
@@ -520,10 +544,10 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint public  _MAXIMUM_TARGET = 2**234;
     uint public miningTarget = _MAXIMUM_TARGET.div(200000000000*25);  //1000 million difficulty to start until i enable mining
     
-    bytes32 public challengeNumber = blockhash(block.number - 1);   //generate a new one when a new reward is minted
+    bytes32 public challengeNumber = ArbSys(0x0000000000000000000000000000000000000064).arbBlockHash( ArbSys(0x0000000000000000000000000000000000000064).arbBlockNumber() - 1);   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-    uint public reward_amount = 0;
+    uint public reward_amount = 2;
     
     //Stuff for Functions
     uint public oldecount = 0; //Previous block count for ArewardSender function
@@ -542,7 +566,7 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     uint8 public constant decimals = 18;
 	
     uint256 lastrun = block.timestamp;
-    uint public latestDifficultyPeriodStarted = block.number;
+    uint public latestDifficultyPeriodStarted = ArbSys(0x0000000000000000000000000000000000000064).arbBlockNumber();
     bool initeds = false;
     
     // mint 1 token to setup LPs
@@ -550,7 +574,6 @@ contract ArbitrumBitcoinAndStaking is Ownable, IERC20 {
     balances[msg.sender] = 1000000000000000000;
     emit Transfer(address(0), msg.sender, 1000000000000000000);
 	}
-
 
 function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) public onlyOwner{
         uint x = 21000000000000000000000000; 
@@ -578,7 +601,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
         AuctionsCT = ABASAuctionsCT(AddressAuction);
         AddressLPReward = payable(LPGuild2);
         AddressLPReward2 = payable(LPGuild3);
-	slowBlocks = 0;
+		slowBlocks = 1;
         oldecount = epochCount;
 	
 	setOwner(address(0));
@@ -726,7 +749,9 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
 
-	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest, address mintToAddress) public returns (uint256 totalOwed) {
+
+
+	function mintToJustABAS(uint256 nonce, bytes32 challenge_digest) public returns (uint256 totalOwed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -760,7 +785,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}
 
 
-		balances[mintToAddress] = balances[mintToAddress].add((reward_amount * totalOwed).div(100000000));
+		balances[msg.sender] = balances[msg.sender].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward2] = balances[AddressLPReward2].add((reward_amount * totalOwed).div(100000000));
 				
@@ -998,9 +1023,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 				_reAdjustDifficulty();
 			}
 		}
-
-		challengeNumber = blockhash(block.number - 1);
-        
+		challengeNumber = ArbSys(0x0000000000000000000000000000000000000064).arbBlockHash( ArbSys(0x0000000000000000000000000000000000000064).arbBlockNumber() - 1);
  }
 
 
@@ -1065,7 +1088,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		}
 
 		latestDifficultyPeriodStarted2 = blktimestamp;
-		latestDifficultyPeriodStarted = block.number;
+		latestDifficultyPeriodStarted = ArbSys(0x0000000000000000000000000000000000000064).arbBlockNumber();
 		if(miningTarget < _MINIMUM_TARGET) //very difficult
 		{
 			miningTarget = _MINIMUM_TARGET;
@@ -1078,12 +1101,14 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 	}
 
 
+//Stat Functions
+
 	function inflationMined () public view returns (uint YearlyInflation, uint EpochsPerYear, uint RewardsAtTime, uint TimePerEpoch){
 		if(epochCount - epochOld == 0){
 			return (0, 0, 0, 0);
 		}
 		uint256 blktimestamp = block.timestamp;
-		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
         
 		TimePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust(); 
@@ -1093,6 +1118,7 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		YearlyInflation = RewardsAtTime * EpochsPerYear;
 		return (YearlyInflation, EpochsPerYear, RewardsAtTime, TimePerEpoch);
 	}
+
 	
 	function toNextEraDays () public view returns (uint daysToNextEra, uint _maxSupplyForEra, uint _tokensMinted, uint amtDaily){
 
@@ -1105,16 +1131,17 @@ function zinit(address AuctionAddress2, address LPGuild2, address LPGuild3) publ
 		return (daysToNextEra, maxSupplyForEra, tokensMinted, amtDaily);
 	}
 	
+
 	function toNextEraEpochs () public view returns ( uint epochs, uint epochTime, uint daysToNextEra){
 		if(blocksFromReadjust() == 0){
 			return (0,0,0);
         }
 		uint256 blktimestamp = block.timestamp;
-        uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestreAdjustStarted;
+        uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 		uint timePerEpoch = TimeSinceLastDifficultyPeriod2 / blocksFromReadjust();
 		(uint daysz,,,) = toNextEraDays();
 		uint amt = daysz * (60*60*24) / timePerEpoch;
-		return (amt, timePerEpoch, daysToNextEra);
+		return (amt, timePerEpoch, daysz);
 	}
 
 	//help debug mining software
