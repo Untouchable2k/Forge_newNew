@@ -1,8 +1,12 @@
+/**
+ *Submitted for verification at Arbiscan on 2022-12-02
+*/
+
 // Arbitrum Bitcoin and Staking - Staking Contract #1
 //
 // Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
-// Recieves 28% or 21,000,000 Forge Tokens from the ForgeMining Contract over 100+ years.
-// Also recieve 33% of the Ethereum Tokens from the ForgeMining Contract over forever.
+// Recieves 28% or 21,000,000 ABAS Tokens from the ABASMining Contract over 100+ years.
+// Also recieve 33% of the Ethereum Tokens from the ABASMining Contract over forever.
 //
 //// What we are staking: Balancer Liquidity Pool tokens for the pair ABAS / Ethereum
 //
@@ -147,7 +151,7 @@ contract StakedTokenWrapper {
     }
 }
 
-contract ForgeAuctionsCT{
+contract ABASAuctionsCT{
     uint256 public secondsPerDay;
     uint256 public currentEra;
     }
@@ -207,7 +211,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     uint256 public rewardPerTokenStoredExtraExtra2;
     uint256 public rewardPerTokenStoredExtraExtra3;
 	
-	ForgeAuctionsCT public AuctionCT;
+	ABASAuctionsCT public AuctionCT;
     struct UserRewards {
         uint256 userRewardPerTokenPaid;
         uint256 rewards;
@@ -273,31 +277,29 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     event RewardAdded7(uint256 rewards7);
     event RewardPaidExtraExtra3(address indexed user, uint256 rewardsExtraExtra3);
 
-    constructor(IERC20 _rewardForge, IERC20 _LP, IERC20 _reward0xBTC, ForgeAuctionsCT AuctionAddress) {
-        rewardToken = _rewardForge;
+    constructor(IERC20 _rewardABAS, IERC20 _LP, IERC20 _reward0xBTC, ABASAuctionsCT AuctionAddress) {
+        rewardToken = _rewardABAS;
         stakedToken = _LP;
         rewardToken2 = _reward0xBTC;
-	AuctionCT = AuctionAddress;
+	      AuctionCT = AuctionAddress;
     }
 
 
     function NewRewardTime() public returns (bool success){
 	    uint64 poolLength2 = uint64(AuctionCT.secondsPerDay());
 	    uint _era = AuctionCT.currentEra();
-	    if(_era < 2 ){
-	    	poolLength = poolLength;
-	    }else if(_era < 5){
+	    if(_era < 5){
 	    	poolLength = poolLength2*3;
 	    }else if(_era  < 10){
 	    	poolLength = poolLength2*5;
 	    }else if(poolLength < poolLength2){
-		poolLength = poolLength2;
+		    poolLength = poolLength2;
 	    }
 	}
 
 
     function Z_addNewToken(IERC20 tokenExtra, uint _decimalsExtra) external OnlyModerators returns (bool success){
-    	require(rewardTokenExtraExtra3 != tokenExtra && tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra && tokenExtra != rewardTokenExtraExtra2, "no same token");
+      	require(rewardTokenExtraExtra3 != tokenExtra && tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra && tokenExtra != rewardTokenExtraExtra2, "no same token");
 	require(!activated4, "Only allowed to add one token");
         decimalsExtra = _decimalsExtra;
         rewardRateExtra = 0;
@@ -331,8 +333,8 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     }
         
     function Z_addNewToken4(IERC20 tokenTWOExtra3, uint _decimalsExtraExtra3) external OnlyModerators returns (bool success){
-	require(rewardTokenExtraExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
-	require(!activated7, "Only allowed to add one token");
+      	require(rewardTokenExtraExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
+      	require(!activated7, "Only allowed to add one token");
         decimalsExtraExtra3 = _decimalsExtraExtra3;
         rewardRateExtraExtra3 = 0;
         rewardTokenExtraExtra3 = tokenTWOExtra3;
@@ -435,7 +437,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration = lastTimeRewardApplicable()-lastUpdateTime;
-            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e36)/totalStakedSupply);
+            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e18)/totalStakedSupply);
         }
     }
 
@@ -447,7 +449,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e36/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
         }
     }
 
@@ -459,7 +461,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration3 = lastTimeRewardApplicable3()-lastUpdateTime3;
-            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e24/totalStakedSupply);
+            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e8/totalStakedSupply);
         }
     }
 
@@ -471,7 +473,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtra = lastTimeRewardApplicableExtra()-lastUpdateTimeExtra;
-            return uint256(rewardPerTokenStoredExtra + rewardDurationExtra*rewardRateExtra*(10**uint(decimalsExtra*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtra + rewardDurationExtra*rewardRateExtra*(10**uint(decimalsExtra))/totalStakedSupply);
         }
     }
 	
@@ -483,7 +485,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra = lastTimeRewardApplicableExtraExtra()-lastUpdateTimeExtraExtra;
-            return uint256(rewardPerTokenStoredExtraExtra + rewardDurationExtraExtra*rewardRateExtraExtra*(10**uint(decimalsExtraExtra*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra + rewardDurationExtraExtra*rewardRateExtraExtra*(10**uint(decimalsExtraExtra))/totalStakedSupply);
         }
     }
 
@@ -494,7 +496,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra2 = lastTimeRewardApplicableExtraExtra2()-lastUpdateTimeExtraExtra2;
-            return uint256(rewardPerTokenStoredExtraExtra2 + rewardDurationExtraExtra2*rewardRateExtraExtra2*(10**uint(decimalsExtraExtra2*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra2 + rewardDurationExtraExtra2*rewardRateExtraExtra2*(10**uint(decimalsExtraExtra2))/totalStakedSupply);
         }
     }
 
@@ -505,20 +507,15 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra3 = lastTimeRewardApplicableExtraExtra3()-lastUpdateTimeExtraExtra3;
-            return uint256(rewardPerTokenStoredExtraExtra3 + rewardDurationExtraExtra3*rewardRateExtraExtra3*(10**uint(decimalsExtraExtra3*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra3 + rewardDurationExtraExtra3*rewardRateExtraExtra3*(10**uint(decimalsExtraExtra3))/totalStakedSupply);
         }
     }
 
     function earned(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerToken() < 1e52)
-            {
-                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e52 + userRewards[account].rewards);
-            }else{
 
-                return uint256(balanceOf(account)*((rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e52) + userRewards[account].rewards);
-                         
-            }
+                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e18 + userRewards[account].rewards);
+
         }
     }
 
@@ -528,10 +525,10 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
             
             if(rewardPerToken2() < 1e52)
             {
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e52 + userRewards2[account].rewards2);
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
             }else{
                  
-                return uint256(balanceOf(account)*((rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e52) + userRewards2[account].rewards2);
+                return uint256(balanceOf(account)*((rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18) + userRewards2[account].rewards2);
             }
         }
     }
@@ -541,9 +538,9 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         unchecked {             
             if(rewardPerToken3() < 1e40)
             {
-                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e40 + userRewards3[account].rewards3);
+                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e8 + userRewards3[account].rewards3);
             }else{
-                return uint256(balanceOf(account)*((rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e40) + userRewards3[account].rewards3);
+                return uint256(balanceOf(account)*((rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e8) + userRewards3[account].rewards3);
             }
         }
     }
@@ -553,9 +550,9 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         unchecked {            
             if(rewardPerTokenExtra() < (10**(decimalsExtra * 2 + 16)))
             {
-                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2 + 16)) + userRewardsExtra[account].rewardsExtra);
+                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra)) + userRewardsExtra[account].rewardsExtra);
             }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2 + 16))) + userRewardsExtra[account].rewardsExtra);
+                return uint256(balanceOf(account)*((rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra))) + userRewardsExtra[account].rewardsExtra);
             }
         }
     }
@@ -563,36 +560,24 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 	
     function earnedExtraExtra(address account) public view returns (uint256) {
         unchecked {             
-            if(rewardPerTokenExtraExtra() < (10 **(decimalsExtraExtra * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra * 2 + 16)) + userRewardsExtraExtra[account].rewardsExtraExtra);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra * 2 + 16))) + userRewardsExtraExtra[account].rewardsExtraExtra);
-            }
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra)) + userRewardsExtraExtra[account].rewardsExtraExtra);
         }
     }
 	
 
     function earnedExtraExtra2(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerTokenExtraExtra2() < (10 **(decimalsExtraExtra2 * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2 * 2+ 16)) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2 * 2+ 16))) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
-            }
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2)) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
+
         }
     }
 	
 
     function earnedExtraExtra3(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerTokenExtraExtra3() < (10 **(decimalsExtraExtra3 * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3 * 2+ 16)) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3 * 2+ 16))) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3)) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
+
         }
     }
 	
@@ -783,7 +768,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra2 = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra2 = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra2 = 0;
@@ -814,7 +799,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra3 = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra3 = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra3 = 0;
@@ -845,7 +830,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra = 0;
@@ -877,7 +862,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtra = (maxRewardSupply*4*10**16)/duration/10;
+                rewardRateExtra = (maxRewardSupply*4)/duration/10;
             }
             else{
                 rewardRateExtra = 0;
@@ -934,7 +919,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > 3)
             {
-                rewardRate = ((maxRewardSupply*4*10**16)/10)/duration ;
+                rewardRate = ((maxRewardSupply*4)/10)/duration ;
             }
             else{
                 rewardRate = 0;
@@ -963,7 +948,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply2 > reward)
             {
-                rewardRate2 = ((maxRewardSupply2*4*10**16)/10)/duration;
+                rewardRate2 = ((maxRewardSupply2*4)/10)/duration;
             }
             else{
                 rewardRate2 = 0;
@@ -988,7 +973,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 
             if(maxRewardSupply3 > duration)
             {
-                rewardRate3 = ((maxRewardSupply3*4*10**16)/10)/duration;
+                rewardRate3 = ((maxRewardSupply3*4)/10)/duration;
             }
             else{
                 rewardRate3 = 0;
