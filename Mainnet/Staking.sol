@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at Arbiscan on 2022-12-02
-*/
-
 // Arbitrum Bitcoin and Staking - Staking Contract #1
 //
 // Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
