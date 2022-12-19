@@ -535,6 +535,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
 	
 	
     function earnedExtra(address account) public view returns (uint256) {
+        unchecked {    
                 return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra)) + userRewardsExtra[account].rewardsExtra);
 
         }
