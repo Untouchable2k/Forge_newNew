@@ -448,7 +448,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e8/totalStakedSupply);
         }
     }
 
@@ -512,7 +512,6 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
 
     function earned(address account) public view returns (uint256) {
         unchecked { 
-
                 return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e18 + userRewards[account].rewards);
 
         }
@@ -521,9 +520,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
 
     function earned2(address account) public view returns (uint256) {
         unchecked {             
-
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
-
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e8 + userRewards2[account].rewards2);
         }
     }
 
@@ -531,14 +528,14 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
     function earned3(address account) public view returns (uint256) {
         unchecked {             
 
-                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e8 + userRewards3[account].rewards3);
+                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e18 + userRewards3[account].rewards3);
 
         }
     }
 	
 	
     function earnedExtra(address account) public view returns (uint256) {
-                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2)) + userRewardsExtra[account].rewardsExtra);
+                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra)) + userRewardsExtra[account].rewardsExtra);
 
         }
     }
