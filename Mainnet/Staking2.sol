@@ -436,7 +436,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration = lastTimeRewardApplicable()-lastUpdateTime;
-            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e36)/totalStakedSupply);
+            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e18)/totalStakedSupply);
         }
     }
 
@@ -448,7 +448,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e36/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
         }
     }
 
@@ -460,7 +460,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration3 = lastTimeRewardApplicable3()-lastUpdateTime3;
-            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e24/totalStakedSupply);
+            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e18/totalStakedSupply);
         }
     }
 
@@ -472,7 +472,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtra = lastTimeRewardApplicableExtra()-lastUpdateTimeExtra;
-            return uint256(rewardPerTokenStoredExtra + rewardDurationExtra*rewardRateExtra*(10**uint(decimalsExtra*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtra + rewardDurationExtra*rewardRateExtra*(10**uint(decimalsExtra))/totalStakedSupply);
         }
     }
 	
@@ -484,7 +484,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra = lastTimeRewardApplicableExtraExtra()-lastUpdateTimeExtraExtra;
-            return uint256(rewardPerTokenStoredExtraExtra + rewardDurationExtraExtra*rewardRateExtraExtra*(10**uint(decimalsExtraExtra*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra + rewardDurationExtraExtra*rewardRateExtraExtra*(10**uint(decimalsExtraExtra))/totalStakedSupply);
         }
     }
 
@@ -495,7 +495,7 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra2 = lastTimeRewardApplicableExtraExtra2()-lastUpdateTimeExtraExtra2;
-            return uint256(rewardPerTokenStoredExtraExtra2 + rewardDurationExtraExtra2*rewardRateExtraExtra2*(10**uint(decimalsExtraExtra2*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra2 + rewardDurationExtraExtra2*rewardRateExtraExtra2*(10**uint(decimalsExtraExtra2))/totalStakedSupply);
         }
     }
 
@@ -506,94 +506,67 @@ contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDurationExtraExtra3 = lastTimeRewardApplicableExtraExtra3()-lastUpdateTimeExtraExtra3;
-            return uint256(rewardPerTokenStoredExtraExtra3 + rewardDurationExtraExtra3*rewardRateExtraExtra3*(10**uint(decimalsExtraExtra3*2))/totalStakedSupply);
+            return uint256(rewardPerTokenStoredExtraExtra3 + rewardDurationExtraExtra3*rewardRateExtraExtra3*(10**uint(decimalsExtraExtra3))/totalStakedSupply);
         }
     }
 
     function earned(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerToken() < 1e52)
-            {
-                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e52 + userRewards[account].rewards);
-            }else{
 
-                return uint256(balanceOf(account)*((rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e52) + userRewards[account].rewards);
-                         
-            }
+                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e18 + userRewards[account].rewards);
+
         }
     }
 
 
     function earned2(address account) public view returns (uint256) {
         unchecked {             
-            
-            if(rewardPerToken2() < 1e52)
-            {
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e52 + userRewards2[account].rewards2);
-            }else{
-                 
-                return uint256(balanceOf(account)*((rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e52) + userRewards2[account].rewards2);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
+
         }
     }
 
 
     function earned3(address account) public view returns (uint256) {
         unchecked {             
-            if(rewardPerToken3() < 1e40)
-            {
-                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e40 + userRewards3[account].rewards3);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e40) + userRewards3[account].rewards3);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e8 + userRewards3[account].rewards3);
+
         }
     }
 	
 	
     function earnedExtra(address account) public view returns (uint256) {
-        unchecked {            
-            if(rewardPerTokenExtra() < (10**(decimalsExtra * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2 + 16)) + userRewardsExtra[account].rewardsExtra);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2 + 16))) + userRewardsExtra[account].rewardsExtra);
-            }
+                return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra * 2)) + userRewardsExtra[account].rewardsExtra);
+
         }
     }
 	
 	
     function earnedExtraExtra(address account) public view returns (uint256) {
         unchecked {             
-            if(rewardPerTokenExtraExtra() < (10 **(decimalsExtraExtra * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra * 2 + 16)) + userRewardsExtraExtra[account].rewardsExtraExtra);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra * 2 + 16))) + userRewardsExtraExtra[account].rewardsExtraExtra);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra)) + userRewardsExtraExtra[account].rewardsExtraExtra);
+
         }
     }
 	
 
     function earnedExtraExtra2(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerTokenExtraExtra2() < (10 **(decimalsExtraExtra2 * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2 * 2+ 16)) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2 * 2+ 16))) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2)) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
+
         }
     }
 	
 
     function earnedExtraExtra3(address account) public view returns (uint256) {
         unchecked { 
-            if(rewardPerTokenExtraExtra3() < (10 **(decimalsExtraExtra3 * 2 + 16)))
-            {
-                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3 * 2+ 16)) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
-            }else{
-                return uint256(balanceOf(account)*((rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3 * 2+ 16))) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
-            }
+
+                return uint256(balanceOf(account)*(rewardPerTokenExtraExtra3()-userRewardsExtraExtra3[account].userRewardPerTokenPaidExtraExtra3)/(10 **(decimalsExtraExtra3)) + userRewardsExtraExtra3[account].rewardsExtraExtra3);
+
         }
     }
 	
@@ -784,7 +757,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra2 = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra2 = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra2 = 0;
@@ -815,7 +788,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra3 = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra3 = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra3 = 0;
@@ -846,7 +819,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtraExtra = ((maxRewardSupply*4*10**16)/10)/duration;
+                rewardRateExtraExtra = ((maxRewardSupply*4)/10)/duration;
             }
             else{
                 rewardRateExtraExtra = 0;
@@ -878,7 +851,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > duration)
             {
-                rewardRateExtra = (maxRewardSupply*4*10**16)/duration/10;
+                rewardRateExtra = (maxRewardSupply*4)/duration/10;
             }
             else{
                 rewardRateExtra = 0;
@@ -935,7 +908,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > 3)
             {
-                rewardRate = ((maxRewardSupply*4*10**16)/10)/duration ;
+                rewardRate = ((maxRewardSupply*4)/10)/duration ;
             }
             else{
                 rewardRate = 0;
@@ -964,7 +937,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply2 > reward)
             {
-                rewardRate2 = ((maxRewardSupply2*4*10**16)/10)/duration;
+                rewardRate2 = ((maxRewardSupply2*4)/10)/duration;
             }
             else{
                 rewardRate2 = 0;
@@ -989,7 +962,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 
             if(maxRewardSupply3 > duration)
             {
-                rewardRate3 = ((maxRewardSupply3*4*10**16)/10)/duration;
+                rewardRate3 = ((maxRewardSupply3*4)/10)/duration;
             }
             else{
                 rewardRate3 = 0;
