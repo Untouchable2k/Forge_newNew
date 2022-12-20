@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at Arbiscan on 2022-12-02
+*/
+
 // Arbitrum Bitcoin and Staking - Staking Contract #1
 //
 // Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
@@ -445,7 +449,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e8/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
         }
     }
 
@@ -519,7 +523,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function earned2(address account) public view returns (uint256) {
         unchecked {             
 
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e8 + userRewards2[account].rewards2);
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
 
         }
     }
@@ -904,7 +908,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > 3)
             {
-                rewardRate = ((maxRewardSupply*4)/10)/duration ;
+                rewardRate = ((maxRewardSupply *4)/10)/duration ;
             }
             else{
                 rewardRate = 0;
