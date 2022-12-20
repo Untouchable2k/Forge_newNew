@@ -1,12 +1,9 @@
-/**
- *Submitted for verification at Arbiscan on 2022-12-02
-*/
-
 // Arbitrum Bitcoin and Staking - Staking Contract #1
 //
 // Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
 // Recieves 28% or 21,000,000 ABAS Tokens from the ABASMining Contract over 100+ years.
 // Also recieve 33% of the Ethereum Tokens from the ABASMining Contract over forever.
+//
 //
 //// What we are staking: Balancer Liquidity Pool tokens for the pair ABAS / Ethereum
 //
