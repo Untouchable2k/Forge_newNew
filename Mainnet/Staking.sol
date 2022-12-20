@@ -434,7 +434,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration = lastTimeRewardApplicable()-lastUpdateTime;
-            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e18)/totalStakedSupply);
+            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e22)/totalStakedSupply);
         }
     }
 
@@ -446,7 +446,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e22/totalStakedSupply);
         }
     }
 
@@ -458,7 +458,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration3 = lastTimeRewardApplicable3()-lastUpdateTime3;
-            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e18/totalStakedSupply);
+            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e22/totalStakedSupply);
         }
     }
 
@@ -511,7 +511,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function earned(address account) public view returns (uint256) {
         unchecked { 
 
-                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e18 + userRewards[account].rewards);
+                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e22 + userRewards[account].rewards);
 
         }
     }
@@ -520,7 +520,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function earned2(address account) public view returns (uint256) {
         unchecked {             
 
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e22 + userRewards2[account].rewards2);
 
         }
     }
@@ -529,7 +529,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function earned3(address account) public view returns (uint256) {
         unchecked {             
 
-                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e18 + userRewards3[account].rewards3);
+                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e22 + userRewards3[account].rewards3);
 
         }
     }
