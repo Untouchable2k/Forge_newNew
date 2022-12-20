@@ -1,14 +1,14 @@
-// Arbitrum Bitcoin and Staking - Staking Contract #1
+// Arbitrum Bitcoin and Staking (ABAS) - Staking Contract #2
 //
-// Balancer Liquidity Pool ABAS / ETH Staking Rewards contract
-// Recieves 28% or 21,000,000 ABAS Tokens from the ABASMining Contract over 100+ years.
-// Also recieve 33% of the Ethereum Tokens from the ABASMining Contract over forever.
+// Balancer Liquidity Pool 0xBitcoin / bForge / Arbitrum Bitcoin and Staking (ABAS) Staking
+// Recieves 28% or 21,000,000 ABAS Tokens from the ForgeMining Contract over 100+ years.
+// Also recieve 33% of the Ethereum Tokens from the ForgeMining Contract over forever.
 //
 //
-//// What we are staking: Balancer Liquidity Pool tokens for the pair ABAS / Ethereum
+// What we are staking: Balancer Liquidity Pool tokens for the pair ABAS / 0xBTC / bForge
 //
-//Rewards: Arbitrum Bitcoin and Staking (ABAS), 0xBitcoin, and Ethereum currently.
-// Funds gathered will be dispered over 2 months. 24 Day reward period for 40%.
+//Rewards: Arbitrum Bitcoin and Staking (ABAS) tokens, 0xBitcoin tokens, and Ethereum currently.
+// Funds gathered will be dispered over 21 days. 7 Day reward period for 40%.
 //Room to Expand to three other cryptocurrencies(Only admin function in all three contracts is to add up to three more cryptocurrencies!)
 
 pragma solidity ^0.8.11;
@@ -148,12 +148,12 @@ contract StakedTokenWrapper {
     }
 }
 
-contract ABASAuctionsCT{
+contract ForgeAuctionsCT{
     uint256 public secondsPerDay;
     uint256 public currentEra;
     }
 
-contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
+contract ArbitrumBitcoinAndStakingRewards2 is StakedTokenWrapper, Ownable2 {
     bool activated6 = false;
     bool activated5 = false;
     bool activated4 = false;
@@ -208,7 +208,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     uint256 public rewardPerTokenStoredExtraExtra2;
     uint256 public rewardPerTokenStoredExtraExtra3;
 	
-	ABASAuctionsCT public AuctionCT;
+	ForgeAuctionsCT public AuctionCT;
     struct UserRewards {
         uint256 userRewardPerTokenPaid;
         uint256 rewards;
@@ -274,29 +274,31 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     event RewardAdded7(uint256 rewards7);
     event RewardPaidExtraExtra3(address indexed user, uint256 rewardsExtraExtra3);
 
-    constructor(IERC20 _rewardABAS, IERC20 _LP, IERC20 _reward0xBTC, ABASAuctionsCT AuctionAddress) {
-        rewardToken = _rewardABAS;
+    constructor(IERC20 _rewardForge, IERC20 _LP, IERC20 _reward0xBTC, ForgeAuctionsCT AuctionAddress) {
+        rewardToken = _rewardForge;
         stakedToken = _LP;
         rewardToken2 = _reward0xBTC;
-	      AuctionCT = AuctionAddress;
+	AuctionCT = AuctionAddress;
     }
 
 
     function NewRewardTime() public returns (bool success){
 	    uint64 poolLength2 = uint64(AuctionCT.secondsPerDay());
 	    uint _era = AuctionCT.currentEra();
-	    if(_era < 5){
+	    if(_era < 2 ){
+	    	poolLength = poolLength;
+	    }else if(_era < 5){
 	    	poolLength = poolLength2*3;
 	    }else if(_era  < 10){
 	    	poolLength = poolLength2*5;
 	    }else if(poolLength < poolLength2){
-		    poolLength = poolLength2;
+		poolLength = poolLength2;
 	    }
 	}
 
 
     function Z_addNewToken(IERC20 tokenExtra, uint _decimalsExtra) external OnlyModerators returns (bool success){
-      	require(rewardTokenExtraExtra3 != tokenExtra && tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra && tokenExtra != rewardTokenExtraExtra2, "no same token");
+    	require(rewardTokenExtraExtra3 != tokenExtra && tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra && tokenExtra != rewardTokenExtraExtra2, "no same token");
 	require(!activated4, "Only allowed to add one token");
         decimalsExtra = _decimalsExtra;
         rewardRateExtra = 0;
@@ -330,8 +332,8 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     }
         
     function Z_addNewToken4(IERC20 tokenTWOExtra3, uint _decimalsExtraExtra3) external OnlyModerators returns (bool success){
-      	require(rewardTokenExtraExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
-      	require(!activated7, "Only allowed to add one token");
+	require(rewardTokenExtraExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
+	require(!activated7, "Only allowed to add one token");
         decimalsExtraExtra3 = _decimalsExtraExtra3;
         rewardRateExtraExtra3 = 0;
         rewardTokenExtraExtra3 = tokenTWOExtra3;
@@ -434,7 +436,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration = lastTimeRewardApplicable()-lastUpdateTime;
-            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e22)/totalStakedSupply);
+            return uint256(rewardPerTokenStored + rewardDuration*rewardRate*(1e18)/totalStakedSupply);
         }
     }
 
@@ -446,7 +448,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration2 = lastTimeRewardApplicable2()-lastUpdateTime2;
-            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e22/totalStakedSupply);
+            return uint256(rewardPerTokenStored2 + rewardDuration2*rewardRate2*1e18/totalStakedSupply);
         }
     }
 
@@ -458,7 +460,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
         }
         unchecked {
             uint256 rewardDuration3 = lastTimeRewardApplicable3()-lastUpdateTime3;
-            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e22/totalStakedSupply);
+            return uint256(rewardPerTokenStored3 + rewardDuration3*rewardRate3*1e18/totalStakedSupply);
         }
     }
 
@@ -510,8 +512,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 
     function earned(address account) public view returns (uint256) {
         unchecked { 
-
-                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e22 + userRewards[account].rewards);
+                return uint256(balanceOf(account)*(rewardPerToken()-userRewards[account].userRewardPerTokenPaid)/1e18 + userRewards[account].rewards);
 
         }
     }
@@ -519,9 +520,7 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 
     function earned2(address account) public view returns (uint256) {
         unchecked {             
-
-                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e22 + userRewards2[account].rewards2);
-
+                return uint256(balanceOf(account)*(rewardPerToken2()-userRewards2[account].userRewardPerTokenPaid2)/1e18 + userRewards2[account].rewards2);
         }
     }
 
@@ -529,15 +528,14 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
     function earned3(address account) public view returns (uint256) {
         unchecked {             
 
-                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e22 + userRewards3[account].rewards3);
+                return uint256(balanceOf(account)*(rewardPerToken3()-userRewards3[account].userRewardPerTokenPaid3)/1e18 + userRewards3[account].rewards3);
 
         }
     }
 	
 	
     function earnedExtra(address account) public view returns (uint256) {
-        unchecked {            
-
+        unchecked {    
                 return uint256(balanceOf(account)*(rewardPerTokenExtra()-userRewardsExtra[account].userRewardPerTokenPaidExtra)/(10 **(decimalsExtra)) + userRewardsExtra[account].rewardsExtra);
 
         }
@@ -546,13 +544,16 @@ contract ArbitrumBitcoinAndStakingRewards is StakedTokenWrapper, Ownable2 {
 	
     function earnedExtraExtra(address account) public view returns (uint256) {
         unchecked {             
+
                 return uint256(balanceOf(account)*(rewardPerTokenExtraExtra()-userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra)/(10 **(decimalsExtraExtra)) + userRewardsExtraExtra[account].rewardsExtraExtra);
+
         }
     }
 	
 
     function earnedExtraExtra2(address account) public view returns (uint256) {
         unchecked { 
+
                 return uint256(balanceOf(account)*(rewardPerTokenExtraExtra2()-userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2)/(10 **(decimalsExtraExtra2)) + userRewardsExtraExtra2[account].rewardsExtraExtra2);
 
         }
@@ -905,7 +906,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    }
             if(maxRewardSupply > 3)
             {
-                rewardRate = ((maxRewardSupply *4)/10)/duration ;
+                rewardRate = ((maxRewardSupply*4)/10)/duration ;
             }
             else{
                 rewardRate = 0;
